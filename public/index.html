@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoApply — Autonomous Job Applications</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#000; --sf:#0d0d0d; --s2:#111; --s3:#1a1a1a;
+      --br:#1f1f1f; --br2:#2a2a2a;
+      --tx:#f5f5f5; --t2:#717171; --t3:#3d3d3d;
+      --bl:#0070f3; --bld:rgba(0,112,243,.09);
+      --gn:#16a34a; --gnd:rgba(22,163,74,.1);
+      --am:#d97706; --amd:rgba(217,119,6,.1);
+      --rd:#dc2626; --rdd:rgba(220,38,38,.1);
+      --fn:'Inter',-apple-system,sans-serif;
+      --mo:'Geist Mono','JetBrains Mono',monospace;
+      --r:6px; --rl:10px;
+    }
+    html,body{height:100%;overflow:hidden;}
+    body{font-family:var(--fn);background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5;}
+    .hdr{height:48px;border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 20px;gap:10px;background:var(--sf);}
+    .hdr-logo{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;letter-spacing:-.2px;}
+    .hdr-sep{color:var(--t3);margin:0 2px;}
+    .hdr-sub{font-size:12px;font-weight:400;color:var(--t2);}
+    .hdr-r{margin-left:auto;}
+    .pill{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);border:1px solid var(--br2);border-radius:20px;padding:3px 10px;}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--gn);flex-shrink:0;}
+    .dot.live{animation:dp 1.2s infinite;background:var(--bl);}
+    @keyframes dp{0%,100%{opacity:1}50%{opacity:.3}}
+    .ws{display:grid;grid-template-columns:360px 1fr;height:calc(100vh - 48px);}
+    .left{border-right:1px solid var(--br);background:var(--sf);display:flex;flex-direction:column;overflow:hidden;}
+    .lscroll{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:20px;}
+    .lscroll::-webkit-scrollbar{width:3px;}
+    .lscroll::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
+    .sec{display:flex;flex-direction:column;gap:10px;}
+    .sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);}
+    .row{display:grid;gap:8px;}
+    .row.two{grid-template-columns:1fr 1fr;}
+    .fg{display:flex;flex-direction:column;gap:5px;}
+    .fl{font-size:11px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.3px;}
+    input[type=text],input[type=email],input[type=tel],textarea,input[type=url]{width:100%;background:var(--s3);border:1px solid var(--br2);border-radius:var(--r);padding:7px 10px;color:var(--tx);font-size:12px;font-family:var(--fn);outline:none;transition:border-color .15s;}
+    input:focus,textarea:focus{border-color:var(--bl);}
+    input::placeholder,textarea::placeholder{color:var(--t3);}
+    textarea{min-height:60px;resize:vertical;}
+    .job-input-wrap{display:flex;flex-direction:column;gap:8px;}
+    .job-url-row{display:flex;gap:6px;}
+    .job-url-row input{flex:1;}
+    .btn-go{padding:7px 14px;background:var(--bl);border:none;border-radius:var(--r);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:opacity .15s;}
+    .btn-go:hover:not(:disabled){opacity:.85;}
+    .btn-go:disabled{opacity:.4;cursor:not-allowed;}
+    .spin{width:12px;height:12px;border:1.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;display:none;}
+    @keyframes sp{to{transform:rotate(360deg);}}
+    .btn-stop{width:100%;padding:7px;background:transparent;border:1px solid var(--br2);border-radius:var(--r);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;display:none;transition:all .12s;}
+    .btn-stop:hover{border-color:var(--rd);color:var(--rd);}
+    .ats-row{display:flex;flex-wrap:wrap;gap:5px;}
+    .ats-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--br2);color:var(--t2);background:var(--s3);}
+    .log-wrap{flex:1;min-height:120px;display:flex;flex-direction:column;}
+    .log-hdr{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:8px;}
+    .log-stream{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px;max-height:200px;}
+    .log-stream::-webkit-scrollbar{width:2px;}
+    .le{font-family:var(--mo);font-size:11px;color:var(--t2);padding:2px 0;display:flex;gap:8px;align-items:baseline;animation:li .2s ease;}
+    @keyframes li{from{opacity:0;transform:translateY(2px);}to{opacity:1;transform:none;}}
+    .le .sym{color:var(--t3);flex-shrink:0;width:10px;text-align:center;}
+    .le.info .sym{color:var(--bl);}.le.ok{color:var(--gn);}.le.ok .sym{color:var(--gn);}.le.err{color:var(--rd);}.le.err .sym{color:var(--rd);}
+    .right{display:flex;flex-direction:column;overflow:hidden;}
+    .tabs{display:flex;border-bottom:1px solid var(--br);background:var(--sf);padding:0 4px;flex-shrink:0;}
+    .tab{padding:12px 16px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:1px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;user-select:none;}
+    .tab:hover{color:var(--tx);}.tab.on{color:var(--tx);border-bottom-color:var(--tx);}
+    .bdg{font-size:10px;background:var(--s3);border:1px solid var(--br2);border-radius:4px;padding:1px 5px;color:var(--t2);display:none;}
+    .bdg.on{display:inline-block;}
+    .pane{flex:1;display:none;flex-direction:column;overflow:hidden;}
+    .pane.on{display:flex;}
+    #pane-live{background:#000;}
+    .bbr{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--sf);border-bottom:1px solid var(--br);flex-shrink:0;}
+    .bdots{display:flex;gap:5px;}
+    .bd{width:10px;height:10px;border-radius:50%;background:#3a3a3a;}
+    .bd.r.on{background:#ff5f57;}.bd.y.on{background:#febc2e;}.bd.g.on{background:#28c840;}
+    .ubar{flex:1;background:var(--s3);border:1px solid var(--br);border-radius:5px;padding:4px 12px;font-family:var(--mo);font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .live-ind{font-size:10px;font-weight:600;color:var(--rd);letter-spacing:.5px;display:none;align-items:center;gap:5px;}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--rd);animation:dp 1s infinite;}
+    .fw{flex:1;position:relative;overflow:hidden;}
+    #live-frame{width:100%;height:100%;border:none;display:none;}
+    .idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:40px;}
+    .idle-icon{width:52px;height:52px;border-radius:14px;border:1px solid var(--br2);background:var(--s2);display:flex;align-items:center;justify-content:center;color:var(--t3);}
+    .idle h3{font-size:16px;font-weight:500;color:var(--tx);}
+    .idle p{font-size:12px;color:var(--t2);max-width:300px;line-height:1.7;}
+    .idle-steps{display:flex;flex-direction:column;gap:8px;text-align:left;max-width:300px;}
+    .is{display:flex;gap:10px;font-size:12px;color:var(--t2);align-items:flex-start;}
+    .sn{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid var(--br2);color:var(--t2);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+    #pane-result{overflow-y:auto;padding:24px;background:var(--bg);}
+    #pane-result::-webkit-scrollbar{width:4px;}
+    #pane-result::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
+    .empty{text-align:center;padding:60px 20px;color:var(--t2);}
+    .empty-ic{width:44px;height:44px;margin:0 auto 14px;border-radius:12px;border:1px solid var(--br2);background:var(--s2);display:flex;align-items:center;justify-content:center;color:var(--t3);}
+    .empty h3{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:6px;}
+    .empty p{font-size:12px;line-height:1.7;max-width:280px;margin:0 auto;}
+    .res-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+    .res-title{font-size:17px;font-weight:600;}
+    .res-meta{font-size:12px;color:var(--t2);margin-top:2px;}
+    .status-row{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
+    .status-badge{font-size:12px;font-weight:600;padding:5px 14px;border-radius:6px;text-transform:capitalize;}
+    .status-badge.submitted{background:var(--gnd);color:var(--gn);border:1px solid rgba(22,163,74,.25);}
+    .status-badge.error{background:var(--rdd);color:var(--rd);border:1px solid rgba(220,38,38,.25);}
+    .status-badge.partial{background:var(--amd);color:var(--am);border:1px solid rgba(217,119,6,.25);}
+    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;margin-bottom:20px;}
+    .ig{background:var(--s2);padding:12px 14px;border-right:1px solid var(--br);}
+    .ig:last-child{border-right:none;}
+    .ig-k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:4px;}
+    .ig-v{font-size:13px;font-weight:500;color:var(--tx);}
+    .conf-box{background:var(--s2);border:1px solid var(--br);border-radius:var(--rl);padding:14px 16px;margin-bottom:20px;}
+    .conf-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:6px;}
+    .conf-text{font-size:13px;color:var(--tx);line-height:1.5;}
+    .qa-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:10px;}
+    .qa-list{display:flex;flex-direction:column;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;}
+    .qa-row{padding:12px 14px;border-bottom:1px solid var(--br);background:var(--s2);}
+    .qa-row:last-child{border-bottom:none;}
+    .qa-q{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:4px;}
+    .qa-a{font-size:12px;color:var(--t2);line-height:1.5;}
+    .toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--s3);border:1px solid var(--br2);border-radius:var(--rl);padding:10px 16px;font-size:12px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:ta .2s ease;}
+    @keyframes ta{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  </style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+    AutoApply
+  </div>
+  <span class="hdr-sep">/</span>
+  <span class="hdr-sub">Autonomous Job Applications &middot; Powered by TinyFish</span>
+  <div class="hdr-r"><div class="pill"><div class="dot" id="hdr-dot"></div><span id="hdr-lbl">Ready</span></div></div>
+</header>
+<div class="ws">
+  <div class="left">
+    <div class="lscroll">
+      <div class="sec">
+        <div class="sec-title">Job</div>
+        <div class="job-input-wrap">
+          <div class="fg"><label class="fl">Application URL</label>
+            <div class="job-url-row">
+              <input type="url" id="job-url" placeholder="https://boards.greenhouse.io/company/jobs/123" />
+              <button class="btn-go" id="btn-go" onclick="apply()"><span id="btn-lbl">Apply</span><div class="spin" id="spin"></div></button>
+            </div>
+          </div>
+          <div class="ats-row"><span class="ats-tag">Greenhouse</span><span class="ats-tag">Lever</span><span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span></div>
+          <button class="btn-stop" id="btn-stop" onclick="stopAgent()">Stop agent</button>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Profile</div>
+        <div class="row two">
+          <div class="fg"><label class="fl">Full Name *</label><input type="text" id="p-name" placeholder="Alex Johnson" /></div>
+          <div class="fg"><label class="fl">Email *</label><input type="email" id="p-email" placeholder="alex@example.com" /></div>
+        </div>
+        <div class="row two">
+          <div class="fg"><label class="fl">Phone</label><input type="tel" id="p-phone" placeholder="+1 555 000 0000" /></div>
+          <div class="fg"><label class="fl">Location</label><input type="text" id="p-loc" placeholder="San Francisco, CA" /></div>
+        </div>
+        <div class="row two">
+          <div class="fg"><label class="fl">LinkedIn URL</label><input type="url" id="p-li" placeholder="linkedin.com/in/..." /></div>
+          <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" placeholder="github.com/..." /></div>
+        </div>
+        <div class="row two">
+          <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" placeholder="e.g. 5 years" /></div>
+          <div class="fg"><label class="fl">Education</label><input type="text" id="p-edu" placeholder="BS Computer Science, MIT" /></div>
+        </div>
+        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" placeholder="Python, React, Node.js, AWS..." /></div>
+        <div class="fg"><label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional, hosted PDF</span></label><input type="url" id="p-resume" placeholder="https://yoursite.com/resume.pdf" /></div>
+        <div class="fg"><label class="fl">Brief Bio</label><textarea id="p-bio" placeholder="Full-stack engineer with 5 years building B2B SaaS..."></textarea></div>
+        <div class="fg"><label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label><textarea id="p-cl" placeholder="Keep it concise, under 150 words. Emphasise my backend experience..."></textarea></div>
+      </div>
+      <div class="log-wrap">
+        <div class="log-hdr">Activity</div>
+        <div class="log-stream" id="log"><div class="le"><span class="sym">&middot;</span><span>Waiting for input</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="tabs">
+      <div class="tab on" data-p="live" onclick="tab('live')">Live Browser</div>
+      <div class="tab" data-p="result" onclick="tab('result')">Result <span class="bdg" id="res-bdg">!</span></div>
+    </div>
+    <div class="pane on" id="pane-live">
+      <div class="bbr">
+        <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
+        <div class="ubar" id="ubar">No active session</div>
+        <div class="live-ind" id="live-ind"><div class="live-dot"></div>Live</div>
+      </div>
+      <div class="fw">
+        <div class="idle" id="idle">
+          <div class="idle-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <h3>Agent standing by</h3>
+          <p>Paste a job URL, fill in your profile, and click Apply. Watch the TinyFish agent complete the real application form live.</p>
+          <div class="idle-steps">
+            <div class="is"><div class="sn">1</div><span>Navigates to the job URL and reads the description</span></div>
+            <div class="is"><div class="sn">2</div><span>Detects the ATS and fills every form field</span></div>
+            <div class="is"><div class="sn">3</div><span>Answers custom screening questions intelligently</span></div>
+            <div class="is"><div class="sn">4</div><span>Uploads resume, navigates multi-page forms, submits</span></div>
+          </div>
+        </div>
+        <iframe id="live-frame" src="" title="TinyFish live session"></iframe>
+      </div>
+    </div>
+    <div class="pane" id="pane-result">
+      <div class="empty" id="res-empty">
+        <div class="empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>No result yet</h3>
+        <p>Run an application to see the outcome — confirmation text, questions answered, submission status.</p>
+      </div>
+      <div id="res-fill" style="display:none">
+        <div class="res-hdr"><div><div class="res-title" id="res-title">Application Result</div><div class="res-meta" id="res-meta"></div></div></div>
+        <div class="status-row"><div class="status-badge" id="res-status">submitted</div><div id="res-ats" style="font-size:12px;color:var(--t2)"></div></div>
+        <div class="info-grid">
+          <div class="ig"><div class="ig-k">Role</div><div class="ig-v" id="ig-role">—</div></div>
+          <div class="ig"><div class="ig-k">Company</div><div class="ig-v" id="ig-co">—</div></div>
+          <div class="ig"><div class="ig-k">Fields filled</div><div class="ig-v" id="ig-fields">—</div></div>
+        </div>
+        <div class="conf-box" id="conf-box" style="display:none"><div class="conf-label">Confirmation</div><div class="conf-text" id="conf-text"></div></div>
+        <div id="qa-section" style="display:none">
+          <div class="qa-title" id="qa-title">Screening Questions Answered</div>
+          <div class="qa-list" id="qa-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const API = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:3001' : '';
+let ctrl = null, t0 = 0;
+function tab(name) { document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name)); document.querySelectorAll('.pane').forEach(p => p.classList.remove('on')); document.getElementById('pane-' + name).classList.add('on'); }
+function log(msg, type = '') { const sym = { info: '→', ok: '✓', err: '×' }[type] || '·'; const el = document.createElement('div'); el.className = 'le ' + type; el.innerHTML = `<span class="sym">${sym}</span><span>${msg}</span>`; const s = document.getElementById('log'); s.appendChild(el); s.scrollTop = s.scrollHeight; }
+function clearLog() { document.getElementById('log').innerHTML = ''; }
+function setRunning(on) { document.getElementById('btn-go').disabled = on; document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply'; document.getElementById('spin').style.display = on ? 'block' : 'none'; document.getElementById('btn-stop').style.display = on ? 'block' : 'none'; document.getElementById('hdr-dot').classList.toggle('live', on); document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready'; }
+function resetFrame() { const f = document.getElementById('live-frame'); f.style.display = 'none'; f.src = ''; document.getElementById('idle').style.display = 'flex'; document.getElementById('ubar').textContent = 'No active session'; document.getElementById('live-ind').style.display = 'none'; ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on')); }
+function getProfile() { return { name: document.getElementById('p-name').value.trim(), email: document.getElementById('p-email').value.trim(), phone: document.getElementById('p-phone').value.trim(), location: document.getElementById('p-loc').value.trim(), linkedin: document.getElementById('p-li').value.trim(), github: document.getElementById('p-gh').value.trim(), experience: document.getElementById('p-exp').value.trim(), education: document.getElementById('p-edu').value.trim(), skills: document.getElementById('p-skills').value.trim(), resumeUrl: document.getElementById('p-resume').value.trim(), bio: document.getElementById('p-bio').value.trim(), coverLetter: document.getElementById('p-cl').value.trim() }; }
+async function apply() {
+  const jobUrl = document.getElementById('job-url').value.trim();
+  const profile = getProfile();
+  if (!jobUrl) return toast('Paste a job URL first');
+  if (!profile.name) return toast('Name is required');
+  if (!profile.email) return toast('Email is required');
+  clearLog(); setRunning(true); resetFrame(); t0 = Date.now();
+  document.getElementById('res-empty').style.display = 'flex'; document.getElementById('res-fill').style.display = 'none'; document.getElementById('res-bdg').classList.remove('on');
+  log('Launching agent for: ' + jobUrl, 'info'); tab('live'); ctrl = new AbortController();
+  try {
+    const res = await fetch(`${API}/api/apply`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jobUrl, profile }), signal: ctrl.signal });
+    const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
+    while (true) { const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true }); const lines = buf.split('\n'); buf = lines.pop(); for (const line of lines) { if (!line.startsWith('data: ')) continue; try { handle(JSON.parse(line.slice(6))); } catch (_) {} } }
+  } catch (e) { if (e.name !== 'AbortError') log('Error: ' + e.message, 'err'); } finally { setRunning(false); }
+}
+function handle(ev) {
+  switch (ev.type) {
+    case 'STARTED': log('Run ' + ev.runId, 'info'); break;
+    case 'STREAMING_URL': { const f = document.getElementById('live-frame'); f.src = ev.streamingUrl; f.style.display = 'block'; document.getElementById('idle').style.display = 'none'; document.getElementById('ubar').textContent = ev.streamingUrl; document.getElementById('live-ind').style.display = 'flex'; ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on')); log('Live browser stream active', 'ok'); break; }
+    case 'PROGRESS': log(ev.message); break;
+    case 'LOG': log(ev.message, 'info'); break;
+    case 'HEARTBEAT': break;
+    case 'COMPLETE': { const secs = ((Date.now() - t0) / 1000).toFixed(1); log(`Completed in ${secs}s`, 'ok'); document.getElementById('live-ind').style.display = 'none'; if (ev.result) renderResult(ev.result, secs); break; }
+    case 'ERROR': log(ev.message, 'err'); break;
+  }
+}
+function stopAgent() { ctrl?.abort(); log('Stopped', 'err'); setRunning(false); }
+function renderResult(r, secs) {
+  document.getElementById('res-title').textContent = (r.jobTitle || 'Application') + (r.company ? ' · ' + r.company : '');
+  document.getElementById('res-meta').textContent = secs + 's · ' + (r.fieldsCompleted || 0) + ' fields filled';
+  const sb = document.getElementById('res-status'); sb.textContent = r.status || 'unknown'; sb.className = 'status-badge ' + (r.status || 'partial');
+  document.getElementById('res-ats').textContent = r.ats ? 'via ' + r.ats : '';
+  document.getElementById('ig-role').textContent = r.jobTitle || '—'; document.getElementById('ig-co').textContent = r.company || '—'; document.getElementById('ig-fields').textContent = r.fieldsCompleted || '—';
+  if (r.confirmationText) { document.getElementById('conf-text').textContent = r.confirmationText; document.getElementById('conf-box').style.display = 'block'; }
+  if (r.questionsAnswered?.length) { document.getElementById('qa-title').textContent = r.questionsAnswered.length + ' Screening Question' + (r.questionsAnswered.length > 1 ? 's' : '') + ' Answered'; document.getElementById('qa-list').innerHTML = r.questionsAnswered.map(q => `<div class="qa-row"><div class="qa-q">${q.question}</div><div class="qa-a">${q.answer}</div></div>`).join(''); document.getElementById('qa-section').style.display = 'block'; }
+  document.getElementById('res-empty').style.display = 'none'; document.getElementById('res-fill').style.display = 'block'; document.getElementById('res-bdg').classList.add('on');
+  setTimeout(() => tab('result'), 1500);
+}
+function toast(msg) { const el = Object.assign(document.createElement('div'), { className: 'toast', textContent: msg }); document.body.appendChild(el); setTimeout(() => el.remove(), 3000); }
+</script>
+</body>
+</html>
