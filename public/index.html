@@ -31,10 +31,27 @@
     .dot.live{animation:dp 1.2s infinite;background:var(--bl);}
     @keyframes dp{0%,100%{opacity:1}50%{opacity:.3}}
     .ws{display:grid;grid-template-columns:360px 1fr;height:calc(100vh - 48px);}
+
+    /* LEFT PANEL — split into scrollable form + fixed activity log */
     .left{border-right:1px solid var(--br);background:var(--sf);display:flex;flex-direction:column;overflow:hidden;}
     .lscroll{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:20px;}
     .lscroll::-webkit-scrollbar{width:3px;}
     .lscroll::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
+
+    /* ACTIVITY LOG — fixed panel pinned to bottom of left sidebar */
+    .log-panel{flex-shrink:0;height:200px;border-top:1px solid var(--br);display:flex;flex-direction:column;background:var(--bg);}
+    .log-hdr{padding:8px 14px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);flex-shrink:0;}
+    .log-stream{flex:1;overflow-y:auto;padding:0 14px 10px;display:flex;flex-direction:column;gap:2px;}
+    .log-stream::-webkit-scrollbar{width:2px;}
+    .log-stream::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
+    .le{font-family:var(--mo);font-size:11px;color:var(--t2);padding:1px 0;display:flex;gap:8px;align-items:baseline;animation:li .15s ease;}
+    @keyframes li{from{opacity:0;transform:translateY(2px);}to{opacity:1;transform:none;}}
+    .le .sym{color:var(--t3);flex-shrink:0;width:10px;text-align:center;}
+    .le .ts{color:var(--t3);font-size:10px;flex-shrink:0;}
+    .le.info .sym{color:var(--bl);}
+    .le.ok{color:var(--gn);}.le.ok .sym{color:var(--gn);}
+    .le.err{color:var(--rd);}.le.err .sym{color:var(--rd);}
+
     .sec{display:flex;flex-direction:column;gap:10px;}
     .sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);}
     .row{display:grid;gap:8px;}
@@ -57,14 +74,7 @@
     .btn-stop:hover{border-color:var(--rd);color:var(--rd);}
     .ats-row{display:flex;flex-wrap:wrap;gap:5px;}
     .ats-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--br2);color:var(--t2);background:var(--s3);}
-    .log-wrap{flex:1;min-height:120px;display:flex;flex-direction:column;}
-    .log-hdr{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:8px;}
-    .log-stream{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px;max-height:200px;}
-    .log-stream::-webkit-scrollbar{width:2px;}
-    .le{font-family:var(--mo);font-size:11px;color:var(--t2);padding:2px 0;display:flex;gap:8px;align-items:baseline;animation:li .2s ease;}
-    @keyframes li{from{opacity:0;transform:translateY(2px);}to{opacity:1;transform:none;}}
-    .le .sym{color:var(--t3);flex-shrink:0;width:10px;text-align:center;}
-    .le.info .sym{color:var(--bl);}.le.ok{color:var(--gn);}.le.ok .sym{color:var(--gn);}.le.err{color:var(--rd);}.le.err .sym{color:var(--rd);}
+
     .right{display:flex;flex-direction:column;overflow:hidden;}
     .tabs{display:flex;border-bottom:1px solid var(--br);background:var(--sf);padding:0 4px;flex-shrink:0;}
     .tab{padding:12px 16px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:1px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;user-select:none;}
@@ -105,6 +115,7 @@
     .status-badge.submitted{background:var(--gnd);color:var(--gn);border:1px solid rgba(22,163,74,.25);}
     .status-badge.error{background:var(--rdd);color:var(--rd);border:1px solid rgba(220,38,38,.25);}
     .status-badge.partial{background:var(--amd);color:var(--am);border:1px solid rgba(217,119,6,.25);}
+    .status-badge.unknown{background:var(--s3);color:var(--t2);border:1px solid var(--br2);}
     .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;margin-bottom:20px;}
     .ig{background:var(--s2);padding:12px 14px;border-right:1px solid var(--br);}
     .ig:last-child{border-right:none;}
@@ -112,7 +123,7 @@
     .ig-v{font-size:13px;font-weight:500;color:var(--tx);}
     .conf-box{background:var(--s2);border:1px solid var(--br);border-radius:var(--rl);padding:14px 16px;margin-bottom:20px;}
     .conf-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:6px;}
-    .conf-text{font-size:13px;color:var(--tx);line-height:1.5;}
+    .conf-text{font-size:13px;color:var(--tx);line-height:1.6;white-space:pre-wrap;}
     .qa-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:10px;}
     .qa-list{display:flex;flex-direction:column;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;}
     .qa-row{padding:12px 14px;border-bottom:1px solid var(--br);background:var(--s2);}
@@ -135,6 +146,7 @@
 </header>
 <div class="ws">
   <div class="left">
+    <!-- Scrollable form -->
     <div class="lscroll">
       <div class="sec">
         <div class="sec-title">Job</div>
@@ -172,12 +184,17 @@
         <div class="fg"><label class="fl">Brief Bio</label><textarea id="p-bio">CS & AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea></div>
         <div class="fg"><label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label><textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea></div>
       </div>
-      <div class="log-wrap">
-        <div class="log-hdr">Activity</div>
-        <div class="log-stream" id="log"><div class="le"><span class="sym">&middot;</span><span>Waiting for input</span></div></div>
+    </div>
+
+    <!-- Activity log — fixed panel at the bottom, always visible -->
+    <div class="log-panel">
+      <div class="log-hdr">Activity</div>
+      <div class="log-stream" id="log">
+        <div class="le"><span class="sym">·</span><span>Waiting for input</span></div>
       </div>
     </div>
   </div>
+
   <div class="right">
     <div class="tabs">
       <div class="tab on" data-p="live" onclick="tab('live')">Live Browser</div>
@@ -219,6 +236,7 @@
           <div class="ig"><div class="ig-k">Fields filled</div><div class="ig-v" id="ig-fields">—</div></div>
         </div>
         <div class="conf-box" id="conf-box" style="display:none"><div class="conf-label">Confirmation</div><div class="conf-text" id="conf-text"></div></div>
+        <div class="conf-box" id="notes-box" style="display:none"><div class="conf-label">Agent Notes</div><div class="conf-text" id="notes-text"></div></div>
         <div id="qa-section" style="display:none">
           <div class="qa-title" id="qa-title">Screening Questions Answered</div>
           <div class="qa-list" id="qa-list"></div>
@@ -230,12 +248,66 @@
 <script>
 const API = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:3001' : '';
 let ctrl = null, t0 = 0;
-function tab(name) { document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name)); document.querySelectorAll('.pane').forEach(p => p.classList.remove('on')); document.getElementById('pane-' + name).classList.add('on'); }
-function log(msg, type = '') { const sym = { info: '→', ok: '✓', err: '×' }[type] || '·'; const el = document.createElement('div'); el.className = 'le ' + type; el.innerHTML = `<span class="sym">${sym}</span><span>${msg}</span>`; const s = document.getElementById('log'); s.appendChild(el); s.scrollTop = s.scrollHeight; }
+
+function tab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.getElementById('pane-' + name).classList.add('on');
+}
+
+function ts() {
+  const d = new Date(); 
+  return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function log(msg, type = '') {
+  if (!msg || !msg.trim()) return;
+  const sym = { info: '→', ok: '✓', err: '×' }[type] || '·';
+  const el = document.createElement('div');
+  el.className = 'le ' + type;
+  el.innerHTML = `<span class="sym">${sym}</span><span class="ts">${ts()}</span><span>${msg}</span>`;
+  const s = document.getElementById('log');
+  s.appendChild(el);
+  s.scrollTop = s.scrollHeight;
+}
+
 function clearLog() { document.getElementById('log').innerHTML = ''; }
-function setRunning(on) { document.getElementById('btn-go').disabled = on; document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply'; document.getElementById('spin').style.display = on ? 'block' : 'none'; document.getElementById('btn-stop').style.display = on ? 'block' : 'none'; document.getElementById('hdr-dot').classList.toggle('live', on); document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready'; }
-function resetFrame() { const f = document.getElementById('live-frame'); f.style.display = 'none'; f.src = ''; document.getElementById('idle').style.display = 'flex'; document.getElementById('ubar').textContent = 'No active session'; document.getElementById('live-ind').style.display = 'none'; ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on')); }
-function getProfile() { return { name: document.getElementById('p-name').value.trim(), email: document.getElementById('p-email').value.trim(), phone: document.getElementById('p-phone').value.trim(), location: document.getElementById('p-loc').value.trim(), linkedin: document.getElementById('p-li').value.trim(), github: document.getElementById('p-gh').value.trim(), experience: document.getElementById('p-exp').value.trim(), education: document.getElementById('p-edu').value.trim(), skills: document.getElementById('p-skills').value.trim(), resumeUrl: document.getElementById('p-resume').value.trim(), bio: document.getElementById('p-bio').value.trim(), coverLetter: document.getElementById('p-cl').value.trim() }; }
+
+function setRunning(on) {
+  document.getElementById('btn-go').disabled = on;
+  document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply';
+  document.getElementById('spin').style.display = on ? 'block' : 'none';
+  document.getElementById('btn-stop').style.display = on ? 'block' : 'none';
+  document.getElementById('hdr-dot').classList.toggle('live', on);
+  document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
+}
+
+function resetFrame() {
+  const f = document.getElementById('live-frame');
+  f.style.display = 'none'; f.src = '';
+  document.getElementById('idle').style.display = 'flex';
+  document.getElementById('ubar').textContent = 'No active session';
+  document.getElementById('live-ind').style.display = 'none';
+  ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on'));
+}
+
+function getProfile() {
+  return {
+    name: document.getElementById('p-name').value.trim(),
+    email: document.getElementById('p-email').value.trim(),
+    phone: document.getElementById('p-phone').value.trim(),
+    location: document.getElementById('p-loc').value.trim(),
+    linkedin: document.getElementById('p-li').value.trim(),
+    github: document.getElementById('p-gh').value.trim(),
+    experience: document.getElementById('p-exp').value.trim(),
+    education: document.getElementById('p-edu').value.trim(),
+    skills: document.getElementById('p-skills').value.trim(),
+    resumeUrl: document.getElementById('p-resume').value.trim(),
+    bio: document.getElementById('p-bio').value.trim(),
+    coverLetter: document.getElementById('p-cl').value.trim()
+  };
+}
+
 async function apply() {
   const jobUrl = document.getElementById('job-url').value.trim();
   const profile = getProfile();
@@ -243,38 +315,131 @@ async function apply() {
   if (!profile.name) return toast('Name is required');
   if (!profile.email) return toast('Email is required');
   clearLog(); setRunning(true); resetFrame(); t0 = Date.now();
-  document.getElementById('res-empty').style.display = 'flex'; document.getElementById('res-fill').style.display = 'none'; document.getElementById('res-bdg').classList.remove('on');
-  log('Launching agent for: ' + jobUrl, 'info'); tab('live'); ctrl = new AbortController();
+  document.getElementById('res-empty').style.display = 'flex';
+  document.getElementById('res-fill').style.display = 'none';
+  document.getElementById('res-bdg').classList.remove('on');
+  document.getElementById('conf-box').style.display = 'none';
+  document.getElementById('notes-box').style.display = 'none';
+  document.getElementById('qa-section').style.display = 'none';
+  log('Launching agent for: ' + jobUrl, 'info');
+  tab('live');
+  ctrl = new AbortController();
   try {
-    const res = await fetch(`${API}/api/apply`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jobUrl, profile }), signal: ctrl.signal });
-    const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
-    while (true) { const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true }); const lines = buf.split('\n'); buf = lines.pop(); for (const line of lines) { if (!line.startsWith('data: ')) continue; try { handle(JSON.parse(line.slice(6))); } catch (_) {} } }
-  } catch (e) { if (e.name !== 'AbortError') log('Error: ' + e.message, 'err'); } finally { setRunning(false); }
-}
-function handle(ev) {
-  switch (ev.type) {
-    case 'STARTED': log('Run ' + ev.runId, 'info'); break;
-    case 'STREAMING_URL': { const f = document.getElementById('live-frame'); f.src = ev.streamingUrl; f.style.display = 'block'; document.getElementById('idle').style.display = 'none'; document.getElementById('ubar').textContent = ev.streamingUrl; document.getElementById('live-ind').style.display = 'flex'; ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on')); log('Live browser stream active', 'ok'); break; }
-    case 'PROGRESS': log(ev.message); break;
-    case 'LOG': log(ev.message, 'info'); break;
-    case 'HEARTBEAT': break;
-    case 'COMPLETE': { const secs = ((Date.now() - t0) / 1000).toFixed(1); log(`Completed in ${secs}s`, 'ok'); document.getElementById('live-ind').style.display = 'none'; if (ev.result) renderResult(ev.result, secs); break; }
-    case 'ERROR': log(ev.message, 'err'); break;
+    const res = await fetch(`${API}/api/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jobUrl, profile }),
+      signal: ctrl.signal
+    });
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try { handle(JSON.parse(line.slice(6))); } catch (_) {}
+      }
+    }
+  } catch (e) {
+    if (e.name !== 'AbortError') log('Error: ' + e.message, 'err');
+  } finally {
+    setRunning(false);
   }
 }
-function stopAgent() { ctrl?.abort(); log('Stopped', 'err'); setRunning(false); }
-function renderResult(r, secs) {
-  document.getElementById('res-title').textContent = (r.jobTitle || 'Application') + (r.company ? ' · ' + r.company : '');
-  document.getElementById('res-meta').textContent = secs + 's · ' + (r.fieldsCompleted || 0) + ' fields filled';
-  const sb = document.getElementById('res-status'); sb.textContent = r.status || 'unknown'; sb.className = 'status-badge ' + (r.status || 'partial');
-  document.getElementById('res-ats').textContent = r.ats ? 'via ' + r.ats : '';
-  document.getElementById('ig-role').textContent = r.jobTitle || '—'; document.getElementById('ig-co').textContent = r.company || '—'; document.getElementById('ig-fields').textContent = r.fieldsCompleted || '—';
-  if (r.confirmationText) { document.getElementById('conf-text').textContent = r.confirmationText; document.getElementById('conf-box').style.display = 'block'; }
-  if (r.questionsAnswered?.length) { document.getElementById('qa-title').textContent = r.questionsAnswered.length + ' Screening Question' + (r.questionsAnswered.length > 1 ? 's' : '') + ' Answered'; document.getElementById('qa-list').innerHTML = r.questionsAnswered.map(q => `<div class="qa-row"><div class="qa-q">${q.question}</div><div class="qa-a">${q.answer}</div></div>`).join(''); document.getElementById('qa-section').style.display = 'block'; }
-  document.getElementById('res-empty').style.display = 'none'; document.getElementById('res-fill').style.display = 'block'; document.getElementById('res-bdg').classList.add('on');
-  setTimeout(() => tab('result'), 1500);
+
+function handle(ev) {
+  switch (ev.type) {
+    case 'STARTED':
+      log('Run ' + ev.runId, 'info'); break;
+    case 'STREAMING_URL': {
+      const f = document.getElementById('live-frame');
+      f.src = ev.streamingUrl; f.style.display = 'block';
+      document.getElementById('idle').style.display = 'none';
+      document.getElementById('ubar').textContent = ev.streamingUrl;
+      document.getElementById('live-ind').style.display = 'flex';
+      ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on'));
+      log('Live browser stream active', 'ok');
+      break;
+    }
+    case 'PROGRESS': log(ev.message); break;
+    case 'LOG':       log(ev.message, 'info'); break;
+    case 'HEARTBEAT': break;
+    case 'COMPLETE': {
+      const secs = ((Date.now() - t0) / 1000).toFixed(1);
+      log('Completed in ' + secs + 's', 'ok');
+      document.getElementById('live-ind').style.display = 'none';
+      // Always render — even if result is empty/null, show something
+      renderResult(ev.result || {}, secs);
+      break;
+    }
+    case 'ERROR':
+      log(ev.message, 'err');
+      // If we get an error after the agent ran, still switch to result to show what we have
+      if (document.getElementById('res-fill').style.display === 'block') tab('result');
+      break;
+  }
 }
-function toast(msg) { const el = Object.assign(document.createElement('div'), { className: 'toast', textContent: msg }); document.body.appendChild(el); setTimeout(() => el.remove(), 3000); }
+
+function stopAgent() { ctrl?.abort(); log('Stopped', 'err'); setRunning(false); }
+
+function renderResult(r, secs) {
+  // Title + meta
+  const title = (r.jobTitle || 'Application Result') + (r.company ? ' · ' + r.company : '');
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-meta').textContent = secs + 's · ' + (r.fieldsCompleted || 0) + ' fields filled';
+
+  // Status badge
+  const sb = document.getElementById('res-status');
+  const status = r.status || 'unknown';
+  sb.textContent = status;
+  sb.className = 'status-badge ' + status;
+
+  // ATS
+  document.getElementById('res-ats').textContent = r.ats ? 'via ' + r.ats : '';
+
+  // Info grid
+  document.getElementById('ig-role').textContent    = r.jobTitle || '—';
+  document.getElementById('ig-co').textContent      = r.company  || '—';
+  document.getElementById('ig-fields').textContent  = r.fieldsCompleted != null ? r.fieldsCompleted : '—';
+
+  // Confirmation text
+  if (r.confirmationText) {
+    document.getElementById('conf-text').textContent = r.confirmationText;
+    document.getElementById('conf-box').style.display = 'block';
+  }
+
+  // Agent notes (always show if present)
+  if (r.notes) {
+    document.getElementById('notes-text').textContent = r.notes;
+    document.getElementById('notes-box').style.display = 'block';
+  }
+
+  // Q&A
+  if (r.questionsAnswered && r.questionsAnswered.length) {
+    document.getElementById('qa-title').textContent =
+      r.questionsAnswered.length + ' Screening Question' + (r.questionsAnswered.length > 1 ? 's' : '') + ' Answered';
+    document.getElementById('qa-list').innerHTML = r.questionsAnswered
+      .map(q => `<div class="qa-row"><div class="qa-q">${q.question}</div><div class="qa-a">${q.answer}</div></div>`)
+      .join('');
+    document.getElementById('qa-section').style.display = 'block';
+  }
+
+  // Show result panel and switch tab immediately
+  document.getElementById('res-empty').style.display = 'none';
+  document.getElementById('res-fill').style.display = 'block';
+  document.getElementById('res-bdg').classList.add('on');
+  tab('result');
+}
+
+function toast(msg) {
+  const el = Object.assign(document.createElement('div'), { className: 'toast', textContent: msg });
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
 </script>
 </body>
 </html>
