@@ -60,9 +60,23 @@ export default async function handler(req, res) {
             case 'PROGRESS':      emit({ type: 'PROGRESS', message: ev.purpose || ev.message || '' }); break;
             case 'HEARTBEAT':     emit({ type: 'HEARTBEAT' }); break;
             case 'COMPLETE':
-              ev.status === 'COMPLETED'
-                ? emit({ type: 'COMPLETE', result: ev.resultJson })
-                : emit({ type: 'ERROR', message: ev.error?.message || `Run ended: ${ev.status}` });
+              if (ev.status === 'COMPLETED') {
+                // resultJson may be a string — parse it so the frontend gets a real object
+                let result = ev.resultJson;
+                if (typeof result === 'string') {
+                  try {
+                    // Strip markdown code fences if present
+                    const clean = result.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+                    result = JSON.parse(clean);
+                  } catch (_) {
+                    // If it won't parse, wrap it so the frontend still shows something
+                    result = { status: 'partial', notes: result, fieldsCompleted: 0 };
+                  }
+                }
+                emit({ type: 'COMPLETE', result });
+              } else {
+                emit({ type: 'ERROR', message: ev.error?.message || `Run ended: ${ev.status}` });
+              }
               break;
             default: emit(ev);
           }
