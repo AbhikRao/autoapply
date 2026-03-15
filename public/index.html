@@ -31,14 +31,10 @@
     .dot.live{animation:dp 1.2s infinite;background:var(--bl);}
     @keyframes dp{0%,100%{opacity:1}50%{opacity:.3}}
     .ws{display:grid;grid-template-columns:360px 1fr;height:calc(100vh - 48px);}
-
-    /* LEFT PANEL — split into scrollable form + fixed activity log */
     .left{border-right:1px solid var(--br);background:var(--sf);display:flex;flex-direction:column;overflow:hidden;}
     .lscroll{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:20px;}
     .lscroll::-webkit-scrollbar{width:3px;}
     .lscroll::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
-
-    /* ACTIVITY LOG — fixed panel pinned to bottom of left sidebar */
     .log-panel{flex-shrink:0;height:200px;border-top:1px solid var(--br);display:flex;flex-direction:column;background:var(--bg);}
     .log-hdr{padding:8px 14px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);flex-shrink:0;}
     .log-stream{flex:1;overflow-y:auto;padding:0 14px 10px;display:flex;flex-direction:column;gap:2px;}
@@ -51,7 +47,6 @@
     .le.info .sym{color:var(--bl);}
     .le.ok{color:var(--gn);}.le.ok .sym{color:var(--gn);}
     .le.err{color:var(--rd);}.le.err .sym{color:var(--rd);}
-
     .sec{display:flex;flex-direction:column;gap:10px;}
     .sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);}
     .row{display:grid;gap:8px;}
@@ -70,11 +65,16 @@
     .btn-go:disabled{opacity:.4;cursor:not-allowed;}
     .spin{width:12px;height:12px;border:1.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;display:none;}
     @keyframes sp{to{transform:rotate(360deg);}}
-    .btn-stop{width:100%;padding:7px;background:transparent;border:1px solid var(--br2);border-radius:var(--r);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;display:none;transition:all .12s;}
-    .btn-stop:hover{border-color:var(--rd);color:var(--rd);}
+    /* Stop + Take Control — two-button row, hidden until agent runs */
+    .agent-ctrl{display:none;gap:6px;}
+    .agent-ctrl.on{display:flex;}
+    .btn-stop{flex:1;padding:7px;background:var(--rdd);border:1px solid var(--rd);border-radius:var(--r);color:var(--rd);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;}
+    .btn-stop:hover{background:var(--rd);color:#fff;}
+    .btn-takeover{flex:1;padding:7px;background:transparent;border:1px solid var(--br2);border-radius:var(--r);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .12s;}
+    .btn-takeover:hover{border-color:var(--am);color:var(--am);}
+    .btn-takeover:disabled{opacity:.3;cursor:not-allowed;}
     .ats-row{display:flex;flex-wrap:wrap;gap:5px;}
     .ats-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--br2);color:var(--t2);background:var(--s3);}
-
     .right{display:flex;flex-direction:column;overflow:hidden;}
     .tabs{display:flex;border-bottom:1px solid var(--br);background:var(--sf);padding:0 4px;flex-shrink:0;}
     .tab{padding:12px 16px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:1px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;user-select:none;}
@@ -84,13 +84,17 @@
     .pane{flex:1;display:none;flex-direction:column;overflow:hidden;}
     .pane.on{display:flex;}
     #pane-live{background:#000;}
-    .bbr{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--sf);border-bottom:1px solid var(--br);flex-shrink:0;}
+    .bbr{display:flex;align-items:center;gap:8px;padding:9px 16px;background:var(--sf);border-bottom:1px solid var(--br);flex-shrink:0;}
     .bdots{display:flex;gap:5px;}
     .bd{width:10px;height:10px;border-radius:50%;background:#3a3a3a;}
     .bd.r.on{background:#ff5f57;}.bd.y.on{background:#febc2e;}.bd.g.on{background:#28c840;}
     .ubar{flex:1;background:var(--s3);border:1px solid var(--br);border-radius:5px;padding:4px 12px;font-family:var(--mo);font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .live-ind{font-size:10px;font-weight:600;color:var(--rd);letter-spacing:.5px;display:none;align-items:center;gap:5px;}
+    .live-ind{font-size:10px;font-weight:600;color:var(--rd);letter-spacing:.5px;display:none;align-items:center;gap:5px;flex-shrink:0;}
     .live-dot{width:7px;height:7px;border-radius:50%;background:var(--rd);animation:dp 1s infinite;}
+    /* Take control button in the browser bar */
+    .btn-bbr-ctrl{padding:4px 10px;background:transparent;border:1px solid var(--br2);border-radius:5px;color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;display:none;align-items:center;gap:5px;transition:all .12s;flex-shrink:0;}
+    .btn-bbr-ctrl.on{display:flex;}
+    .btn-bbr-ctrl:hover{border-color:var(--am);color:var(--am);}
     .fw{flex:1;position:relative;overflow:hidden;}
     #live-frame{width:100%;height:100%;border:none;display:none;}
     .idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:40px;}
@@ -146,7 +150,6 @@
 </header>
 <div class="ws">
   <div class="left">
-    <!-- Scrollable form -->
     <div class="lscroll">
       <div class="sec">
         <div class="sec-title">Job</div>
@@ -158,35 +161,40 @@
             </div>
           </div>
           <div class="ats-row"><span class="ats-tag">Greenhouse</span><span class="ats-tag">Lever</span><span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span></div>
-          <button class="btn-stop" id="btn-stop" onclick="stopAgent()">Stop agent</button>
+          <!-- Stop + Take Control — shown only while agent is running -->
+          <div class="agent-ctrl" id="agent-ctrl">
+            <button class="btn-stop" onclick="stopAgent()">⏹ Stop Agent</button>
+            <button class="btn-takeover" id="btn-takeover" onclick="takeControl()" disabled>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Take Control
+            </button>
+          </div>
         </div>
       </div>
       <div class="sec">
         <div class="sec-title">Profile</div>
         <div class="row two">
-          <div class="fg"><label class="fl">Full Name *</label><input type="text" id="p-name" value="Abhik Rao" placeholder="Alex Johnson" /></div>
-          <div class="fg"><label class="fl">Email *</label><input type="email" id="p-email" value="abhikrao1301@gmail.com" placeholder="alex@example.com" /></div>
+          <div class="fg"><label class="fl">Full Name *</label><input type="text" id="p-name" value="Abhik Rao" /></div>
+          <div class="fg"><label class="fl">Email *</label><input type="email" id="p-email" value="abhikrao1301@gmail.com" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">Phone</label><input type="tel" id="p-phone" value="+91 98765 43210" placeholder="+1 555 000 0000" /></div>
-          <div class="fg"><label class="fl">Location</label><input type="text" id="p-loc" value="New Delhi, India" placeholder="San Francisco, CA" /></div>
+          <div class="fg"><label class="fl">Phone</label><input type="tel" id="p-phone" value="+91 98765 43210" /></div>
+          <div class="fg"><label class="fl">Location</label><input type="text" id="p-loc" value="New Delhi, India" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">LinkedIn URL</label><input type="url" id="p-li" value="https://www.linkedin.com/in/abhik-rao-38611b36a/" placeholder="linkedin.com/in/..." /></div>
-          <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" value="https://github.com/AbhikRao" placeholder="github.com/..." /></div>
+          <div class="fg"><label class="fl">LinkedIn URL</label><input type="url" id="p-li" value="https://www.linkedin.com/in/abhik-rao-38611b36a/" /></div>
+          <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" value="https://github.com/AbhikRao" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" value="1" placeholder="e.g. 5 years" /></div>
-          <div class="fg"><label class="fl">Education</label><input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" placeholder="BS Computer Science, MIT" /></div>
+          <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" value="1" /></div>
+          <div class="fg"><label class="fl">Education</label><input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" /></div>
         </div>
-        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures & Algorithms" placeholder="Python, React, Node.js, AWS..." /></div>
-        <div class="fg"><label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional, hosted PDF</span></label><input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" placeholder="https://yoursite.com/resume.pdf" /></div>
+        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures & Algorithms" /></div>
+        <div class="fg"><label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional, hosted PDF</span></label><input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" /></div>
         <div class="fg"><label class="fl">Brief Bio</label><textarea id="p-bio">CS & AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea></div>
         <div class="fg"><label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label><textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea></div>
       </div>
     </div>
-
-    <!-- Activity log — fixed panel at the bottom, always visible -->
     <div class="log-panel">
       <div class="log-hdr">Activity</div>
       <div class="log-stream" id="log">
@@ -205,6 +213,11 @@
         <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
         <div class="ubar" id="ubar">No active session</div>
         <div class="live-ind" id="live-ind"><div class="live-dot"></div>Live</div>
+        <!-- Take Control button in the browser bar for quick access -->
+        <button class="btn-bbr-ctrl" id="btn-bbr-ctrl" onclick="takeControl()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Take Control
+        </button>
       </div>
       <div class="fw">
         <div class="idle" id="idle">
@@ -247,7 +260,7 @@
 </div>
 <script>
 const API = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:3001' : '';
-let ctrl = null, t0 = 0;
+let ctrl = null, t0 = 0, streamingUrl = null;
 
 function tab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
@@ -256,7 +269,7 @@ function tab(name) {
 }
 
 function ts() {
-  const d = new Date(); 
+  const d = new Date();
   return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
@@ -277,9 +290,15 @@ function setRunning(on) {
   document.getElementById('btn-go').disabled = on;
   document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply';
   document.getElementById('spin').style.display = on ? 'block' : 'none';
-  document.getElementById('btn-stop').style.display = on ? 'block' : 'none';
+  document.getElementById('agent-ctrl').classList.toggle('on', on);
   document.getElementById('hdr-dot').classList.toggle('live', on);
   document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
+  if (!on) {
+    // hide take control when agent stops
+    document.getElementById('btn-bbr-ctrl').classList.remove('on');
+    document.getElementById('btn-takeover').disabled = true;
+    streamingUrl = null;
+  }
 }
 
 function resetFrame() {
@@ -314,7 +333,7 @@ async function apply() {
   if (!jobUrl) return toast('Paste a job URL first');
   if (!profile.name) return toast('Name is required');
   if (!profile.email) return toast('Email is required');
-  clearLog(); setRunning(true); resetFrame(); t0 = Date.now();
+  clearLog(); setRunning(true); resetFrame(); t0 = Date.now(); streamingUrl = null;
   document.getElementById('res-empty').style.display = 'flex';
   document.getElementById('res-fill').style.display = 'none';
   document.getElementById('res-bdg').classList.remove('on');
@@ -356,12 +375,16 @@ function handle(ev) {
     case 'STARTED':
       log('Run ' + ev.runId, 'info'); break;
     case 'STREAMING_URL': {
+      streamingUrl = ev.streamingUrl;
       const f = document.getElementById('live-frame');
-      f.src = ev.streamingUrl; f.style.display = 'block';
+      f.src = streamingUrl; f.style.display = 'block';
       document.getElementById('idle').style.display = 'none';
-      document.getElementById('ubar').textContent = ev.streamingUrl;
+      document.getElementById('ubar').textContent = streamingUrl;
       document.getElementById('live-ind').style.display = 'flex';
       ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on'));
+      // Enable Take Control once we have a stream URL
+      document.getElementById('btn-takeover').disabled = false;
+      document.getElementById('btn-bbr-ctrl').classList.add('on');
       log('Live browser stream active', 'ok');
       break;
     }
@@ -372,53 +395,50 @@ function handle(ev) {
       const secs = ((Date.now() - t0) / 1000).toFixed(1);
       log('Completed in ' + secs + 's', 'ok');
       document.getElementById('live-ind').style.display = 'none';
-      // Always render — even if result is empty/null, show something
       renderResult(ev.result || {}, secs);
       break;
     }
     case 'ERROR':
       log(ev.message, 'err');
-      // If we get an error after the agent ran, still switch to result to show what we have
       if (document.getElementById('res-fill').style.display === 'block') tab('result');
       break;
   }
 }
 
-function stopAgent() { ctrl?.abort(); log('Stopped', 'err'); setRunning(false); }
+function stopAgent() {
+  ctrl?.abort();
+  log('Agent stopped by user', 'err');
+  setRunning(false);
+}
+
+function takeControl() {
+  if (!streamingUrl) return toast('No active session yet — wait for the stream to start');
+  // Open the live browser stream in a new tab so the user can interact directly
+  window.open(streamingUrl, '_blank');
+  log('Opened live browser in new tab — you have control', 'ok');
+  toast('Live browser opened in new tab — you can now interact directly');
+}
 
 function renderResult(r, secs) {
-  // Title + meta
   const title = (r.jobTitle || 'Application Result') + (r.company ? ' · ' + r.company : '');
   document.getElementById('res-title').textContent = title;
   document.getElementById('res-meta').textContent = secs + 's · ' + (r.fieldsCompleted || 0) + ' fields filled';
-
-  // Status badge
   const sb = document.getElementById('res-status');
   const status = r.status || 'unknown';
   sb.textContent = status;
   sb.className = 'status-badge ' + status;
-
-  // ATS
   document.getElementById('res-ats').textContent = r.ats ? 'via ' + r.ats : '';
-
-  // Info grid
-  document.getElementById('ig-role').textContent    = r.jobTitle || '—';
-  document.getElementById('ig-co').textContent      = r.company  || '—';
-  document.getElementById('ig-fields').textContent  = r.fieldsCompleted != null ? r.fieldsCompleted : '—';
-
-  // Confirmation text
+  document.getElementById('ig-role').textContent   = r.jobTitle || '—';
+  document.getElementById('ig-co').textContent     = r.company  || '—';
+  document.getElementById('ig-fields').textContent = r.fieldsCompleted != null ? r.fieldsCompleted : '—';
   if (r.confirmationText) {
     document.getElementById('conf-text').textContent = r.confirmationText;
     document.getElementById('conf-box').style.display = 'block';
   }
-
-  // Agent notes (always show if present)
   if (r.notes) {
     document.getElementById('notes-text').textContent = r.notes;
     document.getElementById('notes-box').style.display = 'block';
   }
-
-  // Q&A
   if (r.questionsAnswered && r.questionsAnswered.length) {
     document.getElementById('qa-title').textContent =
       r.questionsAnswered.length + ' Screening Question' + (r.questionsAnswered.length > 1 ? 's' : '') + ' Answered';
@@ -427,8 +447,6 @@ function renderResult(r, secs) {
       .join('');
     document.getElementById('qa-section').style.display = 'block';
   }
-
-  // Show result panel and switch tab immediately
   document.getElementById('res-empty').style.display = 'none';
   document.getElementById('res-fill').style.display = 'block';
   document.getElementById('res-bdg').classList.add('on');
