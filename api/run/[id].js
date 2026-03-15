@@ -1,13 +1,15 @@
-// api/run/[id].js — Vercel serverless function
-// Polls a TinyFish run by ID. Returns status + parsed result object.
-
+// api/run/[id].js — poll a TinyFish run by ID
 const KEY = process.env.TINYFISH_API_KEY;
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();
   if (!KEY) return res.status(500).json({ error: 'TINYFISH_API_KEY not set' });
 
-  const { id } = req.query;
+  // id comes from query string (injected by vercel.json route: ?id=$1)
+  // fall back to parsing the URL path directly if query is missing
+  const id = req.query.id ||
+    (req.url || '').replace(/^.*\/api\/run\//, '').split('?')[0];
+
   if (!id) return res.status(400).json({ error: 'run id required' });
 
   let r;
@@ -25,11 +27,8 @@ export default async function handler(req, res) {
   }
 
   const data = await r.json();
-
-  // Normalise status to uppercase
   if (data.status) data.status = data.status.toUpperCase();
 
-  // Parse resultJson into a proper object if present
   if (data.resultJson != null) {
     if (typeof data.resultJson === 'string') {
       try {
@@ -53,18 +52,15 @@ export default async function handler(req, res) {
     }
   }
 
-  // Surface error info cleanly for terminal states
-  if (['FAILED', 'ERROR', 'CANCELLED'].includes(data.status)) {
-    if (!data.result) {
-      data.result = {
-        status: 'error',
-        notes: data.error?.message || data.errorMessage || `Run ended with status: ${data.status}`,
-        fieldsFilled: [],
-        fieldsSkipped: [],
-        questionsAnswered: [],
-        fieldsCompleted: 0,
-      };
-    }
+  if (['FAILED', 'ERROR', 'CANCELLED'].includes(data.status) && !data.result) {
+    data.result = {
+      status: 'error',
+      notes: data.error?.message || data.errorMessage || `Run ended: ${data.status}`,
+      fieldsFilled: [],
+      fieldsSkipped: [],
+      questionsAnswered: [],
+      fieldsCompleted: 0,
+    };
   }
 
   return res.json(data);
