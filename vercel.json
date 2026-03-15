@@ -1,7 +1,7 @@
 {
   "version": 2,
   "outputDirectory": "public",
-  "functions": { "api/**/*.js": { "maxDuration": 60 } },
+  "functions": { "api/**/*.js": { "maxDuration": 300 } },
   "routes": [
     { "src": "/api/apply",    "dest": "/api/apply.js" },
     { "src": "/api/run/(.*)", "dest": "/api/run/[id].js" },
