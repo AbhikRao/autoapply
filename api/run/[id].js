@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   let r;
   try {
-    r = await fetch(`https://agent.tinyfish.ai/v1/runs/${id}`, {
+    r = await fetch(`https://agent.tinyfish.ai/v1/automation/runs/${id}`, {
       headers: { 'X-API-Key': KEY },
     });
   } catch (err) {
@@ -20,7 +20,8 @@ export default async function handler(req, res) {
   }
 
   if (!r.ok) {
-    return res.status(r.status).json({ error: `TinyFish returned ${r.status}` });
+    const body = await r.text().catch(() => '');
+    return res.status(r.status).json({ error: `TinyFish ${r.status}: ${body}` });
   }
 
   const data = await r.json();
@@ -32,14 +33,12 @@ export default async function handler(req, res) {
   if (data.resultJson != null) {
     if (typeof data.resultJson === 'string') {
       try {
-        // Strip markdown code fences the model sometimes wraps around JSON
         const clean = data.resultJson
           .replace(/^```(?:json)?\s*/i, '')
           .replace(/\s*```\s*$/i, '')
           .trim();
         data.result = JSON.parse(clean);
       } catch (_) {
-        // Parsing failed — surface the raw text so the UI can still show something
         data.result = {
           status: 'partial',
           notes: data.resultJson,
@@ -54,8 +53,8 @@ export default async function handler(req, res) {
     }
   }
 
-  // Surface error info cleanly
-  if (data.status === 'FAILED' || data.status === 'ERROR' || data.status === 'CANCELLED') {
+  // Surface error info cleanly for terminal states
+  if (['FAILED', 'ERROR', 'CANCELLED'].includes(data.status)) {
     if (!data.result) {
       data.result = {
         status: 'error',
