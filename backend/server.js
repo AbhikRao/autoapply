@@ -1,6 +1,6 @@
 // backend/server.js
 // Local dev server — mirrors the Vercel api/ functions exactly.
-// Run with `npm start`, open public/index.html in your browser.
+// Run with `npm start`, then open http://localhost:3001
 
 import express from 'express';
 import cors from 'cors';
@@ -8,88 +8,48 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const app = express();
-const KEY = process.env.TINYFISH_API_KEY;
+const app  = express();
+const KEY  = process.env.TINYFISH_API_KEY;
 
-if (!KEY) { console.error('Missing TINYFISH_API_KEY in .env'); process.exit(1); }
+if (!KEY) { console.error('\n  ERROR: Missing TINYFISH_API_KEY in .env\n'); process.exit(1); }
 
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(express.static('public'));
 
-const emit = (res, data) => res.write('data: ' + JSON.stringify(data) + '\n\n');
-
-function buildGoal(jobUrl, p) {
-  const resumeNote = p.resumeUrl
-    ? `Resume hosted at: ${p.resumeUrl} — navigate there to download, then upload to the file input.`
-    : 'No resume URL provided — skip optional file upload fields.';
-
-  return `You are an expert job application assistant. Complete a real job application on behalf of the applicant.
-
-TARGET URL: ${jobUrl}
-
-APPLICANT:
-Name: ${p.name} | Email: ${p.email} | Phone: ${p.phone || 'N/A'}
-Location: ${p.location || 'N/A'} | LinkedIn: ${p.linkedin || 'N/A'} | GitHub: ${p.github || 'N/A'}
-Experience: ${p.experience || 'N/A'} | Education: ${p.education || 'N/A'}
-Skills: ${p.skills || 'N/A'}
-Bio: ${p.bio || 'N/A'}
-Cover letter: ${p.coverLetter || 'Concise and professional. Highlight relevant skills and enthusiasm.'}
-${resumeNote}
-
-STEPS:
-1. Load the URL. Read the job description (role, company, required skills).
-2. Find and click Apply / Apply Now.
-3. Fill every field using the profile above.
-4. Answer custom screening questions thoughtfully (2-4 sentences, tailored to the JD).
-5. For dropdowns (work auth, experience level) pick the best option.
-6. Navigate multi-page forms by clicking Next / Continue.
-7. Submit the application.
-8. Wait for the confirmation page.
-
-Return ONLY JSON:
-{
-  "jobTitle": "",
-  "company": "",
-  "ats": "Greenhouse|Lever|Workday|LinkedIn|Direct",
-  "status": "submitted|error|partial",
-  "confirmationText": null,
-  "questionsAnswered": [{ "question": "", "answer": "" }],
-  "fieldsCompleted": 0,
-  "notes": ""
-}`.trim();
-}
-
+// ─── POST /api/apply ────────────────────────────────────────────────────────
+// Starts TinyFish run, reads until runId + streamingUrl, returns JSON.
 app.post('/api/apply', async (req, res) => {
   const { jobUrl, profile } = req.body;
   if (!jobUrl) return res.status(400).json({ error: 'jobUrl required' });
-  if (!profile?.name || !profile?.email) return res.status(400).json({ error: 'profile.name and profile.email required' });
+  if (!profile?.name || !profile?.email)
+    return res.status(400).json({ error: 'profile.name and profile.email required' });
 
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no');
-  res.flushHeaders();
+  const goal = buildGoal(jobUrl, profile);
 
+  let upstream;
   try {
-    emit(res, { type: 'LOG', message: 'Launching agent for: ' + jobUrl });
-
-    const upstream = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
+    upstream = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
       method: 'POST',
       headers: { 'X-API-Key': KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: jobUrl, goal: buildGoal(jobUrl, profile), browser_profile: 'stealth' }),
+      body: JSON.stringify({ url: jobUrl, goal, browser_profile: 'stealth' }),
     });
+  } catch (err) {
+    return res.status(502).json({ error: 'Failed to reach TinyFish: ' + err.message });
+  }
 
-    if (!upstream.ok) {
-      emit(res, { type: 'ERROR', message: `TinyFish ${upstream.status}: ${await upstream.text()}` });
-      return res.end();
-    }
+  if (!upstream.ok) {
+    const text = await upstream.text().catch(() => '');
+    return res.status(502).json({ error: `TinyFish ${upstream.status}: ${text}` });
+  }
 
-    const reader = upstream.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '';
+  const reader = upstream.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '', runId = null, streamingUrl = null, agentError = null;
 
-    while (true) {
+  try {
+    const deadline = Date.now() + 20000;
+    outer: while (Date.now() < deadline) {
       const { done, value } = await reader.read();
       if (done) break;
       buf += dec.decode(value, { stream: true });
@@ -98,25 +58,110 @@ app.post('/api/apply', async (req, res) => {
         if (!line.startsWith('data: ')) continue;
         try {
           const ev = JSON.parse(line.slice(6).trim());
-          switch (ev.type) {
-            case 'STARTED':       emit(res, { type: 'STARTED', runId: ev.runId }); break;
-            case 'STREAMING_URL': emit(res, { type: 'STREAMING_URL', streamingUrl: ev.streamingUrl }); break;
-            case 'PROGRESS':      emit(res, { type: 'PROGRESS', message: ev.purpose || ev.message || '' }); break;
-            case 'HEARTBEAT':     emit(res, { type: 'HEARTBEAT' }); break;
-            case 'COMPLETE':
-              ev.status === 'COMPLETED'
-                ? emit(res, { type: 'COMPLETE', result: ev.resultJson })
-                : emit(res, { type: 'ERROR', message: ev.error?.message || `Run ${ev.status}` });
-              break;
-            default: emit(res, ev);
-          }
+          if (ev.type === 'STARTED')       runId = ev.runId;
+          if (ev.type === 'STREAMING_URL') streamingUrl = ev.streamingUrl;
+          if (ev.type === 'ERROR')         { agentError = ev.message; break outer; }
+          if (ev.type === 'COMPLETE')      break outer;
+          if (runId && streamingUrl)       break outer;
         } catch (_) {}
       }
     }
-  } catch (err) {
-    if (err.name !== 'AbortError') emit(res, { type: 'ERROR', message: err.message });
-  } finally { res.end(); }
+  } finally {
+    reader.cancel().catch(() => {});
+  }
+
+  if (agentError) return res.status(502).json({ error: agentError });
+  if (!runId)     return res.status(502).json({ error: 'Agent did not return a run ID.' });
+
+  res.json({ runId, streamingUrl });
 });
+
+// ─── GET /api/run/:id ────────────────────────────────────────────────────────
+// Polls TinyFish run status. Returns status + parsed result.
+app.get('/api/run/:id', async (req, res) => {
+  const { id } = req.params;
+  let r;
+  try {
+    r = await fetch(`https://agent.tinyfish.ai/v1/runs/${id}`, {
+      headers: { 'X-API-Key': KEY },
+    });
+  } catch (err) {
+    return res.status(502).json({ error: 'Failed to reach TinyFish: ' + err.message });
+  }
+
+  if (!r.ok) return res.status(r.status).json({ error: `TinyFish ${r.status}` });
+
+  const data = await r.json();
+  if (data.status) data.status = data.status.toUpperCase();
+
+  if (data.resultJson != null) {
+    if (typeof data.resultJson === 'string') {
+      try {
+        const clean = data.resultJson
+          .replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+        data.result = JSON.parse(clean);
+      } catch (_) {
+        data.result = { status: 'partial', notes: data.resultJson, fieldsFilled: [], fieldsSkipped: [], questionsAnswered: [], fieldsCompleted: 0 };
+      }
+    } else {
+      data.result = data.resultJson;
+    }
+  }
+
+  if (!data.result && (data.status === 'FAILED' || data.status === 'ERROR' || data.status === 'CANCELLED')) {
+    data.result = { status: 'error', notes: data.error?.message || `Run ended: ${data.status}`, fieldsFilled: [], fieldsSkipped: [], questionsAnswered: [], fieldsCompleted: 0 };
+  }
+
+  res.json(data);
+});
+
+function buildGoal(jobUrl, p) {
+  const resumeInstruction = p.resumeUrl
+    ? `RESUME UPLOAD — for the resume/CV field:\n  a) Click Attach/Upload.\n  b) If a URL input is shown, paste: ${p.resumeUrl}\n  c) If only "Enter manually" exists, paste ONLY this URL: ${p.resumeUrl} — do NOT type the applicant profile in this field.`
+    : 'RESUME: No resume URL provided — skip the file upload field if not required.';
+
+  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant below.
+
+TARGET JOB URL: ${jobUrl}
+
+APPLICANT PROFILE:
+- Full name: ${p.name}
+- Email: ${p.email}
+- Phone: ${p.phone || 'not provided'}
+- Location: ${p.location || 'not provided'}
+- LinkedIn: ${p.linkedin || 'not provided'}
+- GitHub: ${p.github || 'not provided'}
+- Experience: ${p.experience || 'not provided'}
+- Education: ${p.education || 'not provided'}
+- Skills: ${p.skills || 'not provided'}
+- Bio: ${p.bio || 'not provided'}
+- Cover letter style: ${p.coverLetter || 'Concise, professional, highlight relevant skills.'}
+
+${resumeInstruction}
+
+INSTRUCTIONS:
+1. Navigate to the job URL. Read the full job description.
+2. Click Apply. Follow redirects to the ATS.
+3. Fill every field using the profile above.
+4. Answer screening questions thoughtfully (2-4 sentences, tailored to the JD).
+5. For dropdowns: select the best match.
+6. For multi-page forms: click Next/Continue after each page.
+7. Submit. Wait for confirmation page.
+
+Return ONLY valid JSON (no markdown fences, no extra text):
+{
+  "jobTitle": "<exact job title>",
+  "company": "<company name>",
+  "ats": "<Greenhouse|Lever|Workday|LinkedIn|Direct|Other>",
+  "status": "<submitted|partial|error>",
+  "confirmationText": "<confirmation message after submit, or null>",
+  "fieldsFilled": [ { "field": "<label>", "value": "<value entered>" } ],
+  "fieldsSkipped": [ { "field": "<label>", "reason": "<why skipped>" } ],
+  "questionsAnswered": [ { "question": "<question>", "answer": "<answer>" } ],
+  "fieldsCompleted": <integer>,
+  "notes": "<observations and issues>"
+}`.trim();
+}
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`\n  AutoApply  →  http://localhost:${PORT}\n`));

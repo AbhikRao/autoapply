@@ -1,7 +1,7 @@
 // api/apply.js — Vercel serverless function
-// Receives a job URL + applicant profile, launches a TinyFish browser agent
-// that navigates the real application form, fills it, and submits.
-// Relays the live SSE event stream back to the browser.
+// Starts a TinyFish run and returns {runId, streamingUrl} immediately.
+// Does NOT relay the full SSE stream — that would hit Vercel's 60s timeout.
+// The frontend polls /api/run/[id] until the agent finishes.
 
 const KEY = process.env.TINYFISH_API_KEY;
 
@@ -11,40 +11,36 @@ export default async function handler(req, res) {
 
   const { jobUrl, profile } = req.body;
   if (!jobUrl) return res.status(400).json({ error: 'jobUrl required' });
-  if (!profile?.name || !profile?.email) return res.status(400).json({ error: 'profile.name and profile.email required' });
+  if (!profile?.name || !profile?.email)
+    return res.status(400).json({ error: 'profile.name and profile.email required' });
 
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no');
-  res.flushHeaders();
-
-  const emit = (data) => res.write('data: ' + JSON.stringify(data) + '\n\n');
   const goal = buildGoal(jobUrl, profile);
 
+  let upstream;
   try {
-    emit({ type: 'LOG', message: 'Launching agent for: ' + jobUrl });
-
-    const upstream = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
+    upstream = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
       method: 'POST',
       headers: { 'X-API-Key': KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        url: jobUrl,
-        goal,
-        browser_profile: 'stealth',
-      }),
+      body: JSON.stringify({ url: jobUrl, goal, browser_profile: 'stealth' }),
     });
+  } catch (err) {
+    return res.status(502).json({ error: 'Failed to reach TinyFish: ' + err.message });
+  }
 
-    if (!upstream.ok) {
-      emit({ type: 'ERROR', message: `TinyFish ${upstream.status}: ${await upstream.text()}` });
-      return res.end();
-    }
+  if (!upstream.ok) {
+    const text = await upstream.text().catch(() => '');
+    return res.status(502).json({ error: `TinyFish ${upstream.status}: ${text}` });
+  }
 
-    const reader = upstream.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '';
+  // Read SSE events only until we have runId + streamingUrl (arrives in ~2-3s).
+  // Then close the upstream stream — the agent keeps running on TinyFish servers.
+  const reader = upstream.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '', runId = null, streamingUrl = null, agentError = null;
 
-    while (true) {
+  try {
+    const deadline = Date.now() + 20000; // 20s max to get startup events
+    outer: while (Date.now() < deadline) {
       const { done, value } = await reader.read();
       if (done) break;
       buf += dec.decode(value, { stream: true });
@@ -54,53 +50,30 @@ export default async function handler(req, res) {
         if (!line.startsWith('data: ')) continue;
         try {
           const ev = JSON.parse(line.slice(6).trim());
-          switch (ev.type) {
-            case 'STARTED':       emit({ type: 'STARTED', runId: ev.runId }); break;
-            case 'STREAMING_URL': emit({ type: 'STREAMING_URL', streamingUrl: ev.streamingUrl }); break;
-            case 'PROGRESS':      emit({ type: 'PROGRESS', message: ev.purpose || ev.message || '' }); break;
-            case 'HEARTBEAT':     emit({ type: 'HEARTBEAT' }); break;
-            case 'COMPLETE':
-              if (ev.status === 'COMPLETED') {
-                let result = ev.resultJson;
-                if (typeof result === 'string') {
-                  try {
-                    const clean = result.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-                    result = JSON.parse(clean);
-                  } catch (_) {
-                    result = { status: 'partial', notes: result, fieldsCompleted: 0 };
-                  }
-                }
-                emit({ type: 'COMPLETE', result });
-              } else {
-                emit({ type: 'ERROR', message: ev.error?.message || `Run ended: ${ev.status}` });
-              }
-              break;
-            default: emit(ev);
-          }
+          if (ev.type === 'STARTED')        runId = ev.runId;
+          if (ev.type === 'STREAMING_URL')  streamingUrl = ev.streamingUrl;
+          if (ev.type === 'ERROR')          { agentError = ev.message; break outer; }
+          if (ev.type === 'COMPLETE')       break outer; // very fast run
+          if (runId && streamingUrl)        break outer;
         } catch (_) {}
       }
     }
-  } catch (err) {
-    if (err.name !== 'AbortError') emit({ type: 'ERROR', message: err.message });
   } finally {
-    res.end();
+    reader.cancel().catch(() => {});
   }
+
+  if (agentError) return res.status(502).json({ error: agentError });
+  if (!runId)     return res.status(502).json({ error: 'Agent did not return a run ID. TinyFish may be down or the key is invalid.' });
+
+  return res.json({ runId, streamingUrl });
 }
 
 function buildGoal(jobUrl, p) {
   const resumeInstruction = p.resumeUrl
-    ? `RESUME UPLOAD — follow these steps exactly in order:
-  a) Look for a resume/CV upload field on the form (it may say "Attach", "Upload", "Resume/CV").
-  b) Click the "Attach" button or the file upload input directly.
-  c) In the file dialog or URL input that appears, paste this direct PDF URL: ${p.resumeUrl}
-  d) If the dialog has a URL input field, type the URL and confirm. If it opens a file picker, look for an option to paste or enter a URL.
-  e) If none of the above works and there is a "Dropbox" or "Google Drive" option, skip those.
-  f) If the ONLY option is "Enter manually", click it and paste just the resume URL: ${p.resumeUrl} — do NOT type out the applicant's profile details in this field.
-  g) Do NOT type the applicant's name, education, skills, or any other profile information into the resume field. The resume field is ONLY for the file or URL.`
-    : 'No resume URL provided — skip the resume upload field entirely if it is not required.';
+    ? `RESUME UPLOAD — for the resume/CV field:\n  a) Click Attach/Upload.\n  b) If a URL input is shown, paste: ${p.resumeUrl}\n  c) If only "Enter manually" exists, paste ONLY this URL: ${p.resumeUrl} — do NOT type the applicant profile in this field.\n  d) Do NOT write the applicant's name, skills, or bio into the resume field.`
+    : 'RESUME: No resume URL provided — skip the file upload field if not required.';
 
-  return `
-You are an expert job application assistant. Your task is to complete a real job application on behalf of the applicant. Be precise and follow instructions exactly.
+  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant below. Be precise and thorough.
 
 TARGET JOB URL: ${jobUrl}
 
@@ -114,34 +87,37 @@ APPLICANT PROFILE:
 - Years of experience: ${p.experience || 'not provided'}
 - Education: ${p.education || 'not provided'}
 - Key skills: ${p.skills || 'not provided'}
-- Brief bio / summary: ${p.bio || 'not provided'}
-- Cover letter preference: ${p.coverLetter || 'Keep it concise and professional. Emphasise relevant skills and enthusiasm for the role.'}
+- Brief bio: ${p.bio || 'not provided'}
+- Cover letter style: ${p.coverLetter || 'Keep it concise and professional. Highlight relevant skills and enthusiasm for the role.'}
 
 ${resumeInstruction}
 
 INSTRUCTIONS:
-1. Navigate to the job URL. Read the full job description — note the role, required skills, and company name.
-2. Find and click the Apply button. Follow any redirects to the ATS (Greenhouse, Lever, Workday, etc.).
-3. Fill every visible form field using the applicant profile above.
-4. For the resume/CV field, follow the RESUME UPLOAD steps above exactly — do not type profile text into it.
-5. For custom screening questions, answer thoughtfully based on the job description and the applicant's profile. Keep answers concise (2-4 sentences).
-6. For dropdowns (work authorisation, experience level, etc.), select the most appropriate option.
-7. If the form has multiple pages, click Next / Continue after completing each page.
-8. Review all fields before submitting.
-9. Click the final Submit button and wait for the confirmation page.
+1. Navigate to the job URL. Read the full job description — note the role, company, required skills.
+2. Find and click the Apply button. Follow any redirects to the ATS.
+3. Fill every visible field using the applicant profile above.
+4. For screening questions: answer thoughtfully (2-4 sentences, tailored to the job description).
+5. For dropdowns (work authorisation, experience level, etc.): select the best match.
+6. For multi-page forms: click Next/Continue after each page.
+7. Submit the application. Wait for the confirmation page to load.
 
-Return a JSON object with this exact structure:
+Return ONLY valid JSON — no markdown fences, no extra text:
 {
-  "jobTitle": "<extracted job title>",
-  "company": "<extracted company name>",
-  "ats": "<detected ATS platform, e.g. Greenhouse / Lever / Workday / Direct>",
-  "status": "submitted" | "error" | "partial",
-  "confirmationText": "<text from the confirmation page, or null>",
-  "questionsAnswered": [
-    { "question": "<question text>", "answer": "<answer given>" }
+  "jobTitle": "<exact job title from the page>",
+  "company": "<company name>",
+  "ats": "<Greenhouse|Lever|Workday|LinkedIn|Direct|Other>",
+  "status": "<submitted|partial|error>",
+  "confirmationText": "<verbatim confirmation message shown after submit, or null>",
+  "fieldsFilled": [
+    { "field": "<field label>", "value": "<value you entered>" }
   ],
-  "fieldsCompleted": <number of fields successfully filled>,
-  "notes": "<any issues encountered or observations>"
-}
-`.trim();
+  "fieldsSkipped": [
+    { "field": "<field label>", "reason": "<why it was skipped or could not be filled>" }
+  ],
+  "questionsAnswered": [
+    { "question": "<question text>", "answer": "<answer you gave>" }
+  ],
+  "fieldsCompleted": <integer count of fieldsFilled>,
+  "notes": "<any observations, issues encountered, or additional context>"
+}`.trim();
 }

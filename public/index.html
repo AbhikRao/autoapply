@@ -11,7 +11,7 @@
       --bg:#000; --sf:#0d0d0d; --s2:#111; --s3:#1a1a1a;
       --br:#1f1f1f; --br2:#2a2a2a;
       --tx:#f5f5f5; --t2:#717171; --t3:#3d3d3d;
-      --bl:#0070f3; --bld:rgba(0,112,243,.09);
+      --bl:#0070f3;
       --gn:#16a34a; --gnd:rgba(22,163,74,.1);
       --am:#d97706; --amd:rgba(217,119,6,.1);
       --rd:#dc2626; --rdd:rgba(220,38,38,.1);
@@ -21,51 +21,60 @@
     }
     html,body{height:100%;overflow:hidden;}
     body{font-family:var(--fn);background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5;}
+
+    /* ── Header ── */
     .hdr{height:48px;border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 20px;gap:10px;background:var(--sf);}
     .hdr-logo{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;letter-spacing:-.2px;}
     .hdr-sep{color:var(--t3);margin:0 2px;}
-    .hdr-sub{font-size:12px;font-weight:400;color:var(--t2);}
+    .hdr-sub{font-size:12px;color:var(--t2);}
     .hdr-r{margin-left:auto;}
     .pill{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);border:1px solid var(--br2);border-radius:20px;padding:3px 10px;}
     .dot{width:6px;height:6px;border-radius:50%;background:var(--gn);flex-shrink:0;}
     .dot.live{animation:dp 1.2s infinite;background:var(--bl);}
     @keyframes dp{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* ── Layout ── */
     .ws{display:grid;grid-template-columns:360px 1fr;height:calc(100vh - 48px);}
     .left{border-right:1px solid var(--br);background:var(--sf);display:flex;flex-direction:column;overflow:hidden;}
     .lscroll{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:20px;}
     .lscroll::-webkit-scrollbar{width:3px;}
     .lscroll::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
+
+    /* ── Activity log ── */
     .log-panel{flex-shrink:0;height:200px;border-top:1px solid var(--br);display:flex;flex-direction:column;background:var(--bg);}
     .log-hdr{padding:8px 14px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);flex-shrink:0;}
     .log-stream{flex:1;overflow-y:auto;padding:0 14px 10px;display:flex;flex-direction:column;gap:2px;}
     .log-stream::-webkit-scrollbar{width:2px;}
-    .log-stream::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
     .le{font-family:var(--mo);font-size:11px;color:var(--t2);padding:1px 0;display:flex;gap:8px;align-items:baseline;animation:li .15s ease;}
     @keyframes li{from{opacity:0;transform:translateY(2px);}to{opacity:1;transform:none;}}
     .le .sym{color:var(--t3);flex-shrink:0;width:10px;text-align:center;}
     .le .ts{color:var(--t3);font-size:10px;flex-shrink:0;}
     .le.info .sym{color:var(--bl);}
-    .le.ok{color:var(--gn);}.le.ok .sym{color:var(--gn);}
-    .le.err{color:var(--rd);}.le.err .sym{color:var(--rd);}
+    .le.ok .sym,.le.ok{color:var(--gn);}
+    .le.err .sym,.le.err{color:var(--rd);}
+    .le.warn .sym,.le.warn{color:var(--am);}
+
+    /* ── Form ── */
     .sec{display:flex;flex-direction:column;gap:10px;}
     .sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);}
-    .row{display:grid;gap:8px;}
-    .row.two{grid-template-columns:1fr 1fr;}
+    .row.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
     .fg{display:flex;flex-direction:column;gap:5px;}
     .fl{font-size:11px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.3px;}
-    input[type=text],input[type=email],input[type=tel],textarea,input[type=url]{width:100%;background:var(--s3);border:1px solid var(--br2);border-radius:var(--r);padding:7px 10px;color:var(--tx);font-size:12px;font-family:var(--fn);outline:none;transition:border-color .15s;}
+    input[type=text],input[type=email],input[type=tel],input[type=url],textarea{width:100%;background:var(--s3);border:1px solid var(--br2);border-radius:var(--r);padding:7px 10px;color:var(--tx);font-size:12px;font-family:var(--fn);outline:none;transition:border-color .15s;}
     input:focus,textarea:focus{border-color:var(--bl);}
     input::placeholder,textarea::placeholder{color:var(--t3);}
     textarea{min-height:60px;resize:vertical;}
-    .job-input-wrap{display:flex;flex-direction:column;gap:8px;}
     .job-url-row{display:flex;gap:6px;}
     .job-url-row input{flex:1;}
+    .ats-row{display:flex;flex-wrap:wrap;gap:5px;}
+    .ats-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--br2);color:var(--t2);background:var(--s3);}
+
+    /* ── Buttons ── */
     .btn-go{padding:7px 14px;background:var(--bl);border:none;border-radius:var(--r);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:opacity .15s;}
     .btn-go:hover:not(:disabled){opacity:.85;}
     .btn-go:disabled{opacity:.4;cursor:not-allowed;}
     .spin{width:12px;height:12px;border:1.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;display:none;}
     @keyframes sp{to{transform:rotate(360deg);}}
-    /* Stop + Take Control — two-button row, hidden until agent runs */
     .agent-ctrl{display:none;gap:6px;}
     .agent-ctrl.on{display:flex;}
     .btn-stop{flex:1;padding:7px;background:var(--rdd);border:1px solid var(--rd);border-radius:var(--r);color:var(--rd);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;}
@@ -73,17 +82,20 @@
     .btn-takeover{flex:1;padding:7px;background:transparent;border:1px solid var(--br2);border-radius:var(--r);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .12s;}
     .btn-takeover:hover{border-color:var(--am);color:var(--am);}
     .btn-takeover:disabled{opacity:.3;cursor:not-allowed;}
-    .ats-row{display:flex;flex-wrap:wrap;gap:5px;}
-    .ats-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--br2);color:var(--t2);background:var(--s3);}
+
+    /* ── Right panel ── */
     .right{display:flex;flex-direction:column;overflow:hidden;}
     .tabs{display:flex;border-bottom:1px solid var(--br);background:var(--sf);padding:0 4px;flex-shrink:0;}
-    .tab{padding:12px 16px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:1px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;user-select:none;}
-    .tab:hover{color:var(--tx);}.tab.on{color:var(--tx);border-bottom-color:var(--tx);}
-    .bdg{font-size:10px;background:var(--s3);border:1px solid var(--br2);border-radius:4px;padding:1px 5px;color:var(--t2);display:none;}
+    .tab{padding:12px 16px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;user-select:none;}
+    .tab:hover{color:var(--tx);}
+    .tab.on{color:var(--tx);border-bottom-color:var(--tx);}
+    .bdg{font-size:10px;background:var(--gn);border-radius:4px;padding:1px 5px;color:#fff;display:none;}
     .bdg.on{display:inline-block;}
     .pane{flex:1;display:none;flex-direction:column;overflow:hidden;}
     .pane.on{display:flex;}
     #pane-live{background:#000;}
+
+    /* ── Browser bar ── */
     .bbr{display:flex;align-items:center;gap:8px;padding:9px 16px;background:var(--sf);border-bottom:1px solid var(--br);flex-shrink:0;}
     .bdots{display:flex;gap:5px;}
     .bd{width:10px;height:10px;border-radius:50%;background:#3a3a3a;}
@@ -91,7 +103,6 @@
     .ubar{flex:1;background:var(--s3);border:1px solid var(--br);border-radius:5px;padding:4px 12px;font-family:var(--mo);font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .live-ind{font-size:10px;font-weight:600;color:var(--rd);letter-spacing:.5px;display:none;align-items:center;gap:5px;flex-shrink:0;}
     .live-dot{width:7px;height:7px;border-radius:50%;background:var(--rd);animation:dp 1s infinite;}
-    /* Take control button in the browser bar */
     .btn-bbr-ctrl{padding:4px 10px;background:transparent;border:1px solid var(--br2);border-radius:5px;color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;display:none;align-items:center;gap:5px;transition:all .12s;flex-shrink:0;}
     .btn-bbr-ctrl.on{display:flex;}
     .btn-bbr-ctrl:hover{border-color:var(--am);color:var(--am);}
@@ -99,41 +110,66 @@
     #live-frame{width:100%;height:100%;border:none;display:none;}
     .idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:40px;}
     .idle-icon{width:52px;height:52px;border-radius:14px;border:1px solid var(--br2);background:var(--s2);display:flex;align-items:center;justify-content:center;color:var(--t3);}
-    .idle h3{font-size:16px;font-weight:500;color:var(--tx);}
+    .idle h3{font-size:16px;font-weight:500;}
     .idle p{font-size:12px;color:var(--t2);max-width:300px;line-height:1.7;}
     .idle-steps{display:flex;flex-direction:column;gap:8px;text-align:left;max-width:300px;}
     .is{display:flex;gap:10px;font-size:12px;color:var(--t2);align-items:flex-start;}
     .sn{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid var(--br2);color:var(--t2);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;margin-top:1px;}
-    #pane-result{overflow-y:auto;padding:24px;background:var(--bg);}
+
+    /* ── Result pane ── */
+    #pane-result{overflow-y:auto;padding:24px;background:var(--bg);display:flex;flex-direction:column;gap:16px;}
     #pane-result::-webkit-scrollbar{width:4px;}
     #pane-result::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
     .empty{text-align:center;padding:60px 20px;color:var(--t2);}
     .empty-ic{width:44px;height:44px;margin:0 auto 14px;border-radius:12px;border:1px solid var(--br2);background:var(--s2);display:flex;align-items:center;justify-content:center;color:var(--t3);}
     .empty h3{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:6px;}
     .empty p{font-size:12px;line-height:1.7;max-width:280px;margin:0 auto;}
-    .res-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
-    .res-title{font-size:17px;font-weight:600;}
-    .res-meta{font-size:12px;color:var(--t2);margin-top:2px;}
-    .status-row{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
-    .status-badge{font-size:12px;font-weight:600;padding:5px 14px;border-radius:6px;text-transform:capitalize;}
-    .status-badge.submitted{background:var(--gnd);color:var(--gn);border:1px solid rgba(22,163,74,.25);}
-    .status-badge.error{background:var(--rdd);color:var(--rd);border:1px solid rgba(220,38,38,.25);}
-    .status-badge.partial{background:var(--amd);color:var(--am);border:1px solid rgba(217,119,6,.25);}
+
+    /* Result card */
+    .res-card{background:var(--s2);border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;}
+    .res-card-hdr{padding:14px 16px;border-bottom:1px solid var(--br);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .res-card-title{font-size:15px;font-weight:600;line-height:1.3;}
+    .res-card-meta{font-size:11px;color:var(--t2);margin-top:3px;}
+    .status-badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0;}
+    .status-badge.submitted{background:var(--gnd);color:var(--gn);border:1px solid rgba(22,163,74,.3);}
+    .status-badge.partial{background:var(--amd);color:var(--am);border:1px solid rgba(217,119,6,.3);}
+    .status-badge.error{background:var(--rdd);color:var(--rd);border:1px solid rgba(220,38,38,.3);}
     .status-badge.unknown{background:var(--s3);color:var(--t2);border:1px solid var(--br2);}
-    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;margin-bottom:20px;}
-    .ig{background:var(--s2);padding:12px 14px;border-right:1px solid var(--br);}
-    .ig:last-child{border-right:none;}
-    .ig-k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:4px;}
-    .ig-v{font-size:13px;font-weight:500;color:var(--tx);}
-    .conf-box{background:var(--s2);border:1px solid var(--br);border-radius:var(--rl);padding:14px 16px;margin-bottom:20px;}
-    .conf-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:6px;}
-    .conf-text{font-size:13px;color:var(--tx);line-height:1.6;white-space:pre-wrap;}
-    .qa-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:10px;}
-    .qa-list{display:flex;flex-direction:column;border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;}
-    .qa-row{padding:12px 14px;border-bottom:1px solid var(--br);background:var(--s2);}
+
+    /* Stats row */
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--br);}
+    .stat{padding:10px 14px;border-right:1px solid var(--br);}
+    .stat:last-child{border-right:none;}
+    .stat-k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:3px;}
+    .stat-v{font-size:13px;font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+    /* Section blocks */
+    .rblock{background:var(--s2);border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;}
+    .rblock-hdr{padding:10px 14px;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t2);display:flex;align-items:center;gap:8px;}
+    .rblock-hdr .cnt{font-size:10px;background:var(--s3);border:1px solid var(--br2);border-radius:4px;padding:1px 6px;color:var(--t2);font-weight:500;}
+    .rblock-body{padding:0;}
+
+    /* Fields table */
+    .ftable{width:100%;border-collapse:collapse;}
+    .ftable tr{border-bottom:1px solid var(--br);}
+    .ftable tr:last-child{border-bottom:none;}
+    .ftable td{padding:8px 14px;font-size:12px;vertical-align:top;}
+    .ftable td:first-child{color:var(--t2);width:38%;white-space:nowrap;}
+    .ftable td:last-child{color:var(--tx);word-break:break-word;}
+    .ftable tr.skipped td{color:var(--am);}
+    .ftable tr.skipped td:first-child{color:var(--am);}
+
+    /* Q&A */
+    .qa-row{padding:12px 14px;border-bottom:1px solid var(--br);}
     .qa-row:last-child{border-bottom:none;}
-    .qa-q{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:4px;}
-    .qa-a{font-size:12px;color:var(--t2);line-height:1.5;}
+    .qa-q{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:5px;}
+    .qa-a{font-size:12px;color:var(--t2);line-height:1.6;}
+
+    /* Confirmation / Notes */
+    .text-block{padding:14px 16px;font-size:12px;line-height:1.7;color:var(--tx);white-space:pre-wrap;}
+    .text-block.dim{color:var(--t2);}
+
+    /* Toast */
     .toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--s3);border:1px solid var(--br2);border-radius:var(--rl);padding:10px 16px;font-size:12px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:ta .2s ease;}
     @keyframes ta{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   </style>
@@ -148,29 +184,34 @@
   <span class="hdr-sub">Autonomous Job Applications &middot; Powered by TinyFish</span>
   <div class="hdr-r"><div class="pill"><div class="dot" id="hdr-dot"></div><span id="hdr-lbl">Ready</span></div></div>
 </header>
+
 <div class="ws">
+  <!-- ── Left panel ── -->
   <div class="left">
     <div class="lscroll">
+      <!-- Job -->
       <div class="sec">
         <div class="sec-title">Job</div>
-        <div class="job-input-wrap">
-          <div class="fg"><label class="fl">Application URL</label>
-            <div class="job-url-row">
-              <input type="url" id="job-url" placeholder="https://boards.greenhouse.io/company/jobs/123" />
-              <button class="btn-go" id="btn-go" onclick="apply()"><span id="btn-lbl">Apply</span><div class="spin" id="spin"></div></button>
-            </div>
-          </div>
-          <div class="ats-row"><span class="ats-tag">Greenhouse</span><span class="ats-tag">Lever</span><span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span></div>
-          <!-- Stop + Take Control — shown only while agent is running -->
-          <div class="agent-ctrl" id="agent-ctrl">
-            <button class="btn-stop" onclick="stopAgent()">⏹ Stop Agent</button>
-            <button class="btn-takeover" id="btn-takeover" onclick="takeControl()" disabled>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Take Control
-            </button>
+        <div class="fg">
+          <label class="fl">Application URL</label>
+          <div class="job-url-row">
+            <input type="url" id="job-url" placeholder="https://boards.greenhouse.io/company/jobs/123" />
+            <button class="btn-go" id="btn-go" onclick="runApply()"><span id="btn-lbl">Apply</span><div class="spin" id="spin"></div></button>
           </div>
         </div>
+        <div class="ats-row">
+          <span class="ats-tag">Greenhouse</span><span class="ats-tag">Lever</span>
+          <span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span>
+        </div>
+        <div class="agent-ctrl" id="agent-ctrl">
+          <button class="btn-stop" onclick="stopAgent()">&#9635; Stop Agent</button>
+          <button class="btn-takeover" id="btn-takeover" onclick="takeControl()" disabled>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Take Control
+          </button>
+        </div>
       </div>
+      <!-- Profile -->
       <div class="sec">
         <div class="sec-title">Profile</div>
         <div class="row two">
@@ -189,31 +230,40 @@
           <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" value="1" /></div>
           <div class="fg"><label class="fl">Education</label><input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" /></div>
         </div>
-        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures & Algorithms" /></div>
-        <div class="fg"><label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional, hosted PDF</span></label><input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" /></div>
-        <div class="fg"><label class="fl">Brief Bio</label><textarea id="p-bio">CS & AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea></div>
-        <div class="fg"><label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label><textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea></div>
+        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures &amp; Algorithms" /></div>
+        <div class="fg">
+          <label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional, hosted PDF</span></label>
+          <input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" />
+        </div>
+        <div class="fg"><label class="fl">Brief Bio</label><textarea id="p-bio">CS &amp; AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea></div>
+        <div class="fg">
+          <label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label>
+          <textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea>
+        </div>
       </div>
     </div>
+    <!-- Activity log -->
     <div class="log-panel">
       <div class="log-hdr">Activity</div>
       <div class="log-stream" id="log">
-        <div class="le"><span class="sym">·</span><span>Waiting for input</span></div>
+        <div class="le"><span class="sym">&middot;</span><span>Waiting for input</span></div>
       </div>
     </div>
   </div>
 
+  <!-- ── Right panel ── -->
   <div class="right">
     <div class="tabs">
-      <div class="tab on" data-p="live" onclick="tab('live')">Live Browser</div>
-      <div class="tab" data-p="result" onclick="tab('result')">Result <span class="bdg" id="res-bdg">!</span></div>
+      <div class="tab on" data-p="live" onclick="switchTab('live')">Live Browser</div>
+      <div class="tab" data-p="result" onclick="switchTab('result')">Result <span class="bdg" id="res-bdg">&#10003;</span></div>
     </div>
+
+    <!-- Live browser pane -->
     <div class="pane on" id="pane-live">
       <div class="bbr">
         <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
         <div class="ubar" id="ubar">No active session</div>
         <div class="live-ind" id="live-ind"><div class="live-dot"></div>Live</div>
-        <!-- Take Control button in the browser bar for quick access -->
         <button class="btn-bbr-ctrl" id="btn-bbr-ctrl" onclick="takeControl()">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Take Control
@@ -223,84 +273,114 @@
         <div class="idle" id="idle">
           <div class="idle-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
           <h3>Agent standing by</h3>
-          <p>Paste a job URL, fill in your profile, and click Apply. Watch the TinyFish agent complete the real application form live.</p>
+          <p>Paste a job URL, fill in your profile, and click Apply. Watch the TinyFish agent complete the real form live.</p>
           <div class="idle-steps">
             <div class="is"><div class="sn">1</div><span>Navigates to the job URL and reads the description</span></div>
             <div class="is"><div class="sn">2</div><span>Detects the ATS and fills every form field</span></div>
             <div class="is"><div class="sn">3</div><span>Answers custom screening questions intelligently</span></div>
-            <div class="is"><div class="sn">4</div><span>Uploads resume, navigates multi-page forms, submits</span></div>
+            <div class="is"><div class="sn">4</div><span>Navigates multi-page forms and submits</span></div>
           </div>
         </div>
         <iframe id="live-frame" src="" title="TinyFish live session"></iframe>
       </div>
     </div>
+
+    <!-- Result pane -->
     <div class="pane" id="pane-result">
       <div class="empty" id="res-empty">
         <div class="empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
         <h3>No result yet</h3>
-        <p>Run an application to see the outcome — confirmation text, questions answered, submission status.</p>
+        <p>Run an application to see the full outcome — fields filled, answers given, confirmation, and submission status.</p>
       </div>
-      <div id="res-fill" style="display:none">
-        <div class="res-hdr"><div><div class="res-title" id="res-title">Application Result</div><div class="res-meta" id="res-meta"></div></div></div>
-        <div class="status-row"><div class="status-badge" id="res-status">submitted</div><div id="res-ats" style="font-size:12px;color:var(--t2)"></div></div>
-        <div class="info-grid">
-          <div class="ig"><div class="ig-k">Role</div><div class="ig-v" id="ig-role">—</div></div>
-          <div class="ig"><div class="ig-k">Company</div><div class="ig-v" id="ig-co">—</div></div>
-          <div class="ig"><div class="ig-k">Fields filled</div><div class="ig-v" id="ig-fields">—</div></div>
+      <div id="res-content" style="display:none;display:flex;flex-direction:column;gap:16px;">
+        <!-- Summary card -->
+        <div class="res-card">
+          <div class="res-card-hdr">
+            <div>
+              <div class="res-card-title" id="r-title">Application Result</div>
+              <div class="res-card-meta" id="r-meta"></div>
+            </div>
+            <div class="status-badge unknown" id="r-status">—</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat"><div class="stat-k">Role</div><div class="stat-v" id="r-role">—</div></div>
+            <div class="stat"><div class="stat-k">Company</div><div class="stat-v" id="r-company">—</div></div>
+            <div class="stat"><div class="stat-k">ATS</div><div class="stat-v" id="r-ats">—</div></div>
+            <div class="stat"><div class="stat-k">Fields</div><div class="stat-v" id="r-fields">—</div></div>
+            <div class="stat"><div class="stat-k">Time</div><div class="stat-v" id="r-time">—</div></div>
+          </div>
         </div>
-        <div class="conf-box" id="conf-box" style="display:none"><div class="conf-label">Confirmation</div><div class="conf-text" id="conf-text"></div></div>
-        <div class="conf-box" id="notes-box" style="display:none"><div class="conf-label">Agent Notes</div><div class="conf-text" id="notes-text"></div></div>
-        <div id="qa-section" style="display:none">
-          <div class="qa-title" id="qa-title">Screening Questions Answered</div>
-          <div class="qa-list" id="qa-list"></div>
+        <!-- Confirmation -->
+        <div class="rblock" id="blk-confirm" style="display:none">
+          <div class="rblock-hdr">&#10003;&nbsp; Confirmation</div>
+          <div class="rblock-body"><div class="text-block" id="r-confirm"></div></div>
+        </div>
+        <!-- Fields filled -->
+        <div class="rblock" id="blk-filled" style="display:none">
+          <div class="rblock-hdr">Fields Filled <span class="cnt" id="cnt-filled">0</span></div>
+          <div class="rblock-body"><table class="ftable" id="tbl-filled"></table></div>
+        </div>
+        <!-- Fields skipped -->
+        <div class="rblock" id="blk-skipped" style="display:none">
+          <div class="rblock-hdr" style="color:var(--am)">&#9888;&nbsp; Fields Skipped / Unfilled <span class="cnt" id="cnt-skipped">0</span></div>
+          <div class="rblock-body"><table class="ftable" id="tbl-skipped"></table></div>
+        </div>
+        <!-- Screening Q&A -->
+        <div class="rblock" id="blk-qa" style="display:none">
+          <div class="rblock-hdr">Screening Questions Answered <span class="cnt" id="cnt-qa">0</span></div>
+          <div class="rblock-body" id="list-qa"></div>
+        </div>
+        <!-- Agent notes -->
+        <div class="rblock" id="blk-notes" style="display:none">
+          <div class="rblock-hdr">Agent Notes</div>
+          <div class="rblock-body"><div class="text-block dim" id="r-notes"></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<script>
-const API = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:3001' : '';
-let ctrl = null, t0 = 0, streamingUrl = null;
 
-function tab(name) {
+<script>
+const API = (window.location.hostname === 'localhost' || window.location.protocol === 'file:') ? 'http://localhost:3001' : '';
+let pollTimer = null, streamingUrl = null, stopped = false;
+
+// ── Tab switching ────────────────────────────────────────────────────────────
+function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
   document.getElementById('pane-' + name).classList.add('on');
 }
 
+// ── Logging ──────────────────────────────────────────────────────────────────
 function ts() {
-  const d = new Date();
-  return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
-
-function log(msg, type = '') {
+function log(msg, type) {
   if (!msg || !msg.trim()) return;
-  const sym = { info: '→', ok: '✓', err: '×' }[type] || '·';
+  const sym = { info: '\u2192', ok: '\u2713', err: '\u00d7', warn: '!' }[type] || '\u00b7';
   const el = document.createElement('div');
-  el.className = 'le ' + type;
+  el.className = 'le ' + (type || '');
   el.innerHTML = `<span class="sym">${sym}</span><span class="ts">${ts()}</span><span>${msg}</span>`;
   const s = document.getElementById('log');
   s.appendChild(el);
   s.scrollTop = s.scrollHeight;
 }
-
 function clearLog() { document.getElementById('log').innerHTML = ''; }
 
+// ── Running state ────────────────────────────────────────────────────────────
 function setRunning(on) {
   document.getElementById('btn-go').disabled = on;
-  document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply';
+  document.getElementById('btn-lbl').textContent = on ? 'Running\u2026' : 'Apply';
   document.getElementById('spin').style.display = on ? 'block' : 'none';
   document.getElementById('agent-ctrl').classList.toggle('on', on);
   document.getElementById('hdr-dot').classList.toggle('live', on);
   document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
   if (!on) {
-    // hide take control when agent stops
     document.getElementById('btn-bbr-ctrl').classList.remove('on');
     document.getElementById('btn-takeover').disabled = true;
     streamingUrl = null;
   }
 }
-
 function resetFrame() {
   const f = document.getElementById('live-frame');
   f.style.display = 'none'; f.src = '';
@@ -309,148 +389,216 @@ function resetFrame() {
   document.getElementById('live-ind').style.display = 'none';
   ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on'));
 }
+function showFrame(url) {
+  streamingUrl = url;
+  const f = document.getElementById('live-frame');
+  f.src = url; f.style.display = 'block';
+  document.getElementById('idle').style.display = 'none';
+  document.getElementById('ubar').textContent = url;
+  document.getElementById('live-ind').style.display = 'flex';
+  ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on'));
+  document.getElementById('btn-takeover').disabled = false;
+  document.getElementById('btn-bbr-ctrl').classList.add('on');
+}
 
+// ── Profile ──────────────────────────────────────────────────────────────────
 function getProfile() {
   return {
-    name: document.getElementById('p-name').value.trim(),
-    email: document.getElementById('p-email').value.trim(),
-    phone: document.getElementById('p-phone').value.trim(),
-    location: document.getElementById('p-loc').value.trim(),
-    linkedin: document.getElementById('p-li').value.trim(),
-    github: document.getElementById('p-gh').value.trim(),
-    experience: document.getElementById('p-exp').value.trim(),
-    education: document.getElementById('p-edu').value.trim(),
-    skills: document.getElementById('p-skills').value.trim(),
-    resumeUrl: document.getElementById('p-resume').value.trim(),
-    bio: document.getElementById('p-bio').value.trim(),
-    coverLetter: document.getElementById('p-cl').value.trim()
+    name:        document.getElementById('p-name').value.trim(),
+    email:       document.getElementById('p-email').value.trim(),
+    phone:       document.getElementById('p-phone').value.trim(),
+    location:    document.getElementById('p-loc').value.trim(),
+    linkedin:    document.getElementById('p-li').value.trim(),
+    github:      document.getElementById('p-gh').value.trim(),
+    experience:  document.getElementById('p-exp').value.trim(),
+    education:   document.getElementById('p-edu').value.trim(),
+    skills:      document.getElementById('p-skills').value.trim(),
+    resumeUrl:   document.getElementById('p-resume').value.trim(),
+    bio:         document.getElementById('p-bio').value.trim(),
+    coverLetter: document.getElementById('p-cl').value.trim(),
   };
 }
 
-async function apply() {
+// ── Apply ────────────────────────────────────────────────────────────────────
+async function runApply() {
   const jobUrl = document.getElementById('job-url').value.trim();
   const profile = getProfile();
-  if (!jobUrl) return toast('Paste a job URL first');
-  if (!profile.name) return toast('Name is required');
-  if (!profile.email) return toast('Email is required');
-  clearLog(); setRunning(true); resetFrame(); t0 = Date.now(); streamingUrl = null;
+  if (!jobUrl)         return toast('Paste a job URL first');
+  if (!profile.name)   return toast('Name is required');
+  if (!profile.email)  return toast('Email is required');
+
+  clearLog();
+  setRunning(true);
+  resetFrame();
+  stopped = false;
+  if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+
+  // Reset result tab
   document.getElementById('res-empty').style.display = 'flex';
-  document.getElementById('res-fill').style.display = 'none';
+  document.getElementById('res-content').style.display = 'none';
   document.getElementById('res-bdg').classList.remove('on');
-  document.getElementById('conf-box').style.display = 'none';
-  document.getElementById('notes-box').style.display = 'none';
-  document.getElementById('qa-section').style.display = 'none';
+  switchTab('live');
+
   log('Launching agent for: ' + jobUrl, 'info');
-  tab('live');
-  ctrl = new AbortController();
+
+  let data;
   try {
-    const res = await fetch(`${API}/api/apply`, {
+    const resp = await fetch(API + '/api/apply', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jobUrl, profile }),
-      signal: ctrl.signal
     });
-    const reader = res.body.getReader(), dec = new TextDecoder();
-    let buf = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buf += dec.decode(value, { stream: true });
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        try { handle(JSON.parse(line.slice(6))); } catch (_) {}
-      }
-    }
-  } catch (e) {
-    if (e.name !== 'AbortError') log('Error: ' + e.message, 'err');
-  } finally {
+    data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'API error ' + resp.status);
+  } catch (err) {
+    log('Failed to start agent: ' + err.message, 'err');
+    setRunning(false);
+    return;
+  }
+
+  if (data.streamingUrl) {
+    showFrame(data.streamingUrl);
+    log('Live browser stream active', 'ok');
+  }
+
+  if (data.runId) {
+    log('Run ID: ' + data.runId, 'info');
+    schedulePoll(data.runId, Date.now(), 0);
+  } else {
+    log('No run ID — cannot poll for result', 'err');
     setRunning(false);
   }
 }
 
-function handle(ev) {
-  switch (ev.type) {
-    case 'STARTED':
-      log('Run ' + ev.runId, 'info'); break;
-    case 'STREAMING_URL': {
-      streamingUrl = ev.streamingUrl;
-      const f = document.getElementById('live-frame');
-      f.src = streamingUrl; f.style.display = 'block';
-      document.getElementById('idle').style.display = 'none';
-      document.getElementById('ubar').textContent = streamingUrl;
-      document.getElementById('live-ind').style.display = 'flex';
-      ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.add('on'));
-      // Enable Take Control once we have a stream URL
-      document.getElementById('btn-takeover').disabled = false;
-      document.getElementById('btn-bbr-ctrl').classList.add('on');
-      log('Live browser stream active', 'ok');
-      break;
-    }
-    case 'PROGRESS': log(ev.message); break;
-    case 'LOG':       log(ev.message, 'info'); break;
-    case 'HEARTBEAT': break;
-    case 'COMPLETE': {
-      const secs = ((Date.now() - t0) / 1000).toFixed(1);
-      log('Completed in ' + secs + 's', 'ok');
-      document.getElementById('live-ind').style.display = 'none';
-      renderResult(ev.result || {}, secs);
-      break;
-    }
-    case 'ERROR':
-      log(ev.message, 'err');
-      if (document.getElementById('res-fill').style.display === 'block') tab('result');
-      break;
+// ── Polling ───────────────────────────────────────────────────────────────────
+function schedulePoll(runId, t0, attempt) {
+  if (stopped) return;
+  // Max 200 attempts = ~10 minutes at 3s interval
+  if (attempt > 200) {
+    log('Timed out waiting for result (10 min). Agent may still be running on TinyFish.', 'warn');
+    setRunning(false);
+    return;
+  }
+  pollTimer = setTimeout(() => poll(runId, t0, attempt), attempt === 0 ? 4000 : 3000);
+}
+
+async function poll(runId, t0, attempt) {
+  if (stopped) return;
+  let data;
+  try {
+    const resp = await fetch(API + '/api/run/' + runId);
+    data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'API error ' + resp.status);
+  } catch (err) {
+    log('Poll error: ' + err.message + ' — retrying', 'warn');
+    schedulePoll(runId, t0, attempt + 1);
+    return;
+  }
+
+  const status = (data.status || '').toUpperCase();
+  log('Status: ' + status + (attempt % 5 === 0 ? ' (' + Math.round((Date.now()-t0)/1000) + 's elapsed)' : ''));
+
+  if (status === 'COMPLETED') {
+    const secs = ((Date.now() - t0) / 1000).toFixed(1);
+    log('Completed in ' + secs + 's', 'ok');
+    document.getElementById('live-ind').style.display = 'none';
+    setRunning(false);
+    renderResult(data.result || {}, secs);
+  } else if (status === 'FAILED' || status === 'ERROR' || status === 'CANCELLED') {
+    const secs = ((Date.now() - t0) / 1000).toFixed(1);
+    log('Run ended with status: ' + status, 'err');
+    setRunning(false);
+    renderResult(data.result || { status: 'error', notes: data.error?.message || ('Run ended: ' + status) }, secs);
+  } else {
+    // RUNNING, PENDING, QUEUED — keep polling
+    schedulePoll(runId, t0, attempt + 1);
   }
 }
 
+// ── Stop / Take Control ───────────────────────────────────────────────────────
 function stopAgent() {
-  ctrl?.abort();
-  log('Agent stopped by user', 'err');
+  stopped = true;
+  if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+  log('Agent polling stopped by user', 'err');
   setRunning(false);
 }
-
 function takeControl() {
-  if (!streamingUrl) return toast('No active session yet — wait for the stream to start');
-  // Open the live browser stream in a new tab so the user can interact directly
+  if (!streamingUrl) return toast('No active stream yet — wait a moment');
   window.open(streamingUrl, '_blank');
-  log('Opened live browser in new tab — you have control', 'ok');
-  toast('Live browser opened in new tab — you can now interact directly');
+  log('Live browser opened in new tab — you have control', 'ok');
+  toast('Browser opened in new tab — interact directly');
 }
 
+// ── Render Result ─────────────────────────────────────────────────────────────
 function renderResult(r, secs) {
-  const title = (r.jobTitle || 'Application Result') + (r.company ? ' · ' + r.company : '');
-  document.getElementById('res-title').textContent = title;
-  document.getElementById('res-meta').textContent = secs + 's · ' + (r.fieldsCompleted || 0) + ' fields filled';
-  const sb = document.getElementById('res-status');
-  const status = r.status || 'unknown';
-  sb.textContent = status;
-  sb.className = 'status-badge ' + status;
-  document.getElementById('res-ats').textContent = r.ats ? 'via ' + r.ats : '';
-  document.getElementById('ig-role').textContent   = r.jobTitle || '—';
-  document.getElementById('ig-co').textContent     = r.company  || '—';
-  document.getElementById('ig-fields').textContent = r.fieldsCompleted != null ? r.fieldsCompleted : '—';
+  // Summary card
+  const title = [r.jobTitle, r.company].filter(Boolean).join(' \u00b7 ') || 'Application Result';
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-meta').textContent =
+    [secs ? secs + 's elapsed' : null, r.fieldsCompleted != null ? r.fieldsCompleted + ' fields filled' : null]
+    .filter(Boolean).join(' \u00b7 ');
+
+  const sb = document.getElementById('r-status');
+  const st = (r.status || 'unknown').toLowerCase();
+  sb.textContent = { submitted: '\u2713 Submitted', partial: '\u26a0 Partial', error: '\u00d7 Error', unknown: '\u2014 Unknown' }[st] || st;
+  sb.className = 'status-badge ' + (st === 'submitted' ? 'submitted' : st === 'partial' ? 'partial' : st === 'error' ? 'error' : 'unknown');
+
+  document.getElementById('r-role').textContent    = r.jobTitle  || '\u2014';
+  document.getElementById('r-company').textContent = r.company   || '\u2014';
+  document.getElementById('r-ats').textContent     = r.ats       || '\u2014';
+  document.getElementById('r-fields').textContent  = r.fieldsCompleted != null ? r.fieldsCompleted : '\u2014';
+  document.getElementById('r-time').textContent    = secs ? secs + 's' : '\u2014';
+
+  // Confirmation
   if (r.confirmationText) {
-    document.getElementById('conf-text').textContent = r.confirmationText;
-    document.getElementById('conf-box').style.display = 'block';
+    document.getElementById('r-confirm').textContent = r.confirmationText;
+    document.getElementById('blk-confirm').style.display = 'block';
   }
+
+  // Fields filled
+  const filled = Array.isArray(r.fieldsFilled) ? r.fieldsFilled : [];
+  if (filled.length) {
+    document.getElementById('cnt-filled').textContent = filled.length;
+    document.getElementById('tbl-filled').innerHTML = filled
+      .map(f => `<tr><td>${esc(f.field || '')}</td><td>${esc(f.value || '')}</td></tr>`).join('');
+    document.getElementById('blk-filled').style.display = 'block';
+  }
+
+  // Fields skipped
+  const skipped = Array.isArray(r.fieldsSkipped) ? r.fieldsSkipped : [];
+  if (skipped.length) {
+    document.getElementById('cnt-skipped').textContent = skipped.length;
+    document.getElementById('tbl-skipped').innerHTML = skipped
+      .map(f => `<tr class="skipped"><td>${esc(f.field || '')}</td><td>${esc(f.reason || '')}</td></tr>`).join('');
+    document.getElementById('blk-skipped').style.display = 'block';
+  }
+
+  // Q&A
+  const qa = Array.isArray(r.questionsAnswered) ? r.questionsAnswered : [];
+  if (qa.length) {
+    document.getElementById('cnt-qa').textContent = qa.length;
+    document.getElementById('list-qa').innerHTML = qa
+      .map(q => `<div class="qa-row"><div class="qa-q">${esc(q.question || '')}</div><div class="qa-a">${esc(q.answer || '')}</div></div>`).join('');
+    document.getElementById('blk-qa').style.display = 'block';
+  }
+
+  // Notes
   if (r.notes) {
-    document.getElementById('notes-text').textContent = r.notes;
-    document.getElementById('notes-box').style.display = 'block';
+    document.getElementById('r-notes').textContent = r.notes;
+    document.getElementById('blk-notes').style.display = 'block';
   }
-  if (r.questionsAnswered && r.questionsAnswered.length) {
-    document.getElementById('qa-title').textContent =
-      r.questionsAnswered.length + ' Screening Question' + (r.questionsAnswered.length > 1 ? 's' : '') + ' Answered';
-    document.getElementById('qa-list').innerHTML = r.questionsAnswered
-      .map(q => `<div class="qa-row"><div class="qa-q">${q.question}</div><div class="qa-a">${q.answer}</div></div>`)
-      .join('');
-    document.getElementById('qa-section').style.display = 'block';
-  }
+
+  // Show result
   document.getElementById('res-empty').style.display = 'none';
-  document.getElementById('res-fill').style.display = 'block';
+  document.getElementById('res-content').style.removeProperty('display');
   document.getElementById('res-bdg').classList.add('on');
-  tab('result');
+  switchTab('result');
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function toast(msg) {
