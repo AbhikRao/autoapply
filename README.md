@@ -66,6 +66,6 @@ vercel.json            Routing + function config
 
 ## Stack
 
-- **Frontend:** Vanilla HTML/CSS/JS — no framework, no build step  
-- **Backend:** Node.js serverless functions (Vercel)  
+- **Frontend:** Vanilla HTML/CSS/JS — no framework, no build step
+- **Backend:** Node.js serverless functions (Vercel)
 - **Web automation:** TinyFish Web Agent `/run-sse`
