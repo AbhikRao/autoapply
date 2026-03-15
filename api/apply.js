@@ -61,15 +61,12 @@ export default async function handler(req, res) {
             case 'HEARTBEAT':     emit({ type: 'HEARTBEAT' }); break;
             case 'COMPLETE':
               if (ev.status === 'COMPLETED') {
-                // resultJson may be a string — parse it so the frontend gets a real object
                 let result = ev.resultJson;
                 if (typeof result === 'string') {
                   try {
-                    // Strip markdown code fences if present
                     const clean = result.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
                     result = JSON.parse(clean);
                   } catch (_) {
-                    // If it won't parse, wrap it so the frontend still shows something
                     result = { status: 'partial', notes: result, fieldsCompleted: 0 };
                   }
                 }
@@ -91,12 +88,19 @@ export default async function handler(req, res) {
 }
 
 function buildGoal(jobUrl, p) {
-  const resumeNote = p.resumeUrl
-    ? `The applicant's resume is hosted at: ${p.resumeUrl} — if asked to upload a resume, navigate to this URL first to download it, then upload it to the file input.`
-    : 'No resume URL provided — skip file upload fields if they are not required.';
+  const resumeInstruction = p.resumeUrl
+    ? `RESUME UPLOAD — follow these steps exactly in order:
+  a) Look for a resume/CV upload field on the form (it may say "Attach", "Upload", "Resume/CV").
+  b) Click the "Attach" button or the file upload input directly.
+  c) In the file dialog or URL input that appears, paste this direct PDF URL: ${p.resumeUrl}
+  d) If the dialog has a URL input field, type the URL and confirm. If it opens a file picker, look for an option to paste or enter a URL.
+  e) If none of the above works and there is a "Dropbox" or "Google Drive" option, skip those.
+  f) If the ONLY option is "Enter manually", click it and paste just the resume URL: ${p.resumeUrl} — do NOT type out the applicant's profile details in this field.
+  g) Do NOT type the applicant's name, education, skills, or any other profile information into the resume field. The resume field is ONLY for the file or URL.`
+    : 'No resume URL provided — skip the resume upload field entirely if it is not required.';
 
   return `
-You are an expert job application assistant. Your task is to complete a real job application on behalf of the applicant. Be precise, thorough, and do not skip any required fields.
+You are an expert job application assistant. Your task is to complete a real job application on behalf of the applicant. Be precise and follow instructions exactly.
 
 TARGET JOB URL: ${jobUrl}
 
@@ -113,18 +117,18 @@ APPLICANT PROFILE:
 - Brief bio / summary: ${p.bio || 'not provided'}
 - Cover letter preference: ${p.coverLetter || 'Keep it concise and professional. Emphasise relevant skills and enthusiasm for the role.'}
 
-RESUME: ${resumeNote}
+${resumeInstruction}
 
 INSTRUCTIONS:
-1. Navigate to the job URL. Read the full job description carefully — note the role, required skills, and company name.
-2. Find the Apply button and click it. If it redirects to an external ATS (Greenhouse, Lever, Workday, etc.), follow it.
-3. Fill in every visible form field using the applicant profile above.
-4. For custom screening questions, answer thoughtfully based on the job description and the applicant's profile. Keep answers concise (2-4 sentences) and relevant.
-5. For dropdown fields (work authorisation, experience level, etc.), select the most appropriate option.
-6. If the form has multiple pages, click Next / Continue after completing each page.
-7. Before submitting, review the form to ensure all required fields are filled.
-8. Click the final Submit / Send Application button.
-9. Wait for the confirmation page to load.
+1. Navigate to the job URL. Read the full job description — note the role, required skills, and company name.
+2. Find and click the Apply button. Follow any redirects to the ATS (Greenhouse, Lever, Workday, etc.).
+3. Fill every visible form field using the applicant profile above.
+4. For the resume/CV field, follow the RESUME UPLOAD steps above exactly — do not type profile text into it.
+5. For custom screening questions, answer thoughtfully based on the job description and the applicant's profile. Keep answers concise (2-4 sentences).
+6. For dropdowns (work authorisation, experience level, etc.), select the most appropriate option.
+7. If the form has multiple pages, click Next / Continue after completing each page.
+8. Review all fields before submitting.
+9. Click the final Submit button and wait for the confirmation page.
 
 Return a JSON object with this exact structure:
 {
