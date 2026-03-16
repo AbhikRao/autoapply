@@ -1,7 +1,8 @@
-// api/apply.js — Vercel serverless function
-// Starts a TinyFish run and returns {runId, streamingUrl} immediately.
-// Does NOT relay the full SSE stream — that would hit Vercel's 60s timeout.
-// The frontend polls /api/run/[id] until the agent finishes.
+// api/apply.js
+// Proxies the full TinyFish SSE stream to the browser.
+// Vercel maxDuration is 300s — enough for any real run.
+
+export const config = { maxDuration: 300 };
 
 const KEY = process.env.TINYFISH_API_KEY;
 
@@ -10,9 +11,8 @@ export default async function handler(req, res) {
   if (!KEY) return res.status(500).json({ error: 'TINYFISH_API_KEY not set' });
 
   const { jobUrl, profile } = req.body;
-  if (!jobUrl) return res.status(400).json({ error: 'jobUrl required' });
-  if (!profile?.name || !profile?.email)
-    return res.status(400).json({ error: 'profile.name and profile.email required' });
+  if (!jobUrl)                        return res.status(400).json({ error: 'jobUrl required' });
+  if (!profile?.name || !profile?.email) return res.status(400).json({ error: 'profile.name and profile.email required' });
 
   const goal = buildGoal(jobUrl, profile);
 
@@ -24,56 +24,108 @@ export default async function handler(req, res) {
       body: JSON.stringify({ url: jobUrl, goal, browser_profile: 'stealth' }),
     });
   } catch (err) {
-    return res.status(502).json({ error: 'Failed to reach TinyFish: ' + err.message });
+    return res.status(502).json({ error: 'Cannot reach TinyFish: ' + err.message });
   }
 
   if (!upstream.ok) {
-    const text = await upstream.text().catch(() => '');
-    return res.status(502).json({ error: `TinyFish ${upstream.status}: ${text}` });
+    const txt = await upstream.text().catch(() => '');
+    return res.status(502).json({ error: `TinyFish ${upstream.status}: ${txt}` });
   }
 
-  // Read SSE events only until we have runId + streamingUrl (arrives in ~2-3s).
-  // Then close the upstream stream — the agent keeps running on TinyFish servers.
+  // Set SSE headers so the browser can consume this as a stream
+  res.setHeader('Content-Type',  'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection',    'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
   const reader = upstream.body.getReader();
-  const dec = new TextDecoder();
-  let buf = '', runId = null, streamingUrl = null, agentError = null;
+  const dec    = new TextDecoder();
+  let   buf    = '';
 
   try {
-    const deadline = Date.now() + 20000; // 20s max to get startup events
-    outer: while (Date.now() < deadline) {
+    while (true) {
       const { done, value } = await reader.read();
       if (done) break;
+
       buf += dec.decode(value, { stream: true });
       const lines = buf.split('\n');
-      buf = lines.pop();
+      buf = lines.pop(); // keep incomplete last line
+
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         try {
           const ev = JSON.parse(line.slice(6).trim());
-          if (ev.type === 'STARTED')        runId = ev.runId;
-          if (ev.type === 'STREAMING_URL')  streamingUrl = ev.streamingUrl;
-          if (ev.type === 'ERROR')          { agentError = ev.message; break outer; }
-          if (ev.type === 'COMPLETE')       break outer; // very fast run
-          if (runId && streamingUrl)        break outer;
-        } catch (_) {}
+
+          switch (ev.type) {
+            case 'STARTED':
+              emit(res, { type: 'STARTED', runId: ev.runId });
+              break;
+
+            case 'STREAMING_URL':
+              emit(res, { type: 'STREAMING_URL', streamingUrl: ev.streamingUrl });
+              break;
+
+            case 'PROGRESS':
+              emit(res, { type: 'PROGRESS', message: ev.purpose || ev.message || '' });
+              break;
+
+            case 'HEARTBEAT':
+              emit(res, { type: 'HEARTBEAT' });
+              break;
+
+            case 'COMPLETE': {
+              // Parse resultJson robustly
+              let result = ev.resultJson ?? null;
+              if (typeof result === 'string') {
+                try {
+                  const clean = result
+                    .replace(/^```(?:json)?\s*/i, '')
+                    .replace(/\s*```\s*$/i,       '')
+                    .trim();
+                  result = JSON.parse(clean);
+                } catch (_) {
+                  result = { status: 'partial', notes: result, fieldsFilled: [], fieldsSkipped: [], questionsAnswered: [], fieldsCompleted: 0 };
+                }
+              }
+              if (ev.status !== 'COMPLETED') {
+                emit(res, { type: 'ERROR', message: ev.error?.message || `Run ended: ${ev.status}` });
+              } else {
+                emit(res, { type: 'COMPLETE', result });
+              }
+              break;
+            }
+
+            case 'ERROR':
+              emit(res, { type: 'ERROR', message: ev.message || 'Unknown agent error' });
+              break;
+
+            default:
+              // forward unknown events verbatim
+              emit(res, ev);
+          }
+        } catch (_) { /* skip malformed lines */ }
       }
     }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      emit(res, { type: 'ERROR', message: err.message });
+    }
   } finally {
-    reader.cancel().catch(() => {});
+    res.end();
   }
+}
 
-  if (agentError) return res.status(502).json({ error: agentError });
-  if (!runId)     return res.status(502).json({ error: 'Agent did not return a run ID. TinyFish may be down or the key is invalid.' });
-
-  return res.json({ runId, streamingUrl });
+function emit(res, data) {
+  res.write('data: ' + JSON.stringify(data) + '\n\n');
 }
 
 function buildGoal(jobUrl, p) {
   const resumeInstruction = p.resumeUrl
-    ? `RESUME UPLOAD — for the resume/CV field:\n  a) Click Attach/Upload.\n  b) If a URL input is shown, paste: ${p.resumeUrl}\n  c) If only "Enter manually" exists, paste ONLY this URL: ${p.resumeUrl} — do NOT type the applicant profile in this field.\n  d) Do NOT write the applicant's name, skills, or bio into the resume field.`
+    ? `RESUME UPLOAD — for the resume/CV field:\n  a) Click Attach/Upload.\n  b) If a URL input is shown, paste: ${p.resumeUrl}\n  c) If only "Enter manually" exists, paste ONLY this URL: ${p.resumeUrl} — do NOT type the applicant profile.\n  d) Do NOT write the applicant's name, skills, bio, or any other text into the resume field.`
     : 'RESUME: No resume URL provided — skip the file upload field if not required.';
 
-  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant below. Be precise and thorough.
+  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant. Be precise and thorough.
 
 TARGET JOB URL: ${jobUrl}
 
@@ -88,36 +140,30 @@ APPLICANT PROFILE:
 - Education: ${p.education || 'not provided'}
 - Key skills: ${p.skills || 'not provided'}
 - Brief bio: ${p.bio || 'not provided'}
-- Cover letter style: ${p.coverLetter || 'Keep it concise and professional. Highlight relevant skills and enthusiasm for the role.'}
+- Cover letter style: ${p.coverLetter || 'Concise, professional, highlight relevant skills.'}
 
 ${resumeInstruction}
 
 INSTRUCTIONS:
-1. Navigate to the job URL. Read the full job description — note the role, company, required skills.
-2. Find and click the Apply button. Follow any redirects to the ATS.
-3. Fill every visible field using the applicant profile above.
-4. For screening questions: answer thoughtfully (2-4 sentences, tailored to the job description).
-5. For dropdowns (work authorisation, experience level, etc.): select the best match.
-6. For multi-page forms: click Next/Continue after each page.
-7. Submit the application. Wait for the confirmation page to load.
+1. Navigate to the job URL. Read the full job description.
+2. Click Apply and follow any ATS redirects.
+3. Fill every field using the applicant profile.
+4. Answer screening questions thoughtfully (2-4 sentences each).
+5. Select best-match options for any dropdowns.
+6. Navigate multi-page forms, click Next/Continue as needed.
+7. Submit and wait for the confirmation page.
 
 Return ONLY valid JSON — no markdown fences, no extra text:
 {
-  "jobTitle": "<exact job title from the page>",
+  "jobTitle": "<exact job title>",
   "company": "<company name>",
   "ats": "<Greenhouse|Lever|Workday|LinkedIn|Direct|Other>",
   "status": "<submitted|partial|error>",
-  "confirmationText": "<verbatim confirmation message shown after submit, or null>",
-  "fieldsFilled": [
-    { "field": "<field label>", "value": "<value you entered>" }
-  ],
-  "fieldsSkipped": [
-    { "field": "<field label>", "reason": "<why it was skipped or could not be filled>" }
-  ],
-  "questionsAnswered": [
-    { "question": "<question text>", "answer": "<answer you gave>" }
-  ],
-  "fieldsCompleted": <integer count of fieldsFilled>,
-  "notes": "<any observations, issues encountered, or additional context>"
+  "confirmationText": "<confirmation message or null>",
+  "fieldsFilled": [ { "field": "<label>", "value": "<value entered>" } ],
+  "fieldsSkipped": [ { "field": "<label>", "reason": "<why>" } ],
+  "questionsAnswered": [ { "question": "<text>", "answer": "<answer>" } ],
+  "fieldsCompleted": <integer>,
+  "notes": "<observations or issues>"
 }`.trim();
 }

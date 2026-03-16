@@ -22,8 +22,6 @@
     }
     html,body { height:100%; overflow:hidden; }
     body { font-family:var(--fn); background:var(--bg); color:var(--tx); font-size:13px; line-height:1.5; }
-
-    /* ── HEADER ── */
     .hdr { height:48px; border-bottom:1px solid var(--br); display:flex; align-items:center; padding:0 20px; gap:10px; background:var(--sf); }
     .hdr-logo { display:flex; align-items:center; gap:7px; font-size:14px; font-weight:600; letter-spacing:-.2px; }
     .hdr-sep  { color:var(--t3); margin:0 2px; }
@@ -33,17 +31,11 @@
     .dot      { width:6px; height:6px; border-radius:50%; background:var(--gn); flex-shrink:0; }
     .dot.live { animation:pulse 1.2s infinite; background:var(--bl); }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-    /* ── LAYOUT ── */
     .ws   { display:grid; grid-template-columns:360px 1fr; height:calc(100vh - 48px); }
     .left { border-right:1px solid var(--br); background:var(--sf); display:flex; flex-direction:column; overflow:hidden; }
-
-    /* scrollable form */
     .lscroll { flex:1; overflow-y:auto; padding:18px 16px; display:flex; flex-direction:column; gap:20px; }
     .lscroll::-webkit-scrollbar { width:3px; }
     .lscroll::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
-
-    /* activity log pinned to bottom */
     .log-panel  { flex-shrink:0; height:200px; border-top:1px solid var(--br); display:flex; flex-direction:column; background:var(--bg); }
     .log-hdr    { padding:8px 14px 4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--t3); flex-shrink:0; }
     .log-stream { flex:1; overflow-y:auto; padding:0 14px 10px; display:flex; flex-direction:column; gap:2px; }
@@ -57,8 +49,6 @@
     .le.ok   { color:var(--gn); } .le.ok .sym  { color:var(--gn); }
     .le.err  { color:var(--rd); } .le.err .sym { color:var(--rd); }
     .le.warn { color:var(--am); } .le.warn .sym { color:var(--am); }
-
-    /* form elements */
     .sec       { display:flex; flex-direction:column; gap:10px; }
     .sec-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--t3); }
     .row       { display:grid; gap:8px; }
@@ -72,8 +62,6 @@
     input:focus, textarea:focus { border-color:var(--bl); }
     input::placeholder, textarea::placeholder { color:var(--t3); }
     textarea { min-height:60px; resize:vertical; }
-
-    /* job section */
     .job-wrap    { display:flex; flex-direction:column; gap:8px; }
     .url-row     { display:flex; gap:6px; }
     .url-row input { flex:1; }
@@ -82,19 +70,15 @@
     .btn-apply:disabled { opacity:.4; cursor:not-allowed; }
     .spin { width:12px; height:12px; border:1.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; display:none; }
     @keyframes spin { to{transform:rotate(360deg)} }
-    .ats-row   { display:flex; flex-wrap:wrap; gap:5px; }
-    .ats-tag   { font-size:10px; padding:2px 8px; border-radius:4px; border:1px solid var(--br2); color:var(--t2); background:var(--s3); }
-
-    /* agent controls */
+    .ats-row  { display:flex; flex-wrap:wrap; gap:5px; }
+    .ats-tag  { font-size:10px; padding:2px 8px; border-radius:4px; border:1px solid var(--br2); color:var(--t2); background:var(--s3); }
     .agent-ctrl { display:none; gap:6px; }
     .agent-ctrl.on { display:flex; }
     .btn-stop     { flex:1; padding:7px; background:var(--rdd); border:1px solid var(--rd); border-radius:var(--r); color:var(--rd); font-size:12px; font-weight:600; cursor:pointer; transition:all .12s; }
     .btn-stop:hover { background:var(--rd); color:#fff; }
     .btn-takeover { flex:1; padding:7px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:12px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all .12s; }
-    .btn-takeover:hover  { border-color:var(--am); color:var(--am); }
+    .btn-takeover:hover { border-color:var(--am); color:var(--am); }
     .btn-takeover:disabled { opacity:.3; cursor:not-allowed; }
-
-    /* right panel */
     .right { display:flex; flex-direction:column; overflow:hidden; }
     .tabs  { display:flex; border-bottom:1px solid var(--br); background:var(--sf); padding:0 4px; flex-shrink:0; }
     .tab   { padding:12px 16px; font-size:12px; font-weight:500; color:var(--t2); cursor:pointer; border-bottom:1px solid transparent; transition:all .12s; display:flex; align-items:center; gap:6px; user-select:none; }
@@ -102,10 +86,8 @@
     .tab.on    { color:var(--tx); border-bottom-color:var(--tx); }
     .bdg    { font-size:10px; background:var(--s3); border:1px solid var(--br2); border-radius:4px; padding:1px 5px; color:var(--t2); display:none; }
     .bdg.on { display:inline-block; }
-    .pane   { flex:1; display:none; flex-direction:column; overflow:hidden; }
+    .pane    { flex:1; display:none; flex-direction:column; overflow:hidden; }
     .pane.on { display:flex; }
-
-    /* live browser */
     #pane-live { background:#000; }
     .bbr      { display:flex; align-items:center; gap:8px; padding:9px 16px; background:var(--sf); border-bottom:1px solid var(--br); flex-shrink:0; }
     .bdots    { display:flex; gap:5px; }
@@ -114,7 +96,7 @@
     .ubar     { flex:1; background:var(--s3); border:1px solid var(--br); border-radius:5px; padding:4px 12px; font-family:var(--mo); font-size:11px; color:var(--t2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .live-ind { font-size:10px; font-weight:600; color:var(--rd); letter-spacing:.5px; display:none; align-items:center; gap:5px; flex-shrink:0; }
     .live-dot { width:7px; height:7px; border-radius:50%; background:var(--rd); animation:pulse 1s infinite; }
-    .btn-ctrl { padding:4px 10px; background:transparent; border:1px solid var(--br2); border-radius:5px; color:var(--t2); font-size:11px; font-weight:500; cursor:pointer; white-space:nowrap; display:none; align-items:center; gap:5px; transition:all .12s; flex-shrink:0; }
+    .btn-ctrl { padding:4px 10px; background:transparent; border:1px solid var(--br2); border-radius:5px; color:var(--t2); font-size:11px; cursor:pointer; white-space:nowrap; display:none; align-items:center; gap:5px; transition:all .12s; flex-shrink:0; }
     .btn-ctrl.on  { display:flex; }
     .btn-ctrl:hover { border-color:var(--am); color:var(--am); }
     .fw       { flex:1; position:relative; overflow:hidden; }
@@ -124,24 +106,17 @@
     .idle h3  { font-size:16px; font-weight:500; }
     .idle p   { font-size:12px; color:var(--t2); max-width:300px; line-height:1.7; }
     .idle-steps { display:flex; flex-direction:column; gap:8px; text-align:left; max-width:300px; }
-    .is   { display:flex; gap:10px; font-size:12px; color:var(--t2); align-items:flex-start; }
-    .sn   { width:18px; height:18px; border-radius:50%; flex-shrink:0; border:1px solid var(--br2); color:var(--t2); font-size:10px; font-weight:500; display:flex; align-items:center; justify-content:center; margin-top:1px; }
-
-    /* ── RESULT PANE ── */
+    .is  { display:flex; gap:10px; font-size:12px; color:var(--t2); align-items:flex-start; }
+    .sn  { width:18px; height:18px; border-radius:50%; flex-shrink:0; border:1px solid var(--br2); color:var(--t2); font-size:10px; font-weight:500; display:flex; align-items:center; justify-content:center; margin-top:1px; }
     #pane-result { overflow-y:auto; padding:24px; background:var(--bg); display:flex; flex-direction:column; gap:20px; }
     #pane-result::-webkit-scrollbar { width:4px; }
     #pane-result::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
-
     .res-empty { text-align:center; padding:60px 20px; color:var(--t2); margin:auto; }
     .res-empty-ic { width:44px; height:44px; margin:0 auto 14px; border-radius:12px; border:1px solid var(--br2); background:var(--s2); display:flex; align-items:center; justify-content:center; color:var(--t3); }
     .res-empty h3 { font-size:14px; font-weight:500; color:var(--tx); margin-bottom:6px; }
     .res-empty p  { font-size:12px; line-height:1.7; max-width:280px; margin:0 auto; }
-
-    /* result header */
     .res-title { font-size:18px; font-weight:600; line-height:1.3; }
     .res-sub   { font-size:12px; color:var(--t2); margin-top:4px; }
-
-    /* status + meta row */
     .res-meta-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .badge        { font-size:11px; font-weight:600; padding:4px 12px; border-radius:6px; text-transform:uppercase; letter-spacing:.5px; }
     .badge.submitted { background:var(--gnd); color:var(--gn); border:1px solid rgba(22,163,74,.3); }
@@ -149,21 +124,15 @@
     .badge.error     { background:var(--rdd); color:var(--rd); border:1px solid rgba(220,38,38,.3); }
     .badge.unknown   { background:var(--s3); color:var(--t2); border:1px solid var(--br2); }
     .meta-chip { font-size:11px; color:var(--t2); background:var(--s3); border:1px solid var(--br2); border-radius:5px; padding:3px 9px; }
-
-    /* stat cards */
     .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; border:1px solid var(--br); border-radius:var(--rl); overflow:hidden; }
-    .stat      { background:var(--s2); padding:12px 14px; }
-    .stat-k    { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--t2); margin-bottom:4px; }
-    .stat-v    { font-size:14px; font-weight:600; color:var(--tx); }
-
-    /* cards */
-    .card       { background:var(--s2); border:1px solid var(--br); border-radius:var(--rl); overflow:hidden; }
-    .card-hdr   { padding:10px 14px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--t2); border-bottom:1px solid var(--br); background:var(--s3); }
-    .card-body  { padding:14px; }
-    .card-text  { font-size:13px; color:var(--tx); line-height:1.7; white-space:pre-wrap; }
-    .card-note  { font-size:12px; color:var(--t2); line-height:1.7; white-space:pre-wrap; }
-
-    /* fields table */
+    .stat    { background:var(--s2); padding:12px 14px; }
+    .stat-k  { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--t2); margin-bottom:4px; }
+    .stat-v  { font-size:14px; font-weight:600; color:var(--tx); }
+    .card      { background:var(--s2); border:1px solid var(--br); border-radius:var(--rl); overflow:hidden; }
+    .card-hdr  { padding:10px 14px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--t2); border-bottom:1px solid var(--br); background:var(--s3); }
+    .card-body { padding:14px; }
+    .card-text { font-size:13px; color:var(--tx); line-height:1.7; white-space:pre-wrap; }
+    .card-note { font-size:12px; color:var(--t2); line-height:1.7; white-space:pre-wrap; }
     .field-table { width:100%; border-collapse:collapse; font-size:12px; }
     .field-table th { text-align:left; padding:7px 10px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:var(--t2); border-bottom:1px solid var(--br); }
     .field-table td { padding:8px 10px; border-bottom:1px solid var(--br); vertical-align:top; }
@@ -172,14 +141,10 @@
     .field-table td:last-child  { color:var(--tx); word-break:break-word; }
     .field-table tr.skipped td  { opacity:.55; }
     .skip-reason { font-size:11px; color:var(--rd); margin-top:2px; }
-
-    /* Q&A list */
     .qa-item  { padding:12px 14px; border-bottom:1px solid var(--br); }
     .qa-item:last-child { border-bottom:none; }
     .qa-q     { font-size:12px; font-weight:500; color:var(--tx); margin-bottom:5px; }
     .qa-a     { font-size:12px; color:var(--t2); line-height:1.6; }
-
-    /* toast */
     .toast { position:fixed; bottom:20px; right:20px; z-index:999; background:var(--s3); border:1px solid var(--br2); border-radius:var(--rl); padding:10px 16px; font-size:12px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.6); animation:fadein .2s ease; }
   </style>
 </head>
@@ -198,11 +163,8 @@
 </header>
 
 <div class="ws">
-  <!-- ── LEFT PANEL ── -->
   <div class="left">
     <div class="lscroll">
-
-      <!-- Job section -->
       <div class="sec">
         <div class="sec-title">Job</div>
         <div class="job-wrap">
@@ -221,7 +183,7 @@
             <span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span>
           </div>
           <div class="agent-ctrl" id="agent-ctrl">
-            <button class="btn-stop" onclick="stopAgent()">&#9646;&#9646; Stop Agent</button>
+            <button class="btn-stop" onclick="stopAgent()">⏹ Stop Agent</button>
             <button class="btn-takeover" id="btn-takeover" onclick="takeControl()" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               Take Control
@@ -229,59 +191,52 @@
           </div>
         </div>
       </div>
-
-      <!-- Profile section -->
       <div class="sec">
         <div class="sec-title">Profile</div>
         <div class="row two">
-          <div class="fg"><label class="fl">Full Name *</label><input type="text" id="p-name" value="Abhik Rao" /></div>
-          <div class="fg"><label class="fl">Email *</label><input type="email" id="p-email" value="abhikrao1301@gmail.com" /></div>
+          <div class="fg"><label class="fl">Full Name *</label><input type="text"  id="p-name"  value="Abhik Rao" /></div>
+          <div class="fg"><label class="fl">Email *</label>   <input type="email" id="p-email" value="abhikrao1301@gmail.com" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">Phone</label><input type="tel" id="p-phone" value="+91 98765 43210" /></div>
-          <div class="fg"><label class="fl">Location</label><input type="text" id="p-loc" value="New Delhi, India" /></div>
+          <div class="fg"><label class="fl">Phone</label>    <input type="tel"  id="p-phone" value="+91 98765 43210" /></div>
+          <div class="fg"><label class="fl">Location</label> <input type="text" id="p-loc"   value="New Delhi, India" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">LinkedIn URL</label><input type="url" id="p-li" value="https://www.linkedin.com/in/abhik-rao-38611b36a/" /></div>
+          <div class="fg"><label class="fl">LinkedIn URL</label>      <input type="url" id="p-li" value="https://www.linkedin.com/in/abhik-rao-38611b36a/" /></div>
           <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" value="https://github.com/AbhikRao" /></div>
         </div>
         <div class="row two">
           <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" value="1" /></div>
-          <div class="fg"><label class="fl">Education</label><input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" /></div>
+          <div class="fg"><label class="fl">Education</label>          <input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" /></div>
         </div>
         <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures &amp; Algorithms" /></div>
         <div class="fg">
-          <label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — hosted PDF</span></label>
+          <label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> &mdash; hosted PDF</span></label>
           <input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" />
         </div>
         <div class="fg"><label class="fl">Brief Bio</label>
           <textarea id="p-bio">CS &amp; AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea>
         </div>
         <div class="fg">
-          <label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> — optional</span></label>
+          <label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> &mdash; optional</span></label>
           <textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea>
         </div>
       </div>
-
-    </div><!-- /lscroll -->
-
-    <!-- Activity log pinned to bottom -->
+    </div>
     <div class="log-panel">
       <div class="log-hdr">Activity</div>
       <div class="log-stream" id="log">
         <div class="le"><span class="sym">&middot;</span><span>Waiting for input</span></div>
       </div>
     </div>
-  </div><!-- /left -->
+  </div>
 
-  <!-- ── RIGHT PANEL ── -->
   <div class="right">
     <div class="tabs">
       <div class="tab on" data-p="live"   onclick="switchTab('live')">Live Browser</div>
       <div class="tab"    data-p="result" onclick="switchTab('result')">Result <span class="bdg" id="res-bdg">!</span></div>
     </div>
 
-    <!-- Live browser pane -->
     <div class="pane on" id="pane-live">
       <div class="bbr">
         <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
@@ -308,130 +263,85 @@
       </div>
     </div>
 
-    <!-- Result pane -->
     <div class="pane" id="pane-result">
       <div class="res-empty" id="res-empty">
         <div class="res-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
         <h3>No result yet</h3>
-        <p>Run an application to see the full outcome — submission status, every field filled, screening answers, and agent notes.</p>
+        <p>Run an application to see the full outcome &mdash; submission status, every field filled, screening answers, and agent notes.</p>
       </div>
-      <div id="res-content" style="display:none; display:flex; flex-direction:column; gap:20px; display:none;">
-
-        <!-- Title + sub -->
+      <div id="res-content" style="display:none;flex-direction:column;gap:20px;">
         <div>
           <div class="res-title" id="r-title">Application Result</div>
-          <div class="res-sub"  id="r-sub"></div>
+          <div class="res-sub"   id="r-sub"></div>
         </div>
-
-        <!-- Status + meta chips -->
         <div class="res-meta-row">
           <span class="badge unknown" id="r-badge">unknown</span>
-          <span class="meta-chip" id="r-ats"></span>
+          <span class="meta-chip" id="r-ats"    style="display:none"></span>
           <span class="meta-chip" id="r-time"></span>
           <span class="meta-chip" id="r-fields"></span>
         </div>
-
-        <!-- Stat cards -->
         <div class="stat-grid">
-          <div class="stat"><div class="stat-k">Role</div><div class="stat-v" id="r-role">—</div></div>
-          <div class="stat"><div class="stat-k">Company</div><div class="stat-v" id="r-company">—</div></div>
-          <div class="stat"><div class="stat-k">Fields Filled</div><div class="stat-v" id="r-filled-count">—</div></div>
-          <div class="stat"><div class="stat-k">Questions</div><div class="stat-v" id="r-qa-count">—</div></div>
+          <div class="stat"><div class="stat-k">Role</div>         <div class="stat-v" id="r-role">&mdash;</div></div>
+          <div class="stat"><div class="stat-k">Company</div>      <div class="stat-v" id="r-company">&mdash;</div></div>
+          <div class="stat"><div class="stat-k">Fields Filled</div><div class="stat-v" id="r-filled-count">&mdash;</div></div>
+          <div class="stat"><div class="stat-k">Questions</div>    <div class="stat-v" id="r-qa-count">&mdash;</div></div>
         </div>
-
-        <!-- Confirmation -->
-        <div class="card" id="r-conf-card" style="display:none">
-          <div class="card-hdr">&#10003; Confirmation</div>
-          <div class="card-body"><div class="card-text" id="r-conf-text"></div></div>
-        </div>
-
-        <!-- Fields filled -->
+        <div class="card" id="r-conf-card"   style="display:none"><div class="card-hdr">&#10003; Confirmation</div><div class="card-body"><div class="card-text" id="r-conf-text"></div></div></div>
         <div class="card" id="r-fields-card" style="display:none">
           <div class="card-hdr">Fields Filled</div>
           <div class="card-body" style="padding:0">
-            <table class="field-table">
-              <thead><tr><th>Field</th><th>Value entered</th></tr></thead>
-              <tbody id="r-fields-body"></tbody>
-            </table>
+            <table class="field-table"><thead><tr><th>Field</th><th>Value entered</th></tr></thead><tbody id="r-fields-body"></tbody></table>
           </div>
         </div>
-
-        <!-- Fields skipped -->
         <div class="card" id="r-skip-card" style="display:none">
           <div class="card-hdr">Fields Skipped / Issues</div>
           <div class="card-body" style="padding:0">
-            <table class="field-table">
-              <thead><tr><th>Field</th><th>Reason</th></tr></thead>
-              <tbody id="r-skip-body"></tbody>
-            </table>
+            <table class="field-table"><thead><tr><th>Field</th><th>Reason</th></tr></thead><tbody id="r-skip-body"></tbody></table>
           </div>
         </div>
-
-        <!-- Screening Q&A -->
         <div class="card" id="r-qa-card" style="display:none">
           <div class="card-hdr">Screening Questions &amp; Answers</div>
           <div id="r-qa-list"></div>
         </div>
-
-        <!-- Agent notes -->
         <div class="card" id="r-notes-card" style="display:none">
           <div class="card-hdr">Agent Notes</div>
           <div class="card-body"><div class="card-note" id="r-notes-text"></div></div>
         </div>
-
-      </div><!-- /res-content -->
-    </div><!-- /pane-result -->
-
-  </div><!-- /right -->
-</div><!-- /ws -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  // ─── state ───────────────────────────────────────────────────────────────
-  let runId = null;
-  let streamingUrl = null;
-  let stopped = false;
-  let pollTimer = null;
-  let t0 = 0;
+  let ctrl = null, streamingUrl = null, t0 = 0;
 
-  // ─── helpers ─────────────────────────────────────────────────────────────
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
     document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
     document.getElementById('pane-' + name).classList.add('on');
   }
-
   function ts() {
-    return new Date().toLocaleTimeString('en-US', { hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    return new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
-
   function log(msg, type) {
     if (!msg || !String(msg).trim()) return;
-    const sym = { info:'→', ok:'✓', err:'×', warn:'!' }[type] || '·';
+    const sym = {info:'\u2192',ok:'\u2713',err:'\u00d7',warn:'!'}[type]||'\u00b7';
     const el = document.createElement('div');
-    el.className = 'le ' + (type || '');
-    el.innerHTML = `<span class="sym">${sym}</span><span class="ts">${ts()}</span><span>${msg}</span>`;
+    el.className = 'le '+(type||'');
+    el.innerHTML = `<span class="sym">${sym}</span><span class="ts">${ts()}</span><span>${String(msg)}</span>`;
     const s = document.getElementById('log');
-    s.appendChild(el);
-    s.scrollTop = s.scrollHeight;
+    s.appendChild(el); s.scrollTop = s.scrollHeight;
   }
-
   function clearLog() { document.getElementById('log').innerHTML = ''; }
-
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
   function setRunning(on) {
     document.getElementById('btn-apply').disabled = on;
-    document.getElementById('btn-lbl').textContent = on ? 'Running…' : 'Apply';
+    document.getElementById('btn-lbl').textContent = on ? 'Running\u2026' : 'Apply';
     document.getElementById('spin').style.display = on ? 'block' : 'none';
     document.getElementById('agent-ctrl').classList.toggle('on', on);
     document.getElementById('hdr-dot').classList.toggle('live', on);
     document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
-    if (!on) {
-      document.getElementById('btn-ctrl').classList.remove('on');
-      document.getElementById('btn-takeover').disabled = true;
-    }
+    if (!on) { document.getElementById('btn-ctrl').classList.remove('on'); document.getElementById('btn-takeover').disabled = true; }
   }
-
   function showStream(url) {
     const f = document.getElementById('live-frame');
     f.src = url; f.style.display = 'block';
@@ -443,7 +353,6 @@
     document.getElementById('btn-takeover').disabled = false;
     streamingUrl = url;
   }
-
   function resetLive() {
     const f = document.getElementById('live-frame');
     f.style.display = 'none'; f.src = '';
@@ -452,7 +361,6 @@
     document.getElementById('live-ind').style.display = 'none';
     ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on'));
   }
-
   function getProfile() {
     return {
       name:        document.getElementById('p-name').value.trim(),
@@ -470,7 +378,6 @@
     };
   }
 
-  // ─── main apply flow ──────────────────────────────────────────────────────
   async function startApply() {
     const jobUrl = document.getElementById('job-url').value.trim();
     const profile = getProfile();
@@ -478,203 +385,146 @@
     if (!profile.name)  return toast('Full name is required');
     if (!profile.email) return toast('Email is required');
 
-    // reset
-    clearLog();
-    setRunning(true);
-    resetLive();
-    stopped = false;
-    runId = null;
-    streamingUrl = null;
-    t0 = Date.now();
-    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    clearLog(); setRunning(true); resetLive();
+    streamingUrl = null; t0 = Date.now();
+    if (ctrl) { ctrl.abort(); }
+    ctrl = new AbortController();
+
+    // reset result pane
     document.getElementById('res-empty').style.display = 'flex';
     document.getElementById('res-content').style.display = 'none';
     document.getElementById('res-bdg').classList.remove('on');
+    ['r-conf-card','r-fields-card','r-skip-card','r-qa-card','r-notes-card']
+      .forEach(id => document.getElementById(id).style.display = 'none');
     switchTab('live');
-
     log('Launching agent for: ' + jobUrl, 'info');
 
-    // 1. Start the run — get {runId, streamingUrl} back as JSON
-    let data;
     try {
       const res = await fetch('/api/apply', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ jobUrl, profile }),
+        signal: ctrl.signal,
       });
-      data = await res.json();
-      if (!res.ok || data.error) {
-        log('Error: ' + (data.error || 'Unknown error starting agent'), 'err');
-        setRunning(false);
-        return;
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({error: 'HTTP '+res.status}));
+        log('Error: ' + (err.error || 'Unknown'), 'err');
+        setRunning(false); return;
       }
-    } catch (e) {
-      log('Network error: ' + e.message, 'err');
+
+      // Read SSE stream
+      const reader = res.body.getReader();
+      const dec    = new TextDecoder();
+      let   buf    = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try { handle(JSON.parse(line.slice(6))); } catch(_) {}
+        }
+      }
+    } catch(e) {
+      if (e.name !== 'AbortError') log('Connection error: ' + e.message, 'err');
+    } finally {
       setRunning(false);
-      return;
     }
-
-    runId = data.runId;
-    log('Run started · ID: ' + runId, 'info');
-
-    // 2. Show live stream
-    if (data.streamingUrl) {
-      showStream(data.streamingUrl);
-      log('Live browser stream active', 'ok');
-    }
-
-    // 3. Poll for completion
-    await pollForResult();
   }
 
-  async function pollForResult() {
-    if (!runId) { setRunning(false); return; }
-    log('Polling for result every 4s…', 'info');
-
-    let attempts = 0;
-    const MAX = 150; // 10 minutes max
-    const TERMINAL = new Set(['COMPLETED','FAILED','ERROR','CANCELLED']);
-
-    while (attempts < MAX && !stopped) {
-      await sleep(4000);
-      if (stopped) break;
-      attempts++;
-
-      try {
-        const r = await fetch('/api/run/' + runId);
-        if (!r.ok) { log('Poll error: HTTP ' + r.status, 'warn'); continue; }
-        const d = await r.json();
-        const status = (d.status || '').toUpperCase();
-
-        // Show progress every 5 polls or on status changes
-        if (attempts % 5 === 0 || TERMINAL.has(status)) {
-          log('Status: ' + status, TERMINAL.has(status) ? (status === 'COMPLETED' ? 'ok' : 'err') : '');
-        }
-
-        if (TERMINAL.has(status)) {
-          document.getElementById('live-ind').style.display = 'none';
-          const secs = ((Date.now() - t0) / 1000).toFixed(1);
-
-          if (status === 'COMPLETED') {
-            log('Completed in ' + secs + 's', 'ok');
-            renderResult(d.result || {}, secs, status);
-          } else {
-            const errMsg = d.result?.notes || d.error?.message || 'Run ended: ' + status;
-            log('Agent ended: ' + errMsg, 'err');
-            renderResult(d.result || { status: 'error', notes: errMsg }, secs, status);
-          }
-          setRunning(false);
-          return;
-        }
-      } catch (e) {
-        log('Poll failed: ' + e.message, 'warn');
+  function handle(ev) {
+    switch (ev.type) {
+      case 'STARTED':
+        log('Run started \u00b7 ID: ' + ev.runId, 'info'); break;
+      case 'STREAMING_URL':
+        showStream(ev.streamingUrl);
+        log('Live browser stream active', 'ok'); break;
+      case 'PROGRESS':
+        log(ev.message); break;
+      case 'HEARTBEAT': break;
+      case 'COMPLETE': {
+        const secs = ((Date.now()-t0)/1000).toFixed(1);
+        log('Completed in ' + secs + 's', 'ok');
+        document.getElementById('live-ind').style.display = 'none';
+        renderResult(ev.result || {}, secs);
+        break;
       }
+      case 'ERROR':
+        log(ev.message || 'Agent error', 'err'); break;
+      case 'LOG':
+        log(ev.message, 'info'); break;
     }
-
-    if (!stopped) {
-      log('Timed out waiting for result', 'err');
-    }
-    setRunning(false);
   }
 
   function stopAgent() {
-    stopped = true;
-    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    if (ctrl) ctrl.abort();
     log('Stopped by user', 'err');
     setRunning(false);
   }
-
   function takeControl() {
-    if (!streamingUrl) return toast('No active stream yet — wait for the live browser to load');
+    if (!streamingUrl) return toast('No active stream yet');
     window.open(streamingUrl, '_blank');
-    log('Live browser opened in new tab — you now have control', 'ok');
-    toast('Opened in new tab — interact directly with the form');
+    log('Opened live browser in new tab \u2014 you have control', 'ok');
   }
 
-  // ─── render result ────────────────────────────────────────────────────────
-  function renderResult(r, secs, runStatus) {
-    // title
+  function renderResult(r, secs) {
     const jobTitle = r.jobTitle || 'Application';
     const company  = r.company  || '';
-    document.getElementById('r-title').textContent = company ? jobTitle + ' · ' + company : jobTitle;
-    document.getElementById('r-sub').textContent   = 'Run ID: ' + (runId || '—');
-
-    // status badge
-    const appStatus = (r.status || 'unknown').toLowerCase();
-    const badge = document.getElementById('r-badge');
-    badge.textContent  = appStatus;
-    badge.className    = 'badge ' + appStatus;
-
-    // meta chips
+    document.getElementById('r-title').textContent = company ? jobTitle+' \u00b7 '+company : jobTitle;
+    document.getElementById('r-sub').textContent   = new Date().toLocaleString();
+    const status = (r.status || 'unknown').toLowerCase();
+    const badge  = document.getElementById('r-badge');
+    badge.textContent = status; badge.className = 'badge '+status;
     const atsEl = document.getElementById('r-ats');
-    atsEl.textContent   = r.ats ? 'via ' + r.ats : '';
-    atsEl.style.display = r.ats ? '' : 'none';
+    if (r.ats) { atsEl.textContent = 'via '+r.ats; atsEl.style.display = ''; }
     document.getElementById('r-time').textContent   = secs + 's';
-    const filled = Array.isArray(r.fieldsFilled) ? r.fieldsFilled.length : (r.fieldsCompleted || 0);
+    const filled = Array.isArray(r.fieldsFilled) ? r.fieldsFilled.length : (r.fieldsCompleted||0);
     document.getElementById('r-fields').textContent = filled + ' fields filled';
-
-    // stat cards
-    document.getElementById('r-role').textContent         = r.jobTitle  || '—';
-    document.getElementById('r-company').textContent      = r.company   || '—';
-    document.getElementById('r-filled-count').textContent = filled || '—';
+    document.getElementById('r-role').textContent         = r.jobTitle  || '\u2014';
+    document.getElementById('r-company').textContent      = r.company   || '\u2014';
+    document.getElementById('r-filled-count').textContent = filled      || '\u2014';
     const qaCount = Array.isArray(r.questionsAnswered) ? r.questionsAnswered.length : 0;
-    document.getElementById('r-qa-count').textContent     = qaCount || '—';
-
-    // confirmation
+    document.getElementById('r-qa-count').textContent     = qaCount     || '\u2014';
     if (r.confirmationText) {
       document.getElementById('r-conf-text').textContent = r.confirmationText;
       document.getElementById('r-conf-card').style.display = '';
     }
-
-    // fields filled table
     if (Array.isArray(r.fieldsFilled) && r.fieldsFilled.length) {
-      const tbody = document.getElementById('r-fields-body');
-      tbody.innerHTML = r.fieldsFilled.map(f =>
-        `<tr><td>${esc(f.field)}</td><td>${esc(f.value)}</td></tr>`
-      ).join('');
+      document.getElementById('r-fields-body').innerHTML = r.fieldsFilled
+        .map(f => `<tr><td>${esc(f.field)}</td><td>${esc(f.value)}</td></tr>`).join('');
       document.getElementById('r-fields-card').style.display = '';
     }
-
-    // fields skipped table
     if (Array.isArray(r.fieldsSkipped) && r.fieldsSkipped.length) {
-      const tbody = document.getElementById('r-skip-body');
-      tbody.innerHTML = r.fieldsSkipped.map(f =>
-        `<tr class="skipped"><td>${esc(f.field)}</td><td><div class="skip-reason">${esc(f.reason || 'Skipped')}</div></td></tr>`
-      ).join('');
+      document.getElementById('r-skip-body').innerHTML = r.fieldsSkipped
+        .map(f => `<tr class="skipped"><td>${esc(f.field)}</td><td><div class="skip-reason">${esc(f.reason||'Skipped')}</div></td></tr>`).join('');
       document.getElementById('r-skip-card').style.display = '';
     }
-
-    // Q&A
     if (qaCount) {
-      const list = document.getElementById('r-qa-list');
-      list.innerHTML = r.questionsAnswered.map(q =>
-        `<div class="qa-item"><div class="qa-q">${esc(q.question)}</div><div class="qa-a">${esc(q.answer)}</div></div>`
-      ).join('');
+      document.getElementById('r-qa-list').innerHTML = r.questionsAnswered
+        .map(q => `<div class="qa-item"><div class="qa-q">${esc(q.question)}</div><div class="qa-a">${esc(q.answer)}</div></div>`).join('');
       document.getElementById('r-qa-card').style.display = '';
     }
-
-    // notes
     if (r.notes) {
       document.getElementById('r-notes-text').textContent = r.notes;
       document.getElementById('r-notes-card').style.display = '';
     }
-
-    // show result pane + switch tab
-    document.getElementById('res-empty').style.display = 'none';
+    document.getElementById('res-empty').style.display   = 'none';
     document.getElementById('res-content').style.display = 'flex';
     document.getElementById('res-bdg').classList.add('on');
     switchTab('result');
   }
 
   function esc(s) {
-    if (s == null) return '';
+    if (s==null) return '';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
   function toast(msg) {
-    const el = Object.assign(document.createElement('div'), { className:'toast', textContent:msg });
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 3000);
+    const el = Object.assign(document.createElement('div'),{className:'toast',textContent:msg});
+    document.body.appendChild(el); setTimeout(()=>el.remove(),3000);
   }
 </script>
 </body>
