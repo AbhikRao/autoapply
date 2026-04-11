@@ -22,20 +22,30 @@
     }
     html,body { height:100%; overflow:hidden; }
     body { font-family:var(--fn); background:var(--bg); color:var(--tx); font-size:13px; line-height:1.5; }
+
+    /* ── Header ── */
     .hdr { height:48px; border-bottom:1px solid var(--br); display:flex; align-items:center; padding:0 20px; gap:10px; background:var(--sf); }
     .hdr-logo { display:flex; align-items:center; gap:7px; font-size:14px; font-weight:600; letter-spacing:-.2px; }
     .hdr-sep  { color:var(--t3); margin:0 2px; }
     .hdr-sub  { font-size:12px; color:var(--t2); }
-    .hdr-r    { margin-left:auto; }
+    .hdr-r    { margin-left:auto; display:flex; align-items:center; gap:10px; }
     .pill     { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--t2); border:1px solid var(--br2); border-radius:20px; padding:3px 10px; }
     .dot      { width:6px; height:6px; border-radius:50%; background:var(--gn); flex-shrink:0; }
     .dot.live { animation:pulse 1.2s infinite; background:var(--bl); }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .stat-pill { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--t2); }
+    .stat-item { display:flex; align-items:center; gap:4px; }
+    .stat-item strong { color:var(--tx); font-weight:600; }
+    .stat-div { color:var(--t3); }
+
+    /* ── Layout ── */
     .ws   { display:grid; grid-template-columns:360px 1fr; height:calc(100vh - 48px); }
     .left { border-right:1px solid var(--br); background:var(--sf); display:flex; flex-direction:column; overflow:hidden; }
     .lscroll { flex:1; overflow-y:auto; padding:18px 16px; display:flex; flex-direction:column; gap:20px; }
     .lscroll::-webkit-scrollbar { width:3px; }
     .lscroll::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
+
+    /* ── Log panel ── */
     .log-panel  { flex-shrink:0; height:200px; border-top:1px solid var(--br); display:flex; flex-direction:column; background:var(--bg); }
     .log-hdr    { padding:8px 14px 4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--t3); flex-shrink:0; }
     .log-stream { flex:1; overflow-y:auto; padding:0 14px 10px; display:flex; flex-direction:column; gap:2px; }
@@ -49,6 +59,8 @@
     .le.ok   { color:var(--gn); } .le.ok .sym  { color:var(--gn); }
     .le.err  { color:var(--rd); } .le.err .sym { color:var(--rd); }
     .le.warn { color:var(--am); } .le.warn .sym { color:var(--am); }
+
+    /* ── Form ── */
     .sec       { display:flex; flex-direction:column; gap:10px; }
     .sec-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--t3); }
     .row       { display:grid; gap:8px; }
@@ -79,6 +91,8 @@
     .btn-takeover { flex:1; padding:7px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:12px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all .12s; }
     .btn-takeover:hover { border-color:var(--am); color:var(--am); }
     .btn-takeover:disabled { opacity:.3; cursor:not-allowed; }
+
+    /* ── Right panel ── */
     .right { display:flex; flex-direction:column; overflow:hidden; }
     .tabs  { display:flex; border-bottom:1px solid var(--br); background:var(--sf); padding:0 4px; flex-shrink:0; }
     .tab   { padding:12px 16px; font-size:12px; font-weight:500; color:var(--t2); cursor:pointer; border-bottom:1px solid transparent; transition:all .12s; display:flex; align-items:center; gap:6px; user-select:none; }
@@ -89,6 +103,8 @@
     .pane    { flex:1; display:none; flex-direction:column; overflow:hidden; }
     .pane.on { display:flex; }
     #pane-live { background:#000; }
+
+    /* ── Browser bar ── */
     .bbr      { display:flex; align-items:center; gap:8px; padding:9px 16px; background:var(--sf); border-bottom:1px solid var(--br); flex-shrink:0; }
     .bdots    { display:flex; gap:5px; }
     .bd       { width:10px; height:10px; border-radius:50%; background:#3a3a3a; }
@@ -108,6 +124,8 @@
     .idle-steps { display:flex; flex-direction:column; gap:8px; text-align:left; max-width:300px; }
     .is  { display:flex; gap:10px; font-size:12px; color:var(--t2); align-items:flex-start; }
     .sn  { width:18px; height:18px; border-radius:50%; flex-shrink:0; border:1px solid var(--br2); color:var(--t2); font-size:10px; font-weight:500; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+
+    /* ── Result pane ── */
     #pane-result { overflow-y:auto; padding:24px; background:var(--bg); display:flex; flex-direction:column; gap:20px; }
     #pane-result::-webkit-scrollbar { width:4px; }
     #pane-result::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
@@ -145,6 +163,41 @@
     .qa-item:last-child { border-bottom:none; }
     .qa-q     { font-size:12px; font-weight:500; color:var(--tx); margin-bottom:5px; }
     .qa-a     { font-size:12px; color:var(--t2); line-height:1.6; }
+
+    /* ── History pane ── */
+    #pane-history { overflow-y:auto; background:var(--bg); }
+    #pane-history::-webkit-scrollbar { width:4px; }
+    #pane-history::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
+    .hist-toolbar { display:flex; align-items:center; justify-content:space-between; padding:14px 20px 10px; border-bottom:1px solid var(--br); flex-shrink:0; }
+    .hist-toolbar-title { font-size:12px; font-weight:600; color:var(--t2); text-transform:uppercase; letter-spacing:1px; }
+    .hist-actions { display:flex; gap:6px; }
+    .btn-sm { padding:4px 10px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:11px; cursor:pointer; transition:all .12s; }
+    .btn-sm:hover { border-color:var(--bl); color:var(--bl); }
+    .btn-sm.danger:hover { border-color:var(--rd); color:var(--rd); }
+    .hist-list { display:flex; flex-direction:column; gap:0; }
+    .hist-item { padding:14px 20px; border-bottom:1px solid var(--br); cursor:pointer; transition:background .1s; display:flex; flex-direction:column; gap:6px; }
+    .hist-item:hover { background:var(--sf); }
+    .hist-top { display:flex; align-items:center; gap:8px; }
+    .hist-title { font-size:13px; font-weight:500; color:var(--tx); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .hist-meta { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--t2); flex-wrap:wrap; }
+    .hist-meta-item { display:flex; align-items:center; gap:4px; }
+    .hist-url { font-family:var(--mo); font-size:10px; color:var(--t3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .badge-sm { font-size:10px; font-weight:600; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; flex-shrink:0; }
+    .badge-sm.submitted { background:var(--gnd); color:var(--gn); border:1px solid rgba(22,163,74,.25); }
+    .badge-sm.partial   { background:var(--amd); color:var(--am); border:1px solid rgba(217,119,6,.25); }
+    .badge-sm.error     { background:var(--rdd); color:var(--rd); border:1px solid rgba(220,38,38,.25); }
+    .badge-sm.unknown   { background:var(--s3); color:var(--t2); border:1px solid var(--br2); }
+    .hist-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:80px 20px; text-align:center; }
+    .hist-empty-ic { width:44px; height:44px; border-radius:12px; border:1px solid var(--br2); background:var(--s2); display:flex; align-items:center; justify-content:center; color:var(--t3); }
+    .hist-empty h3 { font-size:14px; font-weight:500; }
+    .hist-empty p  { font-size:12px; color:var(--t2); max-width:260px; line-height:1.7; }
+    .hist-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; border-bottom:1px solid var(--br); flex-shrink:0; }
+    .hs { background:var(--s2); padding:12px 16px; }
+    .hs-k { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--t2); margin-bottom:3px; }
+    .hs-v { font-size:18px; font-weight:600; color:var(--tx); }
+    .hs-v.green { color:var(--gn); }
+
+    /* ── Toast ── */
     .toast { position:fixed; bottom:20px; right:20px; z-index:999; background:var(--s3); border:1px solid var(--br2); border-radius:var(--rl); padding:10px 16px; font-size:12px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.6); animation:fadein .2s ease; }
   </style>
 </head>
@@ -158,6 +211,11 @@
   <span class="hdr-sep">/</span>
   <span class="hdr-sub">Autonomous Job Applications &middot; Powered by TinyFish</span>
   <div class="hdr-r">
+    <div class="stat-pill" id="hdr-stats" style="display:none">
+      <div class="stat-item"><strong id="stat-total">0</strong> total</div>
+      <span class="stat-div">&middot;</span>
+      <div class="stat-item"><strong id="stat-success" style="color:var(--gn)">0</strong> submitted</div>
+    </div>
     <div class="pill"><div class="dot" id="hdr-dot"></div><span id="hdr-lbl">Ready</span></div>
   </div>
 </header>
@@ -183,7 +241,7 @@
             <span class="ats-tag">Workday</span><span class="ats-tag">LinkedIn</span><span class="ats-tag">Direct</span>
           </div>
           <div class="agent-ctrl" id="agent-ctrl">
-            <button class="btn-stop" onclick="stopAgent()">⏹ Stop Agent</button>
+            <button class="btn-stop" onclick="stopAgent()">&#9633; Stop Agent</button>
             <button class="btn-takeover" id="btn-takeover" onclick="takeControl()" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               Take Control
@@ -194,32 +252,32 @@
       <div class="sec">
         <div class="sec-title">Profile</div>
         <div class="row two">
-          <div class="fg"><label class="fl">Full Name *</label><input type="text"  id="p-name"  value="Abhik Rao" /></div>
-          <div class="fg"><label class="fl">Email *</label>   <input type="email" id="p-email" value="abhikrao1301@gmail.com" /></div>
+          <div class="fg"><label class="fl">Full Name *</label><input type="text"  id="p-name"  placeholder="Jane Smith" /></div>
+          <div class="fg"><label class="fl">Email *</label>   <input type="email" id="p-email" placeholder="jane@example.com" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">Phone</label>    <input type="tel"  id="p-phone" value="+91 98765 43210" /></div>
-          <div class="fg"><label class="fl">Location</label> <input type="text" id="p-loc"   value="New Delhi, India" /></div>
+          <div class="fg"><label class="fl">Phone</label>    <input type="tel"  id="p-phone" placeholder="+1 555 000 0000" /></div>
+          <div class="fg"><label class="fl">Location</label> <input type="text" id="p-loc"   placeholder="San Francisco, CA" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">LinkedIn URL</label>      <input type="url" id="p-li" value="https://www.linkedin.com/in/abhik-rao-38611b36a/" /></div>
-          <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" value="https://github.com/AbhikRao" /></div>
+          <div class="fg"><label class="fl">LinkedIn URL</label>      <input type="url" id="p-li" placeholder="https://linkedin.com/in/..." /></div>
+          <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" placeholder="https://github.com/..." /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" value="1" /></div>
-          <div class="fg"><label class="fl">Education</label>          <input type="text" id="p-edu" value="B.Tech CSAI, IIIT Delhi (2029)" /></div>
+          <div class="fg"><label class="fl">Years of Experience</label><input type="text" id="p-exp" placeholder="3" /></div>
+          <div class="fg"><label class="fl">Education</label>          <input type="text" id="p-edu" placeholder="B.S. Computer Science, MIT" /></div>
         </div>
-        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" value="Python, C, C++, Git, Linux, REST APIs, Machine Learning, Data Structures &amp; Algorithms" /></div>
+        <div class="fg"><label class="fl">Key Skills</label><input type="text" id="p-skills" placeholder="Python, React, Node.js, SQL..." /></div>
         <div class="fg">
-          <label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> &mdash; hosted PDF</span></label>
-          <input type="url" id="p-resume" value="https://autoapply-omega.vercel.app/resume.pdf" />
+          <label class="fl">Resume URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> &mdash; hosted PDF link</span></label>
+          <input type="url" id="p-resume" placeholder="https://your-site.com/resume.pdf" />
         </div>
         <div class="fg"><label class="fl">Brief Bio</label>
-          <textarea id="p-bio">CS &amp; AI undergrad at IIIT Delhi building AI-powered developer tools. Built AutoApply and LeadHunter — autonomous agents for job applications and B2B lead research. Strong in Python, ML, and systems programming. Active on LeetCode and Codeforces.</textarea>
+          <textarea id="p-bio" placeholder="2-3 sentences about yourself and what you bring to the role..."></textarea>
         </div>
         <div class="fg">
           <label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)"> &mdash; optional</span></label>
-          <textarea id="p-cl">Keep it concise, under 100 words. Highlight my AI/ML background, passion for developer tools, and experience building autonomous agents. Emphasise problem-solving ability and fast shipping.</textarea>
+          <textarea id="p-cl" placeholder="Keep it concise, under 100 words. Highlight..." style="min-height:48px"></textarea>
         </div>
       </div>
     </div>
@@ -233,10 +291,12 @@
 
   <div class="right">
     <div class="tabs">
-      <div class="tab on" data-p="live"   onclick="switchTab('live')">Live Browser</div>
-      <div class="tab"    data-p="result" onclick="switchTab('result')">Result <span class="bdg" id="res-bdg">!</span></div>
+      <div class="tab on" data-p="live"    onclick="switchTab('live')">Live Browser</div>
+      <div class="tab"    data-p="result"  onclick="switchTab('result')">Result <span class="bdg" id="res-bdg">!</span></div>
+      <div class="tab"    data-p="history" onclick="switchTab('history')">History <span class="bdg on" id="hist-bdg">0</span></div>
     </div>
 
+    <!-- Live Browser Pane -->
     <div class="pane on" id="pane-live">
       <div class="bbr">
         <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
@@ -263,6 +323,7 @@
       </div>
     </div>
 
+    <!-- Result Pane -->
     <div class="pane" id="pane-result">
       <div class="res-empty" id="res-empty">
         <div class="res-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
@@ -309,17 +370,183 @@
         </div>
       </div>
     </div>
+
+    <!-- History Pane -->
+    <div class="pane" id="pane-history">
+      <div class="hist-stats" id="hist-stats">
+        <div class="hs"><div class="hs-k">Total Runs</div><div class="hs-v" id="hs-total">0</div></div>
+        <div class="hs"><div class="hs-k">Submitted</div><div class="hs-v green" id="hs-submitted">0</div></div>
+        <div class="hs"><div class="hs-k">Success Rate</div><div class="hs-v" id="hs-rate">—</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px 8px;border-bottom:1px solid var(--br);flex-shrink:0;">
+        <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);">Recent Applications</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm" onclick="exportCSV()">Export CSV</button>
+          <button class="btn-sm danger" onclick="clearHistory()">Clear</button>
+        </div>
+      </div>
+      <div class="hist-list" id="hist-list"></div>
+    </div>
   </div>
 </div>
 
 <script>
+  /* ── Storage keys ── */
+  const PROFILE_KEY = 'aa_profile_v1';
+  const HISTORY_KEY = 'aa_history_v1';
+  const MAX_HISTORY = 50;
+
+  /* ── State ── */
   let ctrl = null, streamingUrl = null, t0 = 0;
 
+  /* ── Profile fields ── */
+  const FIELDS = ['p-name','p-email','p-phone','p-loc','p-li','p-gh','p-exp','p-edu','p-skills','p-resume','p-bio','p-cl'];
+
+  function saveProfile() {
+    const obj = {};
+    FIELDS.forEach(id => { obj[id] = document.getElementById(id).value; });
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(obj)); } catch(_) {}
+  }
+
+  function loadProfile() {
+    try {
+      const raw = localStorage.getItem(PROFILE_KEY);
+      if (!raw) return;
+      const obj = JSON.parse(raw);
+      FIELDS.forEach(id => { if (obj[id] !== undefined) document.getElementById(id).value = obj[id]; });
+    } catch(_) {}
+  }
+
+  /* Auto-save profile on any change */
+  FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', saveProfile);
+  });
+
+  /* ── History ── */
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(_) { return []; }
+  }
+  function saveHistory(h) {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(_) {}
+  }
+  function addToHistory(result, jobUrl, secs) {
+    const h = getHistory();
+    h.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      ts: Date.now(),
+      duration: parseFloat(secs),
+      jobUrl,
+      jobTitle:   result.jobTitle || null,
+      company:    result.company  || null,
+      ats:        result.ats      || null,
+      status:     result.status   || 'unknown',
+      fieldsCompleted: Array.isArray(result.fieldsFilled) ? result.fieldsFilled.length : (result.fieldsCompleted || 0),
+      questionsAnswered: Array.isArray(result.questionsAnswered) ? result.questionsAnswered.length : 0,
+    });
+    if (h.length > MAX_HISTORY) h.splice(MAX_HISTORY);
+    saveHistory(h);
+    renderHistory();
+    updateHeaderStats();
+  }
+
+  function renderHistory() {
+    const h = getHistory();
+    const list = document.getElementById('hist-list');
+    const bdg  = document.getElementById('hist-bdg');
+    bdg.textContent = h.length;
+
+    /* Stats */
+    const submitted = h.filter(r => r.status === 'submitted').length;
+    document.getElementById('hs-total').textContent     = h.length;
+    document.getElementById('hs-submitted').textContent = submitted;
+    document.getElementById('hs-rate').textContent      = h.length ? Math.round(submitted/h.length*100)+'%' : '—';
+
+    if (!h.length) {
+      list.innerHTML = `
+        <div class="hist-empty">
+          <div class="hist-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <h3>No applications yet</h3>
+          <p>Every application you run will appear here with full status and details.</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = h.map(r => {
+      const title   = r.jobTitle && r.company ? `${r.jobTitle} &#x00B7; ${esc(r.company)}` : (r.jobTitle ? esc(r.jobTitle) : (r.company ? esc(r.company) : 'Application'));
+      const date    = new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const status  = (r.status||'unknown').toLowerCase();
+      const host    = (() => { try { return new URL(r.jobUrl).hostname.replace('www.',''); } catch(_) { return r.jobUrl||''; }})();
+      return `
+        <div class="hist-item" onclick="openHistoryItem('${esc(r.jobUrl)}')"
+             title="${esc(r.jobUrl)}">
+          <div class="hist-top">
+            <div class="hist-title">${title}</div>
+            <span class="badge-sm ${status}">${status}</span>
+          </div>
+          <div class="hist-meta">
+            <span class="hist-meta-item">${date}</span>
+            ${r.ats ? `<span style="color:var(--t3)">&#x00B7;</span><span>${esc(r.ats)}</span>` : ''}
+            ${r.fieldsCompleted ? `<span style="color:var(--t3)">&#x00B7;</span><span>${r.fieldsCompleted} fields</span>` : ''}
+            ${r.questionsAnswered ? `<span style="color:var(--t3)">&#x00B7;</span><span>${r.questionsAnswered} questions</span>` : ''}
+            ${r.duration ? `<span style="color:var(--t3)">&#x00B7;</span><span>${r.duration}s</span>` : ''}
+          </div>
+          <div class="hist-url">${esc(host)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function openHistoryItem(url) {
+    if (!url) return;
+    document.getElementById('job-url').value = url;
+    switchTab('live');
+    toast('URL loaded \u2014 click Apply to re-run');
+  }
+
+  function clearHistory() {
+    if (!confirm('Clear all application history?')) return;
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+    updateHeaderStats();
+  }
+
+  function exportCSV() {
+    const h = getHistory();
+    if (!h.length) return toast('No history to export');
+    const header = 'Date,Company,Role,ATS,Status,Fields Filled,Questions,Duration(s),URL';
+    const rows = h.map(r => [
+      new Date(r.ts).toISOString(),
+      r.company||'',
+      r.jobTitle||'',
+      r.ats||'',
+      r.status||'',
+      r.fieldsCompleted||0,
+      r.questionsAnswered||0,
+      r.duration||'',
+      r.jobUrl||'',
+    ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+    const blob = new Blob([[header,...rows].join('\n')], {type:'text/csv'});
+    const a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(blob), download:'autoapply-history.csv'});
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Exported ' + h.length + ' applications');
+  }
+
+  function updateHeaderStats() {
+    const h = getHistory();
+    if (!h.length) { document.getElementById('hdr-stats').style.display = 'none'; return; }
+    document.getElementById('hdr-stats').style.display = 'flex';
+    document.getElementById('stat-total').textContent   = h.length;
+    document.getElementById('stat-success').textContent = h.filter(r=>r.status==='submitted').length;
+  }
+
+  /* ── Tab switching ── */
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
     document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
     document.getElementById('pane-' + name).classList.add('on');
   }
+
+  /* ── Log ── */
   function ts() {
     return new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
@@ -333,6 +560,8 @@
     s.appendChild(el); s.scrollTop = s.scrollHeight;
   }
   function clearLog() { document.getElementById('log').innerHTML = ''; }
+
+  /* ── Running state ── */
   function setRunning(on) {
     document.getElementById('btn-apply').disabled = on;
     document.getElementById('btn-lbl').textContent = on ? 'Running\u2026' : 'Apply';
@@ -342,6 +571,8 @@
     document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
     if (!on) { document.getElementById('btn-ctrl').classList.remove('on'); document.getElementById('btn-takeover').disabled = true; }
   }
+
+  /* ── Live stream ── */
   function showStream(url) {
     const f = document.getElementById('live-frame');
     f.src = url; f.style.display = 'block';
@@ -361,6 +592,8 @@
     document.getElementById('live-ind').style.display = 'none';
     ['bd-r','bd-y','bd-g'].forEach(id => document.getElementById(id).classList.remove('on'));
   }
+
+  /* ── Profile ── */
   function getProfile() {
     return {
       name:        document.getElementById('p-name').value.trim(),
@@ -378,6 +611,7 @@
     };
   }
 
+  /* ── Apply ── */
   async function startApply() {
     const jobUrl = document.getElementById('job-url').value.trim();
     const profile = getProfile();
@@ -385,12 +619,13 @@
     if (!profile.name)  return toast('Full name is required');
     if (!profile.email) return toast('Email is required');
 
+    saveProfile();
     clearLog(); setRunning(true); resetLive();
     streamingUrl = null; t0 = Date.now();
     if (ctrl) { ctrl.abort(); }
     ctrl = new AbortController();
 
-    // reset result pane
+    /* Reset result pane */
     document.getElementById('res-empty').style.display = 'flex';
     document.getElementById('res-content').style.display = 'none';
     document.getElementById('res-bdg').classList.remove('on');
@@ -398,6 +633,8 @@
       .forEach(id => document.getElementById(id).style.display = 'none');
     switchTab('live');
     log('Launching agent for: ' + jobUrl, 'info');
+
+    let lastResult = null;
 
     try {
       const res = await fetch('/api/apply', {
@@ -413,7 +650,6 @@
         setRunning(false); return;
       }
 
-      // Read SSE stream
       const reader = res.body.getReader();
       const dec    = new TextDecoder();
       let   buf    = '';
@@ -426,13 +662,21 @@
         buf = lines.pop();
         for (const line of lines) {
           if (!line.startsWith('data: ')) continue;
-          try { handle(JSON.parse(line.slice(6))); } catch(_) {}
+          try {
+            const ev = JSON.parse(line.slice(6));
+            handle(ev);
+            if (ev.type === 'COMPLETE') lastResult = ev.result;
+          } catch(_) {}
         }
       }
     } catch(e) {
       if (e.name !== 'AbortError') log('Connection error: ' + e.message, 'err');
     } finally {
       setRunning(false);
+      if (lastResult) {
+        const secs = ((Date.now()-t0)/1000).toFixed(1);
+        addToHistory(lastResult, jobUrl, secs);
+      }
     }
   }
 
@@ -471,10 +715,11 @@
     log('Opened live browser in new tab \u2014 you have control', 'ok');
   }
 
+  /* ── Render result ── */
   function renderResult(r, secs) {
     const jobTitle = r.jobTitle || 'Application';
     const company  = r.company  || '';
-    document.getElementById('r-title').textContent = company ? jobTitle+' \u00b7 '+company : jobTitle;
+    document.getElementById('r-title').textContent = company ? jobTitle+'\u00b7'+company : jobTitle;
     document.getElementById('r-sub').textContent   = new Date().toLocaleString();
     const status = (r.status || 'unknown').toLowerCase();
     const badge  = document.getElementById('r-badge');
@@ -518,6 +763,7 @@
     switchTab('result');
   }
 
+  /* ── Utils ── */
   function esc(s) {
     if (s==null) return '';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -526,6 +772,11 @@
     const el = Object.assign(document.createElement('div'),{className:'toast',textContent:msg});
     document.body.appendChild(el); setTimeout(()=>el.remove(),3000);
   }
+
+  /* ── Init ── */
+  loadProfile();
+  renderHistory();
+  updateHeaderStats();
 </script>
 </body>
 </html>
