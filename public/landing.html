@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoApply — Let AI Apply to Jobs For You</title>
+  <meta name="description" content="AutoApply is an autonomous job application agent. Paste a job URL, watch the AI fill every field, answer screening questions, and submit — live." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#000; --sf:#0a0a0a; --s2:#111; --s3:#181818;
+      --br:#1f1f1f; --br2:#2a2a2a;
+      --tx:#f0f0f0; --t2:#888; --t3:#444;
+      --bl:#0070f3; --bld:#0055c8;
+      --gn:#16a34a;
+      --fn:'Inter',-apple-system,sans-serif;
+      --mo:'Geist Mono','JetBrains Mono',monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--fn); background:var(--bg); color:var(--tx); overflow-x:hidden; }
+
+    /* Nav */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; height:56px; border-bottom:1px solid var(--br); background:rgba(0,0,0,.85); backdrop-filter:blur(12px); display:flex; align-items:center; padding:0 32px; gap:12px; }
+    .nav-logo { display:flex; align-items:center; gap:8px; font-size:15px; font-weight:700; letter-spacing:-.3px; text-decoration:none; color:var(--tx); }
+    .nav-r { margin-left:auto; display:flex; align-items:center; gap:10px; }
+    .nav-link { font-size:13px; color:var(--t2); text-decoration:none; padding:4px 8px; transition:color .15s; }
+    .nav-link:hover { color:var(--tx); }
+    .btn-launch { padding:7px 18px; background:var(--bl); border:none; border-radius:6px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:opacity .15s; }
+    .btn-launch:hover { opacity:.85; }
+
+    /* Hero */
+    .hero { padding:140px 32px 80px; text-align:center; max-width:800px; margin:0 auto; }
+    .hero-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--t2); border:1px solid var(--br2); border-radius:20px; padding:4px 14px; margin-bottom:28px; }
+    .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--gn); animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .hero h1 { font-size:clamp(36px,6vw,64px); font-weight:700; line-height:1.1; letter-spacing:-1.5px; margin-bottom:20px; }
+    .hero h1 span { color:var(--bl); }
+    .hero p { font-size:clamp(15px,2vw,18px); color:var(--t2); line-height:1.7; max-width:560px; margin:0 auto 36px; }
+    .hero-cta { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; }
+    .btn-primary { padding:12px 28px; background:var(--bl); border:none; border-radius:8px; color:#fff; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; transition:all .15s; display:inline-flex; align-items:center; gap:8px; }
+    .btn-primary:hover { background:var(--bld); transform:translateY(-1px); }
+    .btn-secondary { padding:12px 24px; background:transparent; border:1px solid var(--br2); border-radius:8px; color:var(--t2); font-size:14px; font-weight:500; cursor:pointer; text-decoration:none; transition:all .15s; }
+    .btn-secondary:hover { border-color:var(--bl); color:var(--bl); }
+
+    /* Demo window */
+    .demo-wrap { max-width:900px; margin:64px auto 0; padding:0 32px; }
+    .demo-win { border:1px solid var(--br2); border-radius:12px; overflow:hidden; background:var(--s2); box-shadow:0 40px 80px rgba(0,0,0,.6); }
+    .demo-bar { background:var(--sf); border-bottom:1px solid var(--br); padding:10px 16px; display:flex; align-items:center; gap:8px; }
+    .demo-dots { display:flex; gap:5px; }
+    .demo-dot  { width:10px; height:10px; border-radius:50%; }
+    .demo-dot.r { background:#ff5f57; } .demo-dot.y { background:#febc2e; } .demo-dot.g { background:#28c840; }
+    .demo-url  { flex:1; background:var(--s3); border:1px solid var(--br); border-radius:5px; padding:4px 12px; font-family:var(--mo); font-size:11px; color:var(--t2); margin:0 10px; }
+    .demo-live { font-size:10px; font-weight:700; color:#ff5f57; letter-spacing:.5px; display:flex; align-items:center; gap:5px; }
+    .demo-live-dot { width:7px; height:7px; border-radius:50%; background:#ff5f57; animation:pulse 1s infinite; }
+    .demo-body { display:grid; grid-template-columns:280px 1fr; height:340px; }
+    .demo-left { border-right:1px solid var(--br); padding:16px; display:flex; flex-direction:column; gap:12px; }
+    .demo-field { display:flex; flex-direction:column; gap:4px; }
+    .demo-label { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+    .demo-input { background:var(--s3); border:1px solid var(--br2); border-radius:5px; padding:5px 8px; font-size:11px; color:var(--t2); font-family:var(--mo); }
+    .demo-input.active { border-color:var(--bl); color:var(--tx); }
+    .demo-log { margin-top:auto; display:flex; flex-direction:column; gap:3px; }
+    .demo-log-entry { font-family:var(--mo); font-size:10px; color:var(--t3); display:flex; gap:6px; }
+    .demo-log-entry.ok { color:var(--gn); }
+    .demo-log-entry.info { color:var(--bl); }
+    .demo-right { background:#0a0a0a; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .demo-agent-msg { position:absolute; bottom:16px; left:16px; right:16px; background:rgba(0,112,243,.08); border:1px solid rgba(0,112,243,.2); border-radius:6px; padding:8px 12px; font-family:var(--mo); font-size:10px; color:var(--bl); }
+    .demo-browser-chrome { width:90%; border:1px solid var(--br2); border-radius:8px; background:var(--s2); overflow:hidden; }
+    .demo-browser-top { background:var(--sf); padding:8px; border-bottom:1px solid var(--br); display:flex; gap:4px; }
+    .demo-browser-content { padding:16px; display:flex; flex-direction:column; gap:8px; }
+    .demo-form-field { height:28px; background:var(--s3); border-radius:4px; display:flex; align-items:center; padding:0 8px; font-size:10px; color:var(--t2); border:1px solid var(--br); }
+    .demo-form-field.filled { border-color:rgba(22,163,74,.4); background:rgba(22,163,74,.05); color:var(--tx); }
+    .demo-progress { height:2px; background:var(--bl); border-radius:1px; animation:progress 3s ease-in-out infinite alternate; }
+    @keyframes progress { from{width:30%} to{width:85%} }
+
+    /* How it works */
+    .section { padding:80px 32px; max-width:1000px; margin:0 auto; }
+    .section-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--bl); margin-bottom:12px; }
+    .section-title { font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:-.5px; margin-bottom:16px; }
+    .section-sub { font-size:15px; color:var(--t2); line-height:1.7; max-width:500px; }
+    .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; border:1px solid var(--br); border-radius:12px; overflow:hidden; margin-top:48px; }
+    .step { background:var(--s2); padding:28px; }
+    .step-num { width:28px; height:28px; border-radius:8px; border:1px solid var(--br2); display:flex; align-items:center; justify-content:center; font-family:var(--mo); font-size:12px; font-weight:600; color:var(--t2); margin-bottom:16px; }
+    .step-title { font-size:15px; font-weight:600; margin-bottom:8px; }
+    .step-desc { font-size:13px; color:var(--t2); line-height:1.7; }
+
+    /* ATS support */
+    .ats-section { padding:40px 32px 80px; max-width:1000px; margin:0 auto; }
+    .ats-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+    .ats-chip { font-size:12px; font-weight:500; padding:7px 16px; border:1px solid var(--br2); border-radius:6px; color:var(--t2); background:var(--s2); }
+
+    /* Features */
+    .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; border:1px solid var(--br); border-radius:12px; overflow:hidden; }
+    .feat { background:var(--s2); padding:24px; }
+    .feat-icon { width:36px; height:36px; border-radius:8px; border:1px solid var(--br2); display:flex; align-items:center; justify-content:center; color:var(--t2); margin-bottom:14px; }
+    .feat-title { font-size:14px; font-weight:600; margin-bottom:6px; }
+    .feat-desc  { font-size:12px; color:var(--t2); line-height:1.7; }
+
+    /* Footer */
+    footer { border-top:1px solid var(--br); padding:32px; text-align:center; }
+    footer p { font-size:12px; color:var(--t3); }
+    footer a { color:var(--t2); text-decoration:none; }
+    footer a:hover { color:var(--tx); }
+
+    /* Divider */
+    .divider { border:none; border-top:1px solid var(--br); margin:0; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+    AutoApply
+  </a>
+  <div class="nav-r">
+    <a class="nav-link" href="#how">How it works</a>
+    <a class="btn-launch" href="/app">Launch App &rarr;</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge"><div class="hero-badge-dot"></div>Powered by TinyFish Web Agent</div>
+  <h1>Let AI apply to<br /><span>jobs for you</span></h1>
+  <p>AutoApply is an autonomous agent that navigates real job portals, fills every form field, answers screening questions, and submits your application &mdash; while you watch it happen live.</p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="/app">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Start applying
+    </a>
+    <a class="btn-secondary" href="#how">See how it works</a>
+  </div>
+</section>
+
+<!-- Animated Demo Window -->
+<div class="demo-wrap">
+  <div class="demo-win">
+    <div class="demo-bar">
+      <div class="demo-dots"><div class="demo-dot r"></div><div class="demo-dot y"></div><div class="demo-dot g"></div></div>
+      <div class="demo-url">boards.greenhouse.io/acmecorp/jobs/7234918</div>
+      <div class="demo-live"><div class="demo-live-dot"></div>Agent Live</div>
+    </div>
+    <div class="demo-body">
+      <div class="demo-left">
+        <div class="demo-field"><div class="demo-label">Application URL</div><div class="demo-input active">boards.greenhouse.io/acme/...</div></div>
+        <div class="demo-field"><div class="demo-label">Full Name</div><div class="demo-input">Jane Smith</div></div>
+        <div class="demo-field"><div class="demo-label">Email</div><div class="demo-input">jane@example.com</div></div>
+        <div class="demo-field"><div class="demo-label">LinkedIn</div><div class="demo-input">linkedin.com/in/janesmith</div></div>
+        <div class="demo-field"><div class="demo-label">Resume URL</div><div class="demo-input">jane.dev/resume.pdf</div></div>
+        <div class="demo-log">
+          <div class="demo-log-entry info">&rarr; Agent started</div>
+          <div class="demo-log-entry ok">&check; Form detected: Greenhouse</div>
+          <div class="demo-log-entry ok">&check; Filling fields&hellip;</div>
+        </div>
+      </div>
+      <div class="demo-right">
+        <div class="demo-browser-chrome">
+          <div class="demo-browser-top">
+            <div class="demo-dot r"></div><div class="demo-dot y"></div><div class="demo-dot g"></div>
+          </div>
+          <div class="demo-browser-content">
+            <div class="demo-form-field filled">Jane Smith</div>
+            <div class="demo-form-field filled">jane@example.com</div>
+            <div class="demo-form-field filled">Software Engineer &mdash; 3 years</div>
+            <div class="demo-form-field" style="color:var(--bl);border-color:var(--bl);background:rgba(0,112,243,.05);">Typing answer to screening question&hellip;</div>
+            <div class="demo-progress"></div>
+          </div>
+        </div>
+        <div class="demo-agent-msg">Answering: &ldquo;Why do you want to work at Acme?&rdquo;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" style="margin:80px 0 0;" />
+
+<!-- How it works -->
+<section class="section" id="how">
+  <div class="section-label">How it works</div>
+  <div class="section-title">Three steps. Zero effort.</div>
+  <div class="section-sub">The agent handles everything a human applicant would do &mdash; reading, typing, clicking, and submitting.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Paste a job URL</div>
+      <div class="step-desc">Works with Greenhouse, Lever, Workday, LinkedIn Easy Apply, and direct application portals. Any URL that has an apply button.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Agent takes over</div>
+      <div class="step-desc">TinyFish launches a real browser session. The agent reads the job description, detects the ATS, and starts filling every field using your profile.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Watch it submit</div>
+      <div class="step-desc">See the live browser stream as the agent answers screening questions, navigates multi-step forms, and hits submit. Full result report generated automatically.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ATS support -->
+<div class="ats-section">
+  <div class="section-label">ATS Support</div>
+  <div class="section-title" style="font-size:22px;margin-bottom:8px;">Works everywhere you apply</div>
+  <div class="ats-grid">
+    <div class="ats-chip">Greenhouse</div>
+    <div class="ats-chip">Lever</div>
+    <div class="ats-chip">Workday</div>
+    <div class="ats-chip">LinkedIn Easy Apply</div>
+    <div class="ats-chip">iCIMS</div>
+    <div class="ats-chip">Taleo</div>
+    <div class="ats-chip">SmartRecruiters</div>
+    <div class="ats-chip">Direct portals</div>
+    <div class="ats-chip">+ more</div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- Features -->
+<section class="section">
+  <div class="section-label">Features</div>
+  <div class="section-title">Built for real applications</div>
+  <div style="margin-top:36px;">
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <div class="feat-title">Live browser stream</div>
+        <div class="feat-desc">Watch the agent work in real time via an embedded browser. Take control at any point if needed.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="feat-title">Smart screening answers</div>
+        <div class="feat-desc">Custom screening questions answered contextually using your bio and the job description. Not generic filler.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="feat-title">Full result report</div>
+        <div class="feat-desc">Every field filled, every question answered, submission status, and agent notes. Complete audit trail per application.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="feat-title">Application history</div>
+        <div class="feat-desc">Every run is saved locally. Track your success rate, re-run applications, and export your history to CSV.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="feat-title">Profile persistence</div>
+        <div class="feat-desc">Your profile is saved automatically. Fill it once, apply everywhere. Resume URL, bio, and cover letter preferences all stored.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="feat-title">Stealth mode</div>
+        <div class="feat-desc">Runs in a stealth browser profile to avoid bot detection. Behaves like a real human applicant navigating the form.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="text-align:center;padding:80px 32px;border-top:1px solid var(--br);">
+  <div style="font-size:clamp(24px,4vw,40px);font-weight:700;letter-spacing:-.5px;margin-bottom:16px;">Ready to automate your job search?</div>
+  <p style="font-size:15px;color:var(--t2);margin-bottom:32px;">Paste your first job URL and watch the agent work.</p>
+  <a class="btn-primary" href="/app" style="font-size:15px;padding:14px 32px;">
+    Launch AutoApply &rarr;
+  </a>
+</section>
+
+<footer>
+  <p>Built with <a href="https://tinyfish.ai" target="_blank">TinyFish</a> &middot; <a href="/app">Open App</a></p>
+</footer>
+
+</body>
+</html>
