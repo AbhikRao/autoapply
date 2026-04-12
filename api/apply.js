@@ -1,25 +1,18 @@
 // api/apply.js
-// Proxies the full TinyFish SSE stream to the browser.
-// Vercel maxDuration is 300s — enough for any real run.
-
 export const config = { maxDuration: 300 };
 
 const KEY           = process.env.TINYFISH_API_KEY;
 const AXIOM_TOKEN   = process.env.AXIOM_TOKEN;
 const AXIOM_DATASET = process.env.AXIOM_DATASET || 'autoapply-runs';
 
-/* Fire-and-forget Axiom ingest — never blocks the main stream */
 function axiom(events) {
   if (!AXIOM_TOKEN) return;
-  const payload = (Array.isArray(events) ? events : [events]).map(e => ({
-    ...e,
-    _time: new Date().toISOString(),
-  }));
+  const payload = (Array.isArray(events) ? events : [events]).map(e => ({ ...e, _time: new Date().toISOString() }));
   fetch(`https://api.axiom.co/v1/datasets/${AXIOM_DATASET}/ingest`, {
-    method:  'POST',
+    method: 'POST',
     headers: { 'Authorization': `Bearer ${AXIOM_TOKEN}`, 'Content-Type': 'application/json' },
-    body:    JSON.stringify(payload),
-  }).catch(() => {}); // silent failure — never break the user flow
+    body: JSON.stringify(payload),
+  }).catch(() => {});
 }
 
 export default async function handler(req, res) {
@@ -30,18 +23,18 @@ export default async function handler(req, res) {
   if (!jobUrl)                           return res.status(400).json({ error: 'jobUrl required' });
   if (!profile?.name || !profile?.email) return res.status(400).json({ error: 'profile.name and profile.email required' });
 
-  const t0   = Date.now();
+  const t0 = Date.now();
   const goal = buildGoal(jobUrl, profile);
-  let   runId = null;
+  let runId = null;
 
   axiom({ event: 'run_start', jobUrl, applicantEmail: profile.email });
 
   let upstream;
   try {
     upstream = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
-      method:  'POST',
+      method: 'POST',
       headers: { 'X-API-Key': KEY, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ url: jobUrl, goal, browser_profile: 'stealth' }),
+      body: JSON.stringify({ url: jobUrl, goal, browser_profile: 'stealth' }),
     });
   } catch (err) {
     axiom({ event: 'run_error', jobUrl, error: err.message, phase: 'connect' });
@@ -54,58 +47,47 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: `TinyFish ${upstream.status}: ${txt}` });
   }
 
-  // SSE headers
-  res.setHeader('Content-Type',      'text/event-stream');
-  res.setHeader('Cache-Control',     'no-cache');
-  res.setHeader('Connection',        'keep-alive');
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
   res.setHeader('X-Accel-Buffering', 'no');
   res.flushHeaders();
 
   const reader = upstream.body.getReader();
-  const dec    = new TextDecoder();
-  let   buf    = '';
+  const dec = new TextDecoder();
+  let buf = '';
 
   try {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-
       buf += dec.decode(value, { stream: true });
       const lines = buf.split('\n');
       buf = lines.pop();
-
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         try {
           const ev = JSON.parse(line.slice(6).trim());
-
           switch (ev.type) {
             case 'STARTED':
               runId = ev.runId;
               emit(res, { type: 'STARTED', runId });
               axiom({ event: 'run_started', runId, jobUrl });
               break;
-
             case 'STREAMING_URL':
               emit(res, { type: 'STREAMING_URL', streamingUrl: ev.streamingUrl });
               break;
-
             case 'PROGRESS':
               emit(res, { type: 'PROGRESS', message: ev.purpose || ev.message || '' });
               break;
-
             case 'HEARTBEAT':
               emit(res, { type: 'HEARTBEAT' });
               break;
-
             case 'COMPLETE': {
               let result = ev.resultJson ?? null;
               if (typeof result === 'string') {
                 try {
-                  const clean = result
-                    .replace(/^```(?:json)?\s*/i, '')
-                    .replace(/\s*```\s*$/i,       '')
-                    .trim();
+                  const clean = result.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
                   result = JSON.parse(clean);
                 } catch (_) {
                   result = { status: 'partial', notes: result, fieldsFilled: [], fieldsSkipped: [], questionsAnswered: [], fieldsCompleted: 0 };
@@ -119,36 +101,31 @@ export default async function handler(req, res) {
               } else {
                 emit(res, { type: 'COMPLETE', result });
                 axiom({
-                  event:            'run_complete',
-                  runId,
-                  jobUrl,
-                  durationMs,
-                  status:           result?.status          || 'unknown',
-                  jobTitle:         result?.jobTitle        || null,
-                  company:          result?.company         || null,
-                  ats:              result?.ats             || null,
-                  fieldsCompleted:  result?.fieldsCompleted || (Array.isArray(result?.fieldsFilled) ? result.fieldsFilled.length : 0),
+                  event: 'run_complete', runId, jobUrl, durationMs,
+                  status: result?.status || 'unknown',
+                  jobTitle: result?.jobTitle || null,
+                  company: result?.company || null,
+                  ats: result?.ats || null,
+                  fieldsCompleted: result?.fieldsCompleted || (Array.isArray(result?.fieldsFilled) ? result.fieldsFilled.length : 0),
                   questionsAnswered: Array.isArray(result?.questionsAnswered) ? result.questionsAnswered.length : 0,
                 });
               }
               break;
             }
-
             case 'ERROR':
               emit(res, { type: 'ERROR', message: ev.message || 'Unknown agent error' });
-              axiom({ event: 'run_error', runId, jobUrl, error: ev.message, durationMs: Date.now()-t0, phase: 'stream' });
+              axiom({ event: 'run_error', runId, jobUrl, error: ev.message, durationMs: Date.now() - t0, phase: 'stream' });
               break;
-
             default:
               emit(res, ev);
           }
-        } catch (_) { /* skip malformed lines */ }
+        } catch (_) {}
       }
     }
   } catch (err) {
     if (err.name !== 'AbortError') {
       emit(res, { type: 'ERROR', message: err.message });
-      axiom({ event: 'run_error', runId, jobUrl, error: err.message, durationMs: Date.now()-t0, phase: 'read' });
+      axiom({ event: 'run_error', runId, jobUrl, error: err.message, durationMs: Date.now() - t0, phase: 'read' });
     }
   } finally {
     res.end();
@@ -161,10 +138,10 @@ function emit(res, data) {
 
 function buildGoal(jobUrl, p) {
   const resumeInstruction = p.resumeUrl
-    ? `RESUME UPLOAD — for the resume/CV field:\n  a) Click Attach/Upload.\n  b) If a URL input is shown, paste: ${p.resumeUrl}\n  c) If only "Enter manually" exists, paste ONLY this URL: ${p.resumeUrl} — do NOT type the applicant profile.\n  d) Do NOT write the applicant's name, skills, bio, or any other text into the resume field.`
-    : 'RESUME: No resume URL provided — skip the file upload field if not required.';
+    ? `RESUME UPLOAD:\n  a) Locate the resume/CV upload field.\n  b) If a URL or text input is available, paste exactly: ${p.resumeUrl}\n  c) If only a file picker is shown and no URL input exists, skip it and note it in fieldsSkipped.\n  d) Do NOT paste the applicant's name, bio, or any profile text into the resume field.`
+    : 'RESUME: No resume URL provided. Skip any file upload field and note it in fieldsSkipped.';
 
-  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant. Be precise and thorough.
+  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant. Be thorough and precise.
 
 TARGET JOB URL: ${jobUrl}
 
@@ -179,30 +156,40 @@ APPLICANT PROFILE:
 - Education: ${p.education || 'not provided'}
 - Key skills: ${p.skills || 'not provided'}
 - Brief bio: ${p.bio || 'not provided'}
-- Cover letter style: ${p.coverLetter || 'Concise, professional, highlight relevant skills.'}
+- Cover letter style: ${p.coverLetter || 'Concise and professional. Highlight relevant skills and enthusiasm for the role.'}
 
 ${resumeInstruction}
 
-INSTRUCTIONS:
-1. Navigate to the job URL. Read the full job description.
-2. Click Apply and follow any ATS redirects.
-3. Fill every field using the applicant profile.
-4. Answer screening questions thoughtfully (2-4 sentences each).
-5. Select best-match options for any dropdowns.
-6. Navigate multi-page forms, click Next/Continue as needed.
-7. Submit and wait for the confirmation page.
+SPECIAL FIELD HANDLING:
+- EEO / diversity fields (race, gender, veteran status, disability): Select "Decline to self-identify" or the equivalent opt-out option.
+- Salary / compensation fields: Enter "Negotiable" or leave blank if the field is optional.
+- "How did you hear about us?": Select or type "Online job board".
+- Consent / authorization checkboxes: Check them to authorize the application.
+- CAPTCHA: If encountered, stop and note it in fieldsSkipped with reason "CAPTCHA requires human interaction".
+- "Are you authorized to work in [country]?": Answer Yes.
+- "Will you now or in the future require sponsorship?": Answer No unless the applicant profile states otherwise.
 
-Return ONLY valid JSON — no markdown fences, no extra text:
+INSTRUCTIONS:
+1. Navigate to the job URL. Read the full job description to understand the role.
+2. Click Apply / Apply Now and follow any ATS redirects.
+3. Fill every visible field using the applicant profile above.
+4. Answer screening questions thoughtfully and specifically (2-4 sentences). Tailor answers to the job description.
+5. For dropdowns, select the closest matching option based on the profile.
+6. Navigate multi-page forms — click Next / Continue / Save and Continue as needed.
+7. On the final page, click Submit and wait for a confirmation message.
+8. If the application requires account creation, create one using the applicant's email.
+
+Return ONLY valid JSON with no markdown fences:
 {
-  "jobTitle": "<exact job title>",
+  "jobTitle": "<exact job title from the posting>",
   "company": "<company name>",
-  "ats": "<Greenhouse|Lever|Workday|LinkedIn|Direct|Other>",
+  "ats": "<Greenhouse|Lever|Workday|LinkedIn|iCIMS|Taleo|SmartRecruiters|Direct|Other>",
   "status": "<submitted|partial|error>",
-  "confirmationText": "<confirmation message or null>",
+  "confirmationText": "<exact confirmation text shown, or null>",
   "fieldsFilled": [ { "field": "<label>", "value": "<value entered>" } ],
-  "fieldsSkipped": [ { "field": "<label>", "reason": "<why>" } ],
-  "questionsAnswered": [ { "question": "<text>", "answer": "<answer>" } ],
-  "fieldsCompleted": <integer>,
-  "notes": "<observations or issues>"
+  "fieldsSkipped": [ { "field": "<label>", "reason": "<why it was skipped>" } ],
+  "questionsAnswered": [ { "question": "<question text>", "answer": "<answer given>" } ],
+  "fieldsCompleted": <integer count of fields filled>,
+  "notes": "<any observations, blockers, or issues encountered>"
 }`.trim();
 }
