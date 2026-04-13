@@ -21,8 +21,6 @@
     }
     html,body { height:100%; overflow:hidden; }
     body { font-family:var(--fn); background:var(--bg); color:var(--tx); font-size:13px; line-height:1.5; }
-
-    /* Header */
     .hdr { height:48px; border-bottom:1px solid var(--br); display:flex; align-items:center; padding:0 20px; gap:10px; background:var(--sf); flex-shrink:0; }
     .hdr-logo { display:flex; align-items:center; gap:7px; font-size:14px; font-weight:600; letter-spacing:-.2px; text-decoration:none; color:var(--tx); }
     .hdr-sep  { color:var(--t3); }
@@ -36,15 +34,11 @@
     .stat-pill strong { color:var(--tx); font-weight:600; }
     .btn-demo { padding:5px 12px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:11px; font-weight:500; cursor:pointer; transition:all .12s; display:flex; align-items:center; gap:5px; }
     .btn-demo:hover { border-color:var(--bl); color:var(--bl); }
-
-    /* Layout */
     .ws   { display:grid; grid-template-columns:360px 1fr; height:calc(100vh - 48px); }
     .left { border-right:1px solid var(--br); background:var(--sf); display:flex; flex-direction:column; overflow:hidden; }
     .lscroll { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:18px; }
     .lscroll::-webkit-scrollbar { width:3px; }
     .lscroll::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
-
-    /* Log */
     .log-panel  { flex-shrink:0; height:170px; border-top:1px solid var(--br); display:flex; flex-direction:column; background:var(--bg); }
     .log-hdr    { padding:7px 14px 3px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--t3); flex-shrink:0; }
     .log-stream { flex:1; overflow-y:auto; padding:0 14px 10px; display:flex; flex-direction:column; gap:2px; }
@@ -58,8 +52,6 @@
     .le.ok   { color:var(--gn); } .le.ok .sym  { color:var(--gn); }
     .le.err  { color:var(--rd); } .le.err .sym { color:var(--rd); }
     .le.warn { color:var(--am); } .le.warn .sym { color:var(--am); }
-
-    /* Sections */
     .sec       { display:flex; flex-direction:column; gap:8px; }
     .sec-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--t3); }
     .row       { display:grid; gap:8px; }
@@ -74,13 +66,9 @@
     input:focus,textarea:focus,select:focus { border-color:var(--bl); }
     input::placeholder,textarea::placeholder { color:var(--t3); }
     textarea { min-height:60px; resize:vertical; }
-
-    /* Mode tabs */
     .mode-tabs { display:flex; gap:0; border:1px solid var(--br2); border-radius:var(--r); overflow:hidden; }
     .mode-tab  { flex:1; padding:5px 10px; text-align:center; font-size:11px; font-weight:500; color:var(--t2); cursor:pointer; background:transparent; border:none; transition:all .12s; }
     .mode-tab.on { background:var(--bl); color:#fff; }
-
-    /* Buttons */
     .btn-apply { padding:7px 14px; background:var(--bl); border:none; border-radius:var(--r); color:#fff; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap; transition:opacity .15s; }
     .btn-apply:hover:not(:disabled) { opacity:.85; }
     .btn-apply:disabled { opacity:.4; cursor:not-allowed; }
@@ -92,7 +80,6 @@
     .btn-sm { padding:5px 12px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:11px; cursor:pointer; transition:all .12s; }
     .btn-sm:hover { border-color:var(--bl); color:var(--bl); }
     .btn-sm.danger:hover { border-color:var(--rd); color:var(--rd); }
-
     .url-row { display:flex; gap:6px; }
     .url-row input { flex:1; }
     .ats-row { display:flex; flex-wrap:wrap; gap:4px; }
@@ -104,8 +91,6 @@
     .btn-takeover { flex:1; padding:6px; background:transparent; border:1px solid var(--br2); border-radius:var(--r); color:var(--t2); font-size:12px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all .12s; }
     .btn-takeover:hover { border-color:var(--am); color:var(--am); }
     .btn-takeover:disabled { opacity:.3; cursor:not-allowed; }
-
-    /* Batch queue */
     .batch-queue { display:flex; flex-direction:column; gap:4px; margin-top:6px; }
     .bq-item { display:flex; align-items:center; gap:8px; padding:6px 10px; background:var(--s3); border:1px solid var(--br2); border-radius:var(--r); font-size:11px; }
     .bq-status { width:8px; height:8px; border-radius:50%; flex-shrink:0; background:var(--t3); }
@@ -119,16 +104,10 @@
     .bq-badge.submitted { color:var(--gn); }
     .bq-badge.partial   { color:var(--am); }
     .bq-badge.error     { color:var(--rd); }
-
-    /* Profile manager */
     .profile-bar { display:flex; gap:6px; align-items:center; }
     .profile-bar select { flex:1; }
-
-    /* PDF Preview */
     .pdf-preview { margin-top:6px; border:1px solid var(--br2); border-radius:var(--r); overflow:hidden; }
     .pdf-frame   { width:100%; height:260px; border:none; display:block; background:var(--s3); }
-
-    /* Right panel */
     .right { display:flex; flex-direction:column; overflow:hidden; }
     .tabs  { display:flex; border-bottom:1px solid var(--br); background:var(--sf); padding:0 4px; flex-shrink:0; }
     .tab   { padding:12px 16px; font-size:12px; font-weight:500; color:var(--t2); cursor:pointer; border-bottom:1px solid transparent; transition:all .12s; display:flex; align-items:center; gap:6px; user-select:none; }
@@ -139,8 +118,6 @@
     .pane    { flex:1; display:none; flex-direction:column; overflow:hidden; }
     .pane.on { display:flex; }
     #pane-live { background:#000; }
-
-    /* Browser bar */
     .bbr   { display:flex; align-items:center; gap:8px; padding:9px 16px; background:var(--sf); border-bottom:1px solid var(--br); flex-shrink:0; }
     .bdots { display:flex; gap:5px; }
     .bd    { width:10px; height:10px; border-radius:50%; background:#3a3a3a; }
@@ -160,8 +137,6 @@
     .idle-steps { display:flex; flex-direction:column; gap:8px; text-align:left; max-width:300px; }
     .is { display:flex; gap:10px; font-size:12px; color:var(--t2); align-items:flex-start; }
     .sn { width:18px; height:18px; border-radius:50%; flex-shrink:0; border:1px solid var(--br2); color:var(--t2); font-size:10px; font-weight:500; display:flex; align-items:center; justify-content:center; margin-top:1px; }
-
-    /* Result pane */
     #pane-result { overflow-y:auto; padding:24px; background:var(--bg); display:flex; flex-direction:column; gap:18px; }
     #pane-result::-webkit-scrollbar { width:4px; }
     #pane-result::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
@@ -202,8 +177,6 @@
     .qa-item:last-child { border-bottom:none; }
     .qa-q { font-size:12px; font-weight:500; color:var(--tx); margin-bottom:5px; }
     .qa-a { font-size:12px; color:var(--t2); line-height:1.6; }
-
-    /* History */
     #pane-history { overflow-y:auto; background:var(--bg); display:flex; flex-direction:column; }
     #pane-history::-webkit-scrollbar { width:4px; }
     #pane-history::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
@@ -230,8 +203,6 @@
     .hist-empty-ic { width:44px; height:44px; border-radius:12px; border:1px solid var(--br2); background:var(--s2); display:flex; align-items:center; justify-content:center; color:var(--t3); }
     .hist-empty h3 { font-size:14px; font-weight:500; }
     .hist-empty p  { font-size:12px; color:var(--t2); max-width:260px; line-height:1.7; }
-
-    /* Detail Modal */
     .modal-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.8); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:24px; }
     .modal-overlay.on { display:flex; }
     .modal { background:var(--sf); border:1px solid var(--br2); border-radius:12px; width:100%; max-width:680px; max-height:85vh; display:flex; flex-direction:column; overflow:hidden; }
@@ -242,8 +213,6 @@
     .modal-body { overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:16px; }
     .modal-body::-webkit-scrollbar { width:4px; }
     .modal-body::-webkit-scrollbar-thumb { background:var(--br2); border-radius:2px; }
-
-    /* Toast */
     .toast { position:fixed; bottom:20px; right:20px; z-index:999; background:var(--s3); border:1px solid var(--br2); border-radius:var(--rl); padding:10px 16px; font-size:12px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.6); animation:fadein .2s ease; }
   </style>
 </head>
@@ -270,11 +239,8 @@
 </header>
 
 <div class="ws">
-  <!-- Left panel -->
   <div class="left">
     <div class="lscroll">
-
-      <!-- Job / Batch section -->
       <div class="sec">
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div class="sec-title">Apply</div>
@@ -283,11 +249,9 @@
             <button class="mode-tab"    id="tab-batch"  onclick="setMode('batch')">Batch</button>
           </div>
         </div>
-
-        <!-- Single mode -->
         <div id="mode-single">
           <div class="fg">
-            <label class="fl">Application URL</label>
+            <label class="fl">Application URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; Enter to apply</span></label>
             <div class="url-row">
               <input type="url" id="job-url" placeholder="https://boards.greenhouse.io/company/jobs/123" />
               <button class="btn-apply" id="btn-apply" onclick="startApply()">
@@ -308,11 +272,9 @@
             </button>
           </div>
         </div>
-
-        <!-- Batch mode -->
         <div id="mode-batch" style="display:none">
           <div class="fg">
-            <label class="fl">Job URLs <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; one per line</span></label>
+            <label class="fl">Job URLs <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; one per line, dupes removed</span></label>
             <textarea id="batch-urls" rows="5" placeholder="https://boards.greenhouse.io/company/jobs/1&#10;https://jobs.lever.co/company/abc&#10;https://linkedin.com/jobs/view/123"></textarea>
           </div>
           <div style="display:flex;gap:6px;align-items:center;">
@@ -326,7 +288,6 @@
         </div>
       </div>
 
-      <!-- Profile section -->
       <div class="sec">
         <div class="sec-title">Profile</div>
         <div class="profile-bar">
@@ -343,7 +304,7 @@
           <div class="fg"><label class="fl">Location</label> <input type="text" id="p-loc"   placeholder="San Francisco, CA" /></div>
         </div>
         <div class="row two">
-          <div class="fg"><label class="fl">LinkedIn</label>         <input type="url" id="p-li" placeholder="https://linkedin.com/in/..." /></div>
+          <div class="fg"><label class="fl">LinkedIn</label>          <input type="url" id="p-li" placeholder="https://linkedin.com/in/..." /></div>
           <div class="fg"><label class="fl">GitHub / Portfolio</label><input type="url" id="p-gh" placeholder="https://github.com/..." /></div>
         </div>
         <div class="row two">
@@ -362,29 +323,35 @@
             <iframe id="pdf-frame" class="pdf-frame" src="" title="Resume preview"></iframe>
           </div>
         </div>
-        <div class="fg"><label class="fl">Brief Bio</label>
-          <textarea id="p-bio" placeholder="2-3 sentences about yourself..."></textarea>
+        <div class="fg">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <label class="fl">Brief Bio</label>
+            <span id="bio-count" style="font-size:10px;color:var(--t3);"></span>
+          </div>
+          <textarea id="p-bio" placeholder="2-3 sentences about yourself..." oninput="updateBioCount()"></textarea>
         </div>
         <div class="fg">
           <label class="fl">Cover Letter Instructions <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; optional</span></label>
           <textarea id="p-cl" placeholder="Keep it concise, under 100 words..." style="min-height:44px"></textarea>
         </div>
         <div class="fg">
-          <label class="fl">Notify Email <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; get emailed on completion</span></label>
+          <label class="fl">Notify Email <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">&mdash; emailed on completion</span></label>
           <input type="email" id="p-notify" placeholder="jane@example.com (optional)" />
         </div>
       </div>
-
     </div>
+
     <div class="log-panel">
-      <div class="log-hdr">Activity</div>
+      <div class="log-hdr" style="display:flex;align-items:center;justify-content:space-between;padding-right:8px;">
+        Activity
+        <button class="btn-xs" onclick="clearLog()" style="font-size:10px;padding:2px 7px;line-height:1.2;">Clear</button>
+      </div>
       <div class="log-stream" id="log">
         <div class="le"><span class="sym">&middot;</span><span>Waiting for input</span></div>
       </div>
     </div>
   </div>
 
-  <!-- Right panel -->
   <div class="right">
     <div class="tabs">
       <div class="tab on" data-p="live"    onclick="switchTab('live')">Live Browser</div>
@@ -392,7 +359,6 @@
       <div class="tab"    data-p="history" onclick="switchTab('history')">History <span class="bdg" id="hist-bdg">0</span></div>
     </div>
 
-    <!-- Live -->
     <div class="pane on" id="pane-live">
       <div class="bbr">
         <div class="bdots"><div class="bd r" id="bd-r"></div><div class="bd y" id="bd-y"></div><div class="bd g" id="bd-g"></div></div>
@@ -407,7 +373,7 @@
         <div class="idle" id="idle">
           <div class="idle-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
           <h3>Agent standing by</h3>
-          <p>Paste a job URL and click Apply. The TinyFish agent will navigate the real ATS portal, fill every field, and submit &mdash; live.</p>
+          <p>Paste a job URL and press Enter or click Apply. The TinyFish agent navigates the real ATS, fills every field, and submits &mdash; live.</p>
           <div class="idle-steps">
             <div class="is"><div class="sn">1</div><span>Navigates to the job URL and reads the description</span></div>
             <div class="is"><div class="sn">2</div><span>Detects the ATS and fills every form field</span></div>
@@ -419,7 +385,6 @@
       </div>
     </div>
 
-    <!-- Result -->
     <div class="pane" id="pane-result">
       <div class="res-empty" id="res-empty">
         <div class="res-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
@@ -471,7 +436,6 @@
       </div>
     </div>
 
-    <!-- History -->
     <div class="pane" id="pane-history">
       <div class="hist-stats">
         <div class="hs"><div class="hs-k">Total Runs</div><div class="hs-v" id="hs-total">0</div></div>
@@ -490,7 +454,6 @@
   </div>
 </div>
 
-<!-- Detail Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-hdr">
@@ -502,84 +465,77 @@
 </div>
 
 <script>
-  /* ─ Keys ─ */
   const PROFILE_KEY  = 'aa_profile_v1';
   const PROFILES_KEY = 'aa_profiles_v1';
-  const HISTORY_KEY  = 'aa_history_v2'; // v2 stores full result
+  const HISTORY_KEY  = 'aa_history_v2';
   const MAX_HISTORY  = 50;
 
-  /* ─ State ─ */
-  let ctrl = null, streamingUrl = null, t0 = 0, lastJobUrl = null;
+  let ctrl = null, streamingUrl = null, t0 = 0, lastJobUrl = null, timerInterval = null;
   let batchRunning = false, batchAbort = false;
 
   const FIELDS = ['p-name','p-email','p-phone','p-loc','p-li','p-gh','p-exp','p-edu','p-skills','p-resume','p-bio','p-cl','p-notify'];
 
-  /* ─ Profile I/O ─ */
-  function getFieldValues() {
-    const o = {}; FIELDS.forEach(id => { o[id] = document.getElementById(id).value; }); return o;
-  }
-  function setFieldValues(o) {
-    FIELDS.forEach(id => { if (o[id] !== undefined) document.getElementById(id).value = o[id]; });
-  }
-  function saveActive() { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(getFieldValues())); } catch(_) {} }
-  function loadActive() {
-    try { const r = localStorage.getItem(PROFILE_KEY); if (r) setFieldValues(JSON.parse(r)); } catch(_) {}
-  }
-  FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', saveActive); });
+  function getFieldValues() { const o={}; FIELDS.forEach(id=>{o[id]=document.getElementById(id).value;}); return o; }
+  function setFieldValues(o) { FIELDS.forEach(id=>{if(o[id]!==undefined)document.getElementById(id).value=o[id];}); }
+  function saveActive() { try{localStorage.setItem(PROFILE_KEY,JSON.stringify(getFieldValues()));}catch(_){} }
+  function loadActive() { try{const r=localStorage.getItem(PROFILE_KEY);if(r)setFieldValues(JSON.parse(r));}catch(_){} }
+  FIELDS.forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',saveActive);});
 
-  /* ─ Named profiles ─ */
-  function getProfiles() { try { return JSON.parse(localStorage.getItem(PROFILES_KEY) || '{}'); } catch(_) { return {}; } }
-  function saveProfiles(p) { try { localStorage.setItem(PROFILES_KEY, JSON.stringify(p)); } catch(_) {} }
+  function getProfiles() { try{return JSON.parse(localStorage.getItem(PROFILES_KEY)||'{}');}catch(_){return{};} }
+  function saveProfiles(p) { try{localStorage.setItem(PROFILES_KEY,JSON.stringify(p));}catch(_){} }
   function renderProfileSelect() {
-    const sel = document.getElementById('profile-select');
-    const profiles = getProfiles(); const cur = sel.value;
-    sel.innerHTML = '<option value="">-- unsaved --</option>' +
-      Object.keys(profiles).map(k => `<option value="${esc(k)}"${k===cur?' selected':''}>${esc(k)}</option>`).join('');
+    const sel=document.getElementById('profile-select');
+    const profiles=getProfiles(); const cur=sel.value;
+    sel.innerHTML='<option value="">-- unsaved --</option>'+
+      Object.keys(profiles).map(k=>`<option value="${esc(k)}"${k===cur?' selected':''}>${esc(k)}</option>`).join('');
   }
   function loadSelectedProfile() {
-    const name = document.getElementById('profile-select').value;
-    if (!name) return;
-    const p = getProfiles(); if (p[name]) { setFieldValues(p[name]); saveActive(); }
+    const name=document.getElementById('profile-select').value; if(!name)return;
+    const p=getProfiles(); if(p[name]){setFieldValues(p[name]);saveActive();updateBioCount();}
   }
   function saveCurrentAsProfile() {
-    const name = prompt('Profile name:'); if (!name?.trim()) return;
-    const p = getProfiles(); p[name.trim()] = getFieldValues(); saveProfiles(p);
-    renderProfileSelect(); document.getElementById('profile-select').value = name.trim();
-    toast('Saved: ' + name.trim());
+    const name=prompt('Profile name:'); if(!name?.trim())return;
+    const p=getProfiles(); p[name.trim()]=getFieldValues(); saveProfiles(p);
+    renderProfileSelect(); document.getElementById('profile-select').value=name.trim();
+    toast('Saved: '+name.trim());
   }
   function deleteSelectedProfile() {
-    const name = document.getElementById('profile-select').value;
-    if (!name) return toast('No profile selected');
-    if (!confirm('Delete "' + name + '"?')) return;
-    const p = getProfiles(); delete p[name]; saveProfiles(p); renderProfileSelect(); toast('Deleted');
+    const name=document.getElementById('profile-select').value;
+    if(!name)return toast('No profile selected');
+    if(!confirm('Delete "'+name+'"?'))return;
+    const p=getProfiles(); delete p[name]; saveProfiles(p); renderProfileSelect(); toast('Deleted');
   }
 
-  /* ─ PDF preview ─ */
   function syncPdfPreview() {
-    const url = document.getElementById('p-resume').value.trim();
-    const frame = document.getElementById('pdf-frame');
-    if (document.getElementById('pdf-preview').style.display !== 'none' && url) frame.src = url;
+    const url=document.getElementById('p-resume').value.trim();
+    const frame=document.getElementById('pdf-frame');
+    if(document.getElementById('pdf-preview').style.display!=='none'&&url)frame.src=url;
   }
   function togglePdfPreview() {
-    const el = document.getElementById('pdf-preview');
-    const url = document.getElementById('p-resume').value.trim();
-    if (el.style.display === 'none') {
-      if (!url) return toast('Enter a resume URL first');
-      document.getElementById('pdf-frame').src = url;
-      el.style.display = 'block';
-      document.getElementById('btn-pdf-toggle').textContent = 'Hide';
-    } else {
-      el.style.display = 'none';
-      document.getElementById('btn-pdf-toggle').textContent = 'Preview';
+    const el=document.getElementById('pdf-preview');
+    const url=document.getElementById('p-resume').value.trim();
+    if(el.style.display==='none'){
+      if(!url)return toast('Enter a resume URL first');
+      document.getElementById('pdf-frame').src=url;
+      el.style.display='block';
+      document.getElementById('btn-pdf-toggle').textContent='Hide';
+    }else{
+      el.style.display='none';
+      document.getElementById('btn-pdf-toggle').textContent='Preview';
     }
   }
   function copyResumeUrl() {
-    const url = document.getElementById('p-resume').value.trim();
-    if (!url) return toast('No resume URL set');
-    navigator.clipboard.writeText(url).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
+    const url=document.getElementById('p-resume').value.trim();
+    if(!url)return toast('No resume URL set');
+    navigator.clipboard.writeText(url).then(()=>toast('Copied!')).catch(()=>toast('Copy failed'));
   }
 
-  /* ─ Demo mode ─ */
+  function updateBioCount() {
+    const v=document.getElementById('p-bio').value;
+    const el=document.getElementById('bio-count');
+    if(el)el.textContent=v.length?v.length+' ch':'';
+  }
+
   function activateDemo() {
     setFieldValues({
       'p-name':   'Alex Johnson',
@@ -593,212 +549,166 @@
       'p-skills': 'Python, TypeScript, React, Node.js, PostgreSQL, AWS, REST APIs',
       'p-resume': 'https://autoapply-omega.vercel.app/resume.pdf',
       'p-bio':    'Full-stack engineer with 3 years experience building web apps and APIs. Passionate about developer tooling and automation. Fast learner, strong communicator.',
-      'p-cl':     'Concise, under 80 words. Highlight engineering background, adaptability, and excitement about the team\'s mission.',
+      'p-cl':     "Concise, under 80 words. Highlight engineering background, adaptability, and excitement about the team's mission.",
       'p-notify': '',
     });
-    // Known stable Greenhouse demo job (swap before Demo Day if expired)
-    document.getElementById('job-url').value = 'https://boards.greenhouse.io/anthropic/jobs/4020305007';
-    saveActive(); setMode('single'); switchTab('live');
-    toast('Demo mode loaded — verify URL still live before pitching');
+    document.getElementById('job-url').value='https://boards.greenhouse.io/anthropic/jobs/4020305007';
+    saveActive(); setMode('single'); switchTab('live'); updateBioCount();
+    toast('Demo mode loaded \u2014 verify URL is live before pitching');
   }
 
-  /* ─ Mode toggle ─ */
   function setMode(m) {
-    document.getElementById('mode-single').style.display = m === 'single' ? '' : 'none';
-    document.getElementById('mode-batch').style.display  = m === 'batch'  ? '' : 'none';
-    document.getElementById('tab-single').classList.toggle('on', m === 'single');
-    document.getElementById('tab-batch').classList.toggle('on', m === 'batch');
+    document.getElementById('mode-single').style.display=m==='single'?'':'none';
+    document.getElementById('mode-batch').style.display =m==='batch' ?'':'none';
+    document.getElementById('tab-single').classList.toggle('on',m==='single');
+    document.getElementById('tab-batch').classList.toggle('on',m==='batch');
   }
 
-  /* ─ History ─ */
-  function getHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(_) { return []; } }
-  function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(_) {} }
-  function addToHistory(result, jobUrl, secs) {
-    const h = getHistory();
+  function getHistory() { try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');}catch(_){return[];} }
+  function saveHistory(h) { try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h));}catch(_){} }
+  function addToHistory(result,jobUrl,secs) {
+    const h=getHistory();
     h.unshift({
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2,5),
-      ts: Date.now(), duration: parseFloat(secs), jobUrl,
-      jobTitle: result.jobTitle||null, company: result.company||null,
-      ats: result.ats||null, status: result.status||'unknown',
-      fieldsCompleted: Array.isArray(result.fieldsFilled) ? result.fieldsFilled.length : (result.fieldsCompleted||0),
-      questionsAnswered: Array.isArray(result.questionsAnswered) ? result.questionsAnswered.length : 0,
-      fullResult: result, // store full result for detail view
+      id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+      ts:Date.now(),duration:parseFloat(secs),jobUrl,
+      jobTitle:result.jobTitle||null,company:result.company||null,
+      ats:result.ats||null,status:result.status||'unknown',
+      fieldsCompleted:Array.isArray(result.fieldsFilled)?result.fieldsFilled.length:(result.fieldsCompleted||0),
+      questionsAnswered:Array.isArray(result.questionsAnswered)?result.questionsAnswered.length:0,
+      fullResult:result,
     });
-    if (h.length > MAX_HISTORY) h.splice(MAX_HISTORY);
-    saveHistory(h); renderHistory(); updateHeaderStats();
+    if(h.length>MAX_HISTORY)h.splice(MAX_HISTORY);
+    saveHistory(h);renderHistory();updateHeaderStats();
   }
   function renderHistory() {
-    const h = getHistory();
-    document.getElementById('hist-bdg').textContent = h.length;
-    const sub = h.filter(r=>r.status==='submitted').length;
-    document.getElementById('hs-total').textContent     = h.length;
-    document.getElementById('hs-submitted').textContent = sub;
-    document.getElementById('hs-rate').textContent      = h.length ? Math.round(sub/h.length*100)+'%' : '\u2014';
-    const list = document.getElementById('hist-list');
-    if (!h.length) {
-      list.innerHTML = `<div class="hist-empty"><div class="hist-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>No applications yet</h3><p>Every run will appear here with full status and details.</p></div>`;
+    const h=getHistory();
+    document.getElementById('hist-bdg').textContent=h.length;
+    const sub=h.filter(r=>r.status==='submitted').length;
+    document.getElementById('hs-total').textContent=h.length;
+    document.getElementById('hs-submitted').textContent=sub;
+    document.getElementById('hs-rate').textContent=h.length?Math.round(sub/h.length*100)+'%':'\u2014';
+    const list=document.getElementById('hist-list');
+    if(!h.length){
+      list.innerHTML=`<div class="hist-empty"><div class="hist-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>No applications yet</h3><p>Every run will appear here with full status and details.</p></div>`;
       return;
     }
-    list.innerHTML = h.map(r => {
-      const title  = r.jobTitle && r.company ? `${esc(r.jobTitle)} &middot; ${esc(r.company)}` : esc(r.jobTitle||r.company||'Application');
-      const date   = new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-      const status = (r.status||'unknown').toLowerCase();
-      const host   = (() => { try { return new URL(r.jobUrl).hostname.replace('www.',''); } catch(_) { return r.jobUrl||''; }})();
+    list.innerHTML=h.map(r=>{
+      const title=r.jobTitle&&r.company?`${esc(r.jobTitle)} &middot; ${esc(r.company)}`:esc(r.jobTitle||r.company||'Application');
+      const date=new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const status=(r.status||'unknown').toLowerCase();
+      const host=(()=>{try{return new URL(r.jobUrl).hostname.replace('www.','');}catch(_){return r.jobUrl||'';}})();
       return `<div class="hist-item" onclick="openDetailModal('${esc(r.id)}')">
-        <div class="hist-top">
-          <div class="hist-title">${title}</div>
-          <span class="badge-sm ${status}">${status}</span>
-          <span class="hist-expand">&#8250;</span>
-        </div>
-        <div class="hist-meta">${date}
-          ${r.ats?`<span>&middot;</span>${esc(r.ats)}`:''}
-          ${r.fieldsCompleted?`<span>&middot;</span>${r.fieldsCompleted} fields`:''}
-          ${r.questionsAnswered?`<span>&middot;</span>${r.questionsAnswered} q&amp;a`:''}
-          ${r.duration?`<span>&middot;</span>${r.duration}s`:''}
-        </div>
+        <div class="hist-top"><div class="hist-title">${title}</div><span class="badge-sm ${status}">${status}</span><span class="hist-expand">&#8250;</span></div>
+        <div class="hist-meta">${date}${r.ats?`<span>&middot;</span>${esc(r.ats)}`:''}${r.fieldsCompleted?`<span>&middot;</span>${r.fieldsCompleted} fields`:''}${r.questionsAnswered?`<span>&middot;</span>${r.questionsAnswered} q&amp;a`:''}${r.duration?`<span>&middot;</span>${r.duration}s`:''}</div>
         <div class="hist-url">${esc(host)}</div>
       </div>`;
     }).join('');
   }
   function clearHistory() {
-    if (!confirm('Clear all history?')) return;
-    localStorage.removeItem(HISTORY_KEY); renderHistory(); updateHeaderStats();
+    if(!confirm('Clear all history?'))return;
+    localStorage.removeItem(HISTORY_KEY);renderHistory();updateHeaderStats();
   }
   function exportCSV() {
-    const h = getHistory(); if (!h.length) return toast('No history to export');
-    const rows = [['Date','Company','Role','ATS','Status','Fields','Questions','Duration(s)','URL'],
+    const h=getHistory();if(!h.length)return toast('No history to export');
+    const rows=[['Date','Company','Role','ATS','Status','Fields','Questions','Duration(s)','URL'],
       ...h.map(r=>[new Date(r.ts).toISOString(),r.company||'',r.jobTitle||'',r.ats||'',r.status||'',r.fieldsCompleted||0,r.questionsAnswered||0,r.duration||'',r.jobUrl||'']
-        .map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))];
-    const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'})),download:'autoapply-history.csv'});
-    a.click(); URL.revokeObjectURL(a.href); toast('Exported ' + h.length + ' applications');
+        .map(v=>`"${String(v).replace(/"/g,'""')}"`)
+        .join(','))];
+    const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'})),download:'autoapply-history.csv'});
+    a.click();URL.revokeObjectURL(a.href);toast('Exported '+h.length+' applications');
   }
   function updateHeaderStats() {
-    const h = getHistory();
-    if (!h.length) { document.getElementById('hdr-stats').style.display='none'; return; }
+    const h=getHistory();
+    if(!h.length){document.getElementById('hdr-stats').style.display='none';return;}
     document.getElementById('hdr-stats').style.display='flex';
-    document.getElementById('stat-total').textContent   = h.length;
-    document.getElementById('stat-success').textContent = h.filter(r=>r.status==='submitted').length;
+    document.getElementById('stat-total').textContent=h.length;
+    document.getElementById('stat-success').textContent=h.filter(r=>r.status==='submitted').length;
   }
 
-  /* ─ Detail modal ─ */
   function openDetailModal(id) {
-    const h = getHistory();
-    const item = h.find(r => r.id === id);
-    if (!item) return;
-    const r = item.fullResult || {};
-    const status = (item.status||'unknown').toLowerCase();
-    document.getElementById('modal-title').textContent = item.jobTitle && item.company
-      ? `${item.jobTitle} \u00b7 ${item.company}` : (item.jobTitle || item.company || 'Application Detail');
-
-    let html = `
+    const h=getHistory();
+    const item=h.find(r=>r.id===id);if(!item)return;
+    const r=item.fullResult||{};
+    const status=(item.status||'unknown').toLowerCase();
+    document.getElementById('modal-title').textContent=item.jobTitle&&item.company
+      ?`${item.jobTitle} \u00b7 ${item.company}`:(item.jobTitle||item.company||'Application Detail');
+    let html=`
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="badge ${status}">${status}</span>
-        ${item.ats ? `<span class="meta-chip">via ${esc(item.ats)}</span>` : ''}
-        <span class="meta-chip">${item.duration || 0}s</span>
-        <span class="meta-chip">${item.fieldsCompleted || 0} fields</span>
-        <span class="meta-chip">${item.questionsAnswered || 0} q&amp;a</span>
+        ${item.ats?`<span class="meta-chip">via ${esc(item.ats)}</span>`:''}
+        <span class="meta-chip">${item.duration||0}s</span>
+        <span class="meta-chip">${item.fieldsCompleted||0} fields</span>
+        <span class="meta-chip">${item.questionsAnswered||0} q&amp;a</span>
       </div>
       <div style="font-size:11px;font-family:var(--mo);color:var(--t3);word-break:break-all;">${esc(item.jobUrl||'')}</div>`;
-
-    if (r.confirmationText) html += `
-      <div class="card"><div class="card-hdr">&#10003; Confirmation</div>
-      <div class="card-body"><div class="card-text">${esc(r.confirmationText)}</div></div></div>`;
-
-    if (Array.isArray(r.fieldsFilled) && r.fieldsFilled.length) html += `
-      <div class="card"><div class="card-hdr">Fields Filled</div>
-      <div class="card-body" style="padding:0">
-      <table class="field-table"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
-      ${r.fieldsFilled.map(f=>`<tr><td>${esc(f.field)}</td><td>${esc(f.value)}</td></tr>`).join('')}
-      </tbody></table></div></div>`;
-
-    if (Array.isArray(r.fieldsSkipped) && r.fieldsSkipped.length) html += `
-      <div class="card"><div class="card-hdr">Fields Skipped</div>
-      <div class="card-body" style="padding:0">
-      <table class="field-table"><thead><tr><th>Field</th><th>Reason</th></tr></thead><tbody>
-      ${r.fieldsSkipped.map(f=>`<tr class="skipped"><td>${esc(f.field)}</td><td><div class="skip-reason">${esc(f.reason||'Skipped')}</div></td></tr>`).join('')}
-      </tbody></table></div></div>`;
-
-    if (Array.isArray(r.questionsAnswered) && r.questionsAnswered.length) html += `
-      <div class="card"><div class="card-hdr">Screening Q&amp;A</div><div>
-      ${r.questionsAnswered.map(q=>`<div class="qa-item"><div class="qa-q">${esc(q.question)}</div><div class="qa-a">${esc(q.answer)}</div></div>`).join('')}
-      </div></div>`;
-
-    if (r.notes) html += `
-      <div class="card"><div class="card-hdr">Agent Notes</div>
-      <div class="card-body"><div class="card-note">${esc(r.notes)}</div></div></div>`;
-
-    if (!r.fieldsFilled && !r.questionsAnswered && !r.notes) html += `
-      <div style="text-align:center;padding:24px;color:var(--t2);font-size:12px;">Full result not available for this run.</div>`;
-
-    html += `<div style="display:flex;gap:8px;">
-      <button class="btn-sm" onclick="closeDetailModal();document.getElementById('job-url').value='${esc(item.jobUrl||'')}';switchTab('live');">
-        Load URL &amp; Re-run
-      </button>
+    if(r.confirmationText)html+=`<div class="card"><div class="card-hdr">&#10003; Confirmation</div><div class="card-body"><div class="card-text">${esc(r.confirmationText)}</div></div></div>`;
+    if(Array.isArray(r.fieldsFilled)&&r.fieldsFilled.length)html+=`<div class="card"><div class="card-hdr">Fields Filled</div><div class="card-body" style="padding:0"><table class="field-table"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${r.fieldsFilled.map(f=>`<tr><td>${esc(f.field)}</td><td>${esc(f.value)}</td></tr>`).join('')}</tbody></table></div></div>`;
+    if(Array.isArray(r.fieldsSkipped)&&r.fieldsSkipped.length)html+=`<div class="card"><div class="card-hdr">Fields Skipped</div><div class="card-body" style="padding:0"><table class="field-table"><thead><tr><th>Field</th><th>Reason</th></tr></thead><tbody>${r.fieldsSkipped.map(f=>`<tr class="skipped"><td>${esc(f.field)}</td><td><div class="skip-reason">${esc(f.reason||'Skipped')}</div></td></tr>`).join('')}</tbody></table></div></div>`;
+    if(Array.isArray(r.questionsAnswered)&&r.questionsAnswered.length)html+=`<div class="card"><div class="card-hdr">Screening Q&amp;A</div><div>${r.questionsAnswered.map(q=>`<div class="qa-item"><div class="qa-q">${esc(q.question)}</div><div class="qa-a">${esc(q.answer)}</div></div>`).join('')}</div></div>`;
+    if(r.notes)html+=`<div class="card"><div class="card-hdr">Agent Notes</div><div class="card-body"><div class="card-note">${esc(r.notes)}</div></div></div>`;
+    if(!r.fieldsFilled&&!r.questionsAnswered&&!r.notes)html+=`<div style="text-align:center;padding:24px;color:var(--t2);font-size:12px;">Full result not available for this run.</div>`;
+    html+=`<div style="display:flex;gap:8px;">
+      <button class="btn-sm" onclick="closeDetailModal();document.getElementById('job-url').value='${esc(item.jobUrl||'')}';switchTab('live');">Load URL &amp; Re-run</button>
       <a href="${esc(item.jobUrl||'')}" target="_blank" style="text-decoration:none;"><button class="btn-sm">Open Job Posting &#8599;</button></a>
     </div>`;
-
-    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-body').innerHTML=html;
     document.getElementById('modal-overlay').classList.add('on');
   }
-  function closeDetailModal() { document.getElementById('modal-overlay').classList.remove('on'); }
-  function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) closeDetailModal(); }
+  function closeDetailModal(){document.getElementById('modal-overlay').classList.remove('on');}
+  function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeDetailModal();}
 
-  /* ─ Email notification ─ */
-  async function sendNotification(result, jobUrl, secs) {
-    const to = document.getElementById('p-notify').value.trim();
-    if (!to) return;
-    try {
-      await fetch('/api/notify', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          to, jobUrl,
-          jobTitle: result.jobTitle||null,
-          company:  result.company||null,
-          status:   result.status||'unknown',
-          fieldsCompleted:  Array.isArray(result.fieldsFilled) ? result.fieldsFilled.length : (result.fieldsCompleted||0),
-          questionsAnswered: Array.isArray(result.questionsAnswered) ? result.questionsAnswered.length : 0,
-          duration: secs,
-          notes:    result.notes||null,
-        }),
-      });
-      log('Notification sent to ' + to, 'ok');
-    } catch(_) {}
+  async function sendNotification(result,jobUrl,secs) {
+    const to=document.getElementById('p-notify').value.trim();if(!to)return;
+    try{
+      await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({to,jobUrl,jobTitle:result.jobTitle||null,company:result.company||null,status:result.status||'unknown',
+          fieldsCompleted:Array.isArray(result.fieldsFilled)?result.fieldsFilled.length:(result.fieldsCompleted||0),
+          questionsAnswered:Array.isArray(result.questionsAnswered)?result.questionsAnswered.length:0,
+          duration:secs,notes:result.notes||null})});
+      log('Notification sent to '+to,'ok');
+    }catch(_){}
   }
 
-  /* ─ Tab switching ─ */
-  function switchTab(name) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === name));
-    document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
-    document.getElementById('pane-' + name).classList.add('on');
+  function switchTab(name){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.p===name));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+    document.getElementById('pane-'+name).classList.add('on');
   }
 
-  /* ─ Log ─ */
-  function ts() { return new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
-  function log(msg, type) {
-    if (!msg||!String(msg).trim()) return;
-    const sym = {info:'\u2192',ok:'\u2713',err:'\u00d7',warn:'!'}[type]||'\u00b7';
-    const el = document.createElement('div'); el.className='le '+(type||'');
+  function ts(){return new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+  function log(msg,type){
+    if(!msg||!String(msg).trim())return;
+    const sym={info:'\u2192',ok:'\u2713',err:'\u00d7',warn:'!'}[type]||'\u00b7';
+    const el=document.createElement('div');el.className='le '+(type||'');
     el.innerHTML=`<span class="sym">${sym}</span><span class="ts">${ts()}</span><span>${String(msg)}</span>`;
-    const s = document.getElementById('log'); s.appendChild(el); s.scrollTop=s.scrollHeight;
+    const s=document.getElementById('log');s.appendChild(el);s.scrollTop=s.scrollHeight;
   }
-  function clearLog() { document.getElementById('log').innerHTML=''; }
+  function clearLog(){document.getElementById('log').innerHTML='';}
 
-  /* ─ Running state ─ */
-  function setRunning(on) {
-    document.getElementById('btn-apply').disabled = on;
-    document.getElementById('btn-lbl').textContent = on ? 'Running\u2026' : 'Apply';
-    document.getElementById('spin').style.display = on ? 'block' : 'none';
-    document.getElementById('agent-ctrl').classList.toggle('on', on);
-    document.getElementById('hdr-dot').classList.toggle('live', on);
-    document.getElementById('hdr-lbl').textContent = on ? 'Agent running' : 'Ready';
-    if (!on) { document.getElementById('btn-ctrl').classList.remove('on'); document.getElementById('btn-takeover').disabled=true; }
+  // ── setRunning with elapsed timer ──
+  function setRunning(on,label){
+    document.getElementById('btn-apply').disabled=on;
+    document.getElementById('btn-lbl').textContent=on?'Running\u2026':'Apply';
+    document.getElementById('spin').style.display=on?'block':'none';
+    document.getElementById('agent-ctrl').classList.toggle('on',on);
+    document.getElementById('hdr-dot').classList.toggle('live',on);
+    if(on){
+      clearInterval(timerInterval);
+      timerInterval=setInterval(()=>{
+        const s=((Date.now()-t0)/1000).toFixed(0);
+        document.getElementById('hdr-lbl').textContent=(label||'Agent running')+' \u00b7 '+s+'s';
+      },1000);
+    }else{
+      clearInterval(timerInterval);timerInterval=null;
+      document.getElementById('hdr-lbl').textContent='Ready';
+      document.getElementById('btn-ctrl').classList.remove('on');
+      document.getElementById('btn-takeover').disabled=true;
+    }
   }
 
-  /* ─ Live stream ─ */
-  function showStream(url) {
-    const f = document.getElementById('live-frame');
-    f.src=url; f.style.display='block';
+  function showStream(url){
+    const f=document.getElementById('live-frame');
+    f.src=url;f.style.display='block';
     document.getElementById('idle').style.display='none';
     document.getElementById('ubar').textContent=url;
     document.getElementById('live-ind').style.display='flex';
@@ -807,74 +717,55 @@
     document.getElementById('btn-takeover').disabled=false;
     streamingUrl=url;
   }
-  function resetLive() {
-    const f=document.getElementById('live-frame'); f.style.display='none'; f.src='';
+  function resetLive(){
+    const f=document.getElementById('live-frame');f.style.display='none';f.src='';
     document.getElementById('idle').style.display='flex';
     document.getElementById('ubar').textContent='No active session';
     document.getElementById('live-ind').style.display='none';
     ['bd-r','bd-y','bd-g'].forEach(id=>document.getElementById(id).classList.remove('on'));
   }
 
-  /* ─ Get profile ─ */
-  function getProfile() {
-    return {
-      name:        document.getElementById('p-name').value.trim(),
-      email:       document.getElementById('p-email').value.trim(),
-      phone:       document.getElementById('p-phone').value.trim(),
-      location:    document.getElementById('p-loc').value.trim(),
-      linkedin:    document.getElementById('p-li').value.trim(),
-      github:      document.getElementById('p-gh').value.trim(),
-      experience:  document.getElementById('p-exp').value.trim(),
-      education:   document.getElementById('p-edu').value.trim(),
-      skills:      document.getElementById('p-skills').value.trim(),
-      resumeUrl:   document.getElementById('p-resume').value.trim(),
-      bio:         document.getElementById('p-bio').value.trim(),
-      coverLetter: document.getElementById('p-cl').value.trim(),
+  function getProfile(){
+    return{
+      name:       document.getElementById('p-name').value.trim(),
+      email:      document.getElementById('p-email').value.trim(),
+      phone:      document.getElementById('p-phone').value.trim(),
+      location:   document.getElementById('p-loc').value.trim(),
+      linkedin:   document.getElementById('p-li').value.trim(),
+      github:     document.getElementById('p-gh').value.trim(),
+      experience: document.getElementById('p-exp').value.trim(),
+      education:  document.getElementById('p-edu').value.trim(),
+      skills:     document.getElementById('p-skills').value.trim(),
+      resumeUrl:  document.getElementById('p-resume').value.trim(),
+      bio:        document.getElementById('p-bio').value.trim(),
+      coverLetter:document.getElementById('p-cl').value.trim(),
     };
   }
 
-  /* ─ Core run function (returns result or null) ─ */
-  async function runApplication(jobUrl, profile, signal) {
-    const res = await fetch('/api/apply', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ jobUrl, profile }),
-      signal,
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({error:'HTTP '+res.status}));
-      throw new Error(err.error||'HTTP '+res.status);
-    }
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '', lastResult = null;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buf += dec.decode(value, { stream: true });
-      const lines = buf.split('\n'); buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        try {
-          const ev = JSON.parse(line.slice(6));
-          handle(ev);
-          if (ev.type === 'COMPLETE') lastResult = ev.result;
-        } catch(_) {}
+  async function runApplication(jobUrl,profile,signal){
+    const res=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobUrl,profile}),signal});
+    if(!res.ok){const err=await res.json().catch(()=>({error:'HTTP '+res.status}));throw new Error(err.error||'HTTP '+res.status);}
+    const reader=res.body.getReader();const dec=new TextDecoder();let buf='',lastResult=null;
+    while(true){
+      const{done,value}=await reader.read();if(done)break;
+      buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data: '))continue;
+        try{const ev=JSON.parse(line.slice(6));handle(ev);if(ev.type==='COMPLETE')lastResult=ev.result;}catch(_){}
       }
     }
     return lastResult;
   }
 
-  /* ─ Single apply ─ */
-  async function startApply() {
-    const jobUrl = document.getElementById('job-url').value.trim();
-    const profile = getProfile();
-    if (!jobUrl)         return toast('Paste a job URL first');
-    if (!profile.name)  return toast('Full name is required');
-    if (!profile.email) return toast('Email is required');
-    lastJobUrl = jobUrl; saveActive();
-    clearLog(); setRunning(true); resetLive(); streamingUrl=null; t0=Date.now();
-    if (ctrl) ctrl.abort(); ctrl = new AbortController();
+  async function startApply(){
+    const jobUrl=document.getElementById('job-url').value.trim();
+    const profile=getProfile();
+    if(!jobUrl)return toast('Paste a job URL first');
+    if(!profile.name)return toast('Full name is required');
+    if(!profile.email)return toast('Email is required');
+    lastJobUrl=jobUrl;saveActive();
+    clearLog();t0=Date.now();setRunning(true);resetLive();streamingUrl=null;
+    if(ctrl)ctrl.abort();ctrl=new AbortController();
     document.getElementById('res-empty').style.display='flex';
     document.getElementById('res-content').style.display='none';
     document.getElementById('res-bdg').textContent='';
@@ -882,128 +773,120 @@
     document.getElementById('btn-retry').classList.remove('on');
     ['r-conf-card','r-fields-card','r-skip-card','r-qa-card','r-notes-card'].forEach(id=>document.getElementById(id).style.display='none');
     switchTab('live');
-    log('Launching agent for: ' + jobUrl, 'info');
-    try {
-      const result = await runApplication(jobUrl, profile, ctrl.signal);
-      if (result) {
-        const secs = ((Date.now()-t0)/1000).toFixed(1);
-        addToHistory(result, jobUrl, secs);
-        await sendNotification(result, jobUrl, secs);
-      }
-    } catch(e) {
-      if (e.name !== 'AbortError') log('Error: ' + e.message, 'err');
-    } finally { setRunning(false); }
+    log('Launching agent for: '+jobUrl,'info');
+    try{
+      const result=await runApplication(jobUrl,profile,ctrl.signal);
+      if(result){const secs=((Date.now()-t0)/1000).toFixed(1);addToHistory(result,jobUrl,secs);await sendNotification(result,jobUrl,secs);}
+    }catch(e){if(e.name!=='AbortError')log('Error: '+e.message,'err');}
+    finally{setRunning(false);}
   }
 
-  /* ─ Batch apply ─ */
-  let batchItems = [];
-  function parseBatchUrls() {
+  // ── Batch: dedup URLs + fixed stop + elapsed timer ──
+  let batchItems=[];
+  function parseBatchUrls(){
+    const seen=new Set();
     return document.getElementById('batch-urls').value
-      .split('\n').map(s=>s.trim()).filter(s=>s.startsWith('http'));
+      .split('\n').map(s=>s.trim())
+      .filter(s=>{if(!s.startsWith('http')||seen.has(s))return false;seen.add(s);return true;});
   }
-  function renderBatchQueue() {
-    const el = document.getElementById('batch-queue');
-    if (!batchItems.length) { el.innerHTML=''; return; }
-    el.innerHTML = batchItems.map((item,i) => {
-      const host = (() => { try { return new URL(item.url).hostname.replace('www.',''); } catch(_) { return item.url; }})();
-      return `<div class="bq-item">
-        <div class="bq-status ${item.status}"></div>
-        <div class="bq-url">${esc(host)}</div>
-        <div class="bq-badge ${item.status}">${item.status==='waiting'?'':(item.status==='running'?'running':item.status)}</div>
-      </div>`;
+  function renderBatchQueue(){
+    const el=document.getElementById('batch-queue');
+    if(!batchItems.length){el.innerHTML='';return;}
+    el.innerHTML=batchItems.map((item)=>{
+      const host=(()=>{try{return new URL(item.url).hostname.replace('www.','');}catch(_){return item.url;}})();
+      return `<div class="bq-item"><div class="bq-status ${item.status}"></div><div class="bq-url">${esc(host)}</div><div class="bq-badge ${item.status}">${item.status==='waiting'?'':(item.status==='running'?'running':item.status)}</div></div>`;
     }).join('');
   }
-  function clearBatchQueue() {
-    if (batchRunning) return toast('Stop the batch first');
-    batchItems=[]; document.getElementById('batch-urls').value='';
+  function clearBatchQueue(){
+    if(batchRunning)return toast('Stop the batch first');
+    batchItems=[];document.getElementById('batch-urls').value='';
     document.getElementById('batch-queue').innerHTML='';
   }
-  async function startBatch() {
-    if (batchRunning) { batchAbort=true; return; }
-    const urls = parseBatchUrls();
-    if (!urls.length) return toast('Add at least one URL');
-    const profile = getProfile();
-    if (!profile.name)  return toast('Full name is required');
-    if (!profile.email) return toast('Email is required');
+  async function startBatch(){
+    // BUG FIX: also abort the current in-flight request when stopping
+    if(batchRunning){batchAbort=true;if(ctrl)ctrl.abort();return;}
+    const urls=parseBatchUrls();
+    if(!urls.length)return toast('Add at least one URL');
+    const profile=getProfile();
+    if(!profile.name)return toast('Full name is required');
+    if(!profile.email)return toast('Email is required');
     saveActive();
-    batchItems = urls.map(url => ({ url, status:'waiting' }));
-    batchRunning=true; batchAbort=false;
+    batchItems=urls.map(url=>({url,status:'waiting'}));
+    batchRunning=true;batchAbort=false;
     document.getElementById('btn-batch-lbl').textContent='Stop';
     document.getElementById('spin-batch').style.display='block';
     document.getElementById('btn-batch').style.background='var(--rd)';
-    renderBatchQueue(); clearLog(); resetLive();
-    log(`Batch: ${urls.length} URLs queued`, 'info');
-    for (let i=0; i<batchItems.length; i++) {
-      if (batchAbort) { log('Batch stopped', 'warn'); break; }
-      const item = batchItems[i];
-      item.status='running'; renderBatchQueue();
-      log(`[${i+1}/${batchItems.length}] ${item.url}`, 'info');
-      t0=Date.now(); ctrl=new AbortController();
-      try {
-        const result = await runApplication(item.url, profile, ctrl.signal);
-        if (result) {
+    renderBatchQueue();clearLog();resetLive();
+    log(`Batch: ${urls.length} URLs queued`,'info');
+    t0=Date.now();setRunning(true,'Batch');
+    for(let i=0;i<batchItems.length;i++){
+      if(batchAbort){log('Batch stopped','warn');break;}
+      const item=batchItems[i];
+      item.status='running';renderBatchQueue();
+      log(`[${i+1}/${batchItems.length}] ${item.url}`,'info');
+      document.getElementById('hdr-lbl').textContent=`Batch [${i+1}/${batchItems.length}]`;
+      ctrl=new AbortController();
+      try{
+        const result=await runApplication(item.url,profile,ctrl.signal);
+        if(result){
           const secs=((Date.now()-t0)/1000).toFixed(1);
           item.status=(result.status||'unknown').toLowerCase();
-          addToHistory(result, item.url, secs);
-          await sendNotification(result, item.url, secs);
-          log(`[${i+1}] ${item.status} in ${secs}s`, item.status==='submitted'?'ok':'warn');
-        } else {
-          item.status='error';
-        }
-      } catch(e) {
+          addToHistory(result,item.url,secs);
+          await sendNotification(result,item.url,secs);
+          log(`[${i+1}] ${item.status} in ${secs}s`,item.status==='submitted'?'ok':'warn');
+        }else{item.status='error';}
+      }catch(e){
         item.status='error';
-        if (e.name!=='AbortError') log(`[${i+1}] Error: ${e.message}`, 'err');
+        if(e.name!=='AbortError')log(`[${i+1}] Error: ${e.message}`,'err');
       }
       renderBatchQueue();
-      // Small delay between runs
-      if (i < batchItems.length-1 && !batchAbort) await new Promise(r=>setTimeout(r,2000));
+      if(i<batchItems.length-1&&!batchAbort)await new Promise(r=>setTimeout(r,2000));
     }
-    batchRunning=false; batchAbort=false;
+    batchRunning=false;batchAbort=false;
     document.getElementById('btn-batch-lbl').textContent='Start Batch';
     document.getElementById('spin-batch').style.display='none';
     document.getElementById('btn-batch').style.background='';
     const done=batchItems.filter(b=>b.status==='submitted').length;
-    log(`Batch complete: ${done}/${batchItems.length} submitted`, done>0?'ok':'warn');
+    log(`Batch complete: ${done}/${batchItems.length} submitted`,done>0?'ok':'warn');
+    setRunning(false);
     resetLive();
   }
 
-  /* ─ Handle SSE events ─ */
-  function handle(ev) {
-    switch (ev.type) {
-      case 'STARTED':       log('Run started \u00b7 ' + ev.runId, 'info'); break;
-      case 'STREAMING_URL': showStream(ev.streamingUrl); log('Live stream active', 'ok'); break;
-      case 'PROGRESS':      log(ev.message); break;
+  function handle(ev){
+    switch(ev.type){
+      case 'STARTED':       log('Run started \u00b7 '+ev.runId,'info');break;
+      case 'STREAMING_URL': showStream(ev.streamingUrl);log('Live stream active','ok');break;
+      case 'PROGRESS':      log(ev.message);break;
       case 'HEARTBEAT':     break;
-      case 'COMPLETE': {
+      case 'COMPLETE':{
         const secs=((Date.now()-t0)/1000).toFixed(1);
         log('Completed in '+secs+'s','ok');
         document.getElementById('live-ind').style.display='none';
-        renderResult(ev.result||{},secs); break;
+        renderResult(ev.result||{},secs);break;
       }
-      case 'ERROR': log(ev.message||'Agent error','err'); break;
-      case 'LOG':   log(ev.message,'info'); break;
+      case 'ERROR': log(ev.message||'Agent error','err');break;
+      case 'LOG':   log(ev.message,'info');break;
     }
   }
 
-  function stopAgent() { if (ctrl) ctrl.abort(); log('Stopped','err'); setRunning(false); }
-  function takeControl() {
-    if (!streamingUrl) return toast('No active stream');
-    window.open(streamingUrl,'_blank'); log('Opened live browser \u2014 you have control','ok');
+  function stopAgent(){if(ctrl)ctrl.abort();log('Stopped','err');setRunning(false);}
+  function takeControl(){
+    if(!streamingUrl)return toast('No active stream');
+    window.open(streamingUrl,'_blank');log('Opened live browser \u2014 you have control','ok');
   }
-  function retryLast() {
-    if (!lastJobUrl) return;
+  function retryLast(){
+    if(!lastJobUrl)return;
     document.getElementById('job-url').value=lastJobUrl;
-    switchTab('live'); startApply();
+    switchTab('live');startApply();
   }
 
-  /* ─ Render result ─ */
-  function renderResult(r, secs) {
-    document.getElementById('r-title').textContent = r.company ? (r.jobTitle||'Application')+' \u00b7 '+r.company : (r.jobTitle||'Application');
-    document.getElementById('r-sub').textContent   = new Date().toLocaleString();
+  function renderResult(r,secs){
+    document.getElementById('r-title').textContent=r.company?(r.jobTitle||'Application')+' \u00b7 '+r.company:(r.jobTitle||'Application');
+    document.getElementById('r-sub').textContent=new Date().toLocaleString();
     const status=(r.status||'unknown').toLowerCase();
-    const badge=document.getElementById('r-badge'); badge.textContent=status; badge.className='badge '+status;
+    const badge=document.getElementById('r-badge');badge.textContent=status;badge.className='badge '+status;
     const atsEl=document.getElementById('r-ats');
-    if (r.ats){atsEl.textContent='via '+r.ats;atsEl.style.display='';}else{atsEl.style.display='none';}
+    if(r.ats){atsEl.textContent='via '+r.ats;atsEl.style.display='';}else{atsEl.style.display='none';}
     document.getElementById('r-time').textContent=secs+'s';
     const filled=Array.isArray(r.fieldsFilled)?r.fieldsFilled.length:(r.fieldsCompleted||0);
     document.getElementById('r-fields').textContent=filled+' fields';
@@ -1032,20 +915,33 @@
     switchTab('result');
   }
 
-  function esc(s) {
+  function esc(s){
     if(s==null)return'';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
-  function toast(msg) {
+  function toast(msg){
     const el=Object.assign(document.createElement('div'),{className:'toast',textContent:msg});
-    document.body.appendChild(el); setTimeout(()=>el.remove(),3000);
+    document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
   }
 
-  /* ─ Init ─ */
+  // ── Init ──
   loadActive();
   renderProfileSelect();
   renderHistory();
   updateHeaderStats();
+  updateBioCount();
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') closeDetailModal();
+    if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+      if(!document.getElementById('btn-apply').disabled) startApply();
+    }
+  });
+  // Enter in URL field fires apply
+  document.getElementById('job-url').addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();startApply();}
+  });
 </script>
 </body>
 </html>
