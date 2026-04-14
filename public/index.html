@@ -472,6 +472,7 @@
 
   let ctrl = null, streamingUrl = null, t0 = 0, lastJobUrl = null, timerInterval = null;
   let batchRunning = false, batchAbort = false;
+  let modalItemUrl = null; // FIX: safe modal URL storage instead of onclick interpolation
 
   const FIELDS = ['p-name','p-email','p-phone','p-loc','p-li','p-gh','p-exp','p-edu','p-skills','p-resume','p-bio','p-cl','p-notify'];
 
@@ -625,11 +626,19 @@
     document.getElementById('stat-success').textContent=h.filter(r=>r.status==='submitted').length;
   }
 
+  // FIX 3: Safe modal URL — store in variable, load via named function
+  function loadModalUrl() {
+    closeDetailModal();
+    if(modalItemUrl) document.getElementById('job-url').value=modalItemUrl;
+    switchTab('live');
+  }
+
   function openDetailModal(id) {
     const h=getHistory();
     const item=h.find(r=>r.id===id);if(!item)return;
     const r=item.fullResult||{};
     const status=(item.status||'unknown').toLowerCase();
+    modalItemUrl = item.jobUrl || null; // FIX: store safely
     document.getElementById('modal-title').textContent=item.jobTitle&&item.company
       ?`${item.jobTitle} \u00b7 ${item.company}`:(item.jobTitle||item.company||'Application Detail');
     let html=`
@@ -647,8 +656,9 @@
     if(Array.isArray(r.questionsAnswered)&&r.questionsAnswered.length)html+=`<div class="card"><div class="card-hdr">Screening Q&amp;A</div><div>${r.questionsAnswered.map(q=>`<div class="qa-item"><div class="qa-q">${esc(q.question)}</div><div class="qa-a">${esc(q.answer)}</div></div>`).join('')}</div></div>`;
     if(r.notes)html+=`<div class="card"><div class="card-hdr">Agent Notes</div><div class="card-body"><div class="card-note">${esc(r.notes)}</div></div></div>`;
     if(!r.fieldsFilled&&!r.questionsAnswered&&!r.notes)html+=`<div style="text-align:center;padding:24px;color:var(--t2);font-size:12px;">Full result not available for this run.</div>`;
+    // FIX: use loadModalUrl() instead of interpolated URL in onclick
     html+=`<div style="display:flex;gap:8px;">
-      <button class="btn-sm" onclick="closeDetailModal();document.getElementById('job-url').value='${esc(item.jobUrl||'')}';switchTab('live');">Load URL &amp; Re-run</button>
+      <button class="btn-sm" onclick="loadModalUrl()">Load URL &amp; Re-run</button>
       <a href="${esc(item.jobUrl||'')}" target="_blank" style="text-decoration:none;"><button class="btn-sm">Open Job Posting &#8599;</button></a>
     </div>`;
     document.getElementById('modal-body').innerHTML=html;
@@ -685,7 +695,6 @@
   }
   function clearLog(){document.getElementById('log').innerHTML='';}
 
-  // ── setRunning with elapsed timer ──
   function setRunning(on,label){
     document.getElementById('btn-apply').disabled=on;
     document.getElementById('btn-lbl').textContent=on?'Running\u2026':'Apply';
@@ -781,7 +790,6 @@
     finally{setRunning(false);}
   }
 
-  // ── Batch: dedup URLs + fixed stop + elapsed timer ──
   let batchItems=[];
   function parseBatchUrls(){
     const seen=new Set();
@@ -803,7 +811,6 @@
     document.getElementById('batch-queue').innerHTML='';
   }
   async function startBatch(){
-    // BUG FIX: also abort the current in-flight request when stopping
     if(batchRunning){batchAbort=true;if(ctrl)ctrl.abort();return;}
     const urls=parseBatchUrls();
     if(!urls.length)return toast('Add at least one URL');
@@ -824,12 +831,12 @@
       const item=batchItems[i];
       item.status='running';renderBatchQueue();
       log(`[${i+1}/${batchItems.length}] ${item.url}`,'info');
-      document.getElementById('hdr-lbl').textContent=`Batch [${i+1}/${batchItems.length}]`;
+      const itemT0=Date.now(); // FIX 1: per-item timer, not cumulative
       ctrl=new AbortController();
       try{
         const result=await runApplication(item.url,profile,ctrl.signal);
         if(result){
-          const secs=((Date.now()-t0)/1000).toFixed(1);
+          const secs=((Date.now()-itemT0)/1000).toFixed(1); // FIX 1: use itemT0
           item.status=(result.status||'unknown').toLowerCase();
           addToHistory(result,item.url,secs);
           await sendNotification(result,item.url,secs);
@@ -862,7 +869,9 @@
         const secs=((Date.now()-t0)/1000).toFixed(1);
         log('Completed in '+secs+'s','ok');
         document.getElementById('live-ind').style.display='none';
-        renderResult(ev.result||{},secs);break;
+        // FIX 2: only auto-switch to result tab in single mode, not batch
+        if(!batchRunning) renderResult(ev.result||{},secs);
+        break;
       }
       case 'ERROR': log(ev.message||'Agent error','err');break;
       case 'LOG':   log(ev.message,'info');break;
@@ -924,7 +933,7 @@
     document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
   }
 
-  // ── Init ──
+  // Init
   loadActive();
   renderProfileSelect();
   renderHistory();
@@ -938,7 +947,6 @@
       if(!document.getElementById('btn-apply').disabled) startApply();
     }
   });
-  // Enter in URL field fires apply
   document.getElementById('job-url').addEventListener('keydown',e=>{
     if(e.key==='Enter'){e.preventDefault();startApply();}
   });
