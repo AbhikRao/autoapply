@@ -70,21 +70,24 @@ export default async function handler(req, res) {
           const ev = JSON.parse(line.slice(6).trim());
           switch (ev.type) {
             case 'STARTED':
-              runId = ev.runId;
+              runId = ev.runId || ev.run_id || ev.id || 'started';
               emit(res, { type: 'STARTED', runId });
               axiom({ event: 'run_started', runId, jobUrl });
               break;
             case 'STREAMING_URL':
               emit(res, { type: 'STREAMING_URL', streamingUrl: ev.streamingUrl });
               break;
-            case 'PROGRESS':
-              emit(res, { type: 'PROGRESS', message: ev.purpose || ev.message || '' });
+            case 'PROGRESS': {
+              const msg = ev.purpose || ev.message || ev.text || ev.content || '';
+              if (msg) emit(res, { type: 'PROGRESS', message: msg });
               break;
+            }
             case 'HEARTBEAT':
               emit(res, { type: 'HEARTBEAT' });
               break;
             case 'COMPLETE': {
-              let result = ev.resultJson ?? null;
+              // Accept resultJson OR result field
+              let result = ev.resultJson ?? ev.result ?? null;
               if (typeof result === 'string') {
                 try {
                   const clean = result.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
@@ -93,9 +96,20 @@ export default async function handler(req, res) {
                   result = { status: 'partial', notes: result, fieldsFilled: [], fieldsSkipped: [], questionsAnswered: [], fieldsCompleted: 0 };
                 }
               }
+              // If agent completed but returned no JSON, build a useful fallback
+              if (!result && ev.status === 'COMPLETED') {
+                result = {
+                  status: 'partial',
+                  notes: 'Agent completed but returned no structured result. The application may have been submitted — check your email for a confirmation from the company.',
+                  fieldsFilled: [],
+                  fieldsSkipped: [],
+                  questionsAnswered: [],
+                  fieldsCompleted: 0,
+                };
+              }
               const durationMs = Date.now() - t0;
               if (ev.status !== 'COMPLETED') {
-                const errMsg = ev.error?.message || `Run ended: ${ev.status}`;
+                const errMsg = ev.error?.message || ev.message || `Run ended: ${ev.status}`;
                 emit(res, { type: 'ERROR', message: errMsg });
                 axiom({ event: 'run_error', runId, jobUrl, error: errMsg, durationMs, phase: 'agent' });
               } else {
@@ -113,11 +127,14 @@ export default async function handler(req, res) {
               break;
             }
             case 'ERROR':
-              emit(res, { type: 'ERROR', message: ev.message || 'Unknown agent error' });
+              emit(res, { type: 'ERROR', message: ev.message || ev.error || 'Unknown agent error' });
               axiom({ event: 'run_error', runId, jobUrl, error: ev.message, durationMs: Date.now() - t0, phase: 'stream' });
               break;
-            default:
-              emit(res, ev);
+            default: {
+              // Forward any text from unknown events as PROGRESS
+              const unknownMsg = ev.message || ev.text || ev.purpose || ev.content || '';
+              if (unknownMsg) emit(res, { type: 'PROGRESS', message: unknownMsg });
+            }
           }
         } catch (_) {}
       }
@@ -138,14 +155,22 @@ function emit(res, data) {
 
 function buildGoal(jobUrl, p) {
   const resumeInstruction = p.resumeUrl
-    ? `RESUME UPLOAD:\n  a) Locate the resume/CV upload field.\n  b) If a URL or text input is available, paste exactly: ${p.resumeUrl}\n  c) If only a file picker is shown and no URL input exists, skip it and note it in fieldsSkipped.\n  d) Do NOT paste the applicant's name, bio, or any profile text into the resume field.`
-    : 'RESUME: No resume URL provided. Skip any file upload field and note it in fieldsSkipped.';
+    ? `RESUME UPLOAD:\n  a) Look for a resume/CV upload field on the application form.\n  b) If a text or URL input field exists, paste exactly this URL: ${p.resumeUrl}\n  c) If only a file picker button exists with no URL input, skip it and note "file upload requires local file" in fieldsSkipped.\n  d) NEVER paste the applicant name, bio, or skills into the resume field.`
+    : 'RESUME: No resume URL provided. Skip any resume upload field and note it in fieldsSkipped.';
 
-  return `You are an expert job application assistant. Complete a real online job application on behalf of the applicant. Be thorough and precise.
+  return `You are an autonomous job application agent. Your ONLY goal is to COMPLETE AND SUBMIT a real online job application. Do NOT stop at the job description page. You MUST click Apply and fill the form.
 
 TARGET JOB URL: ${jobUrl}
 
-APPLICANT PROFILE:
+STEP 1 — FIND AND CLICK APPLY (this is mandatory):
+- Navigate to the job URL.
+- Find and click the primary Apply button. Look for: "Apply", "Apply Now", "Apply for this job", "Easy Apply", "Apply for this position", "Submit Application".
+- If the page redirects to an ATS portal (Greenhouse, Lever, Workday, etc.), follow the redirect and continue.
+- If a login or account creation wall appears, create a new account using the applicant's email address, then continue to the form.
+- You MUST reach the actual application form. Simply reading the job description is NOT sufficient.
+
+STEP 2 — FILL EVERY FIELD:
+Applicant profile:
 - Full name: ${p.name}
 - Email: ${p.email}
 - Phone: ${p.phone || 'not provided'}
@@ -155,41 +180,38 @@ APPLICANT PROFILE:
 - Years of experience: ${p.experience || 'not provided'}
 - Education: ${p.education || 'not provided'}
 - Key skills: ${p.skills || 'not provided'}
-- Brief bio: ${p.bio || 'not provided'}
-- Cover letter style: ${p.coverLetter || 'Concise and professional. Highlight relevant skills and enthusiasm for the role.'}
+- Bio / summary: ${p.bio || 'not provided'}
+- Cover letter instructions: ${p.coverLetter || 'Concise, under 100 words. Professional tone. Highlight relevant experience and enthusiasm for the specific role.'}
 
 ${resumeInstruction}
 
-SPECIAL FIELD HANDLING:
-- EEO / diversity fields (race, gender, veteran status, disability): Select "Decline to self-identify" or the equivalent opt-out option.
-- Salary / compensation fields: Enter "Negotiable" or leave blank if the field is optional.
-- "How did you hear about us?": Select or type "Online job board".
-- Consent / authorization checkboxes: Check them to authorize the application.
-- CAPTCHA: If encountered, stop and note it in fieldsSkipped with reason "CAPTCHA requires human interaction".
-- "Are you authorized to work in [country]?": Answer Yes.
-- "Will you now or in the future require sponsorship?": Answer No unless the applicant profile states otherwise.
+Special field rules:
+- EEO/diversity (race, gender, veteran, disability): select "Decline to self-identify" or equivalent opt-out.
+- Salary/compensation: type "Negotiable" or leave blank if optional.
+- "How did you hear about us?": select "Online job board" or "LinkedIn".
+- Authorization checkboxes / consent: check all.
+- Work authorization ("legally authorized to work?"): Yes.
+- Sponsorship required now or in the future: No.
+- Cover letter or personal statement fields: write one following the instructions above.
+- Screening questions: answer thoughtfully in 2-4 sentences, tailored to the job description.
+- CAPTCHA: note in fieldsSkipped as "CAPTCHA — requires human interaction".
 
-INSTRUCTIONS:
-1. Navigate to the job URL. Read the full job description to understand the role.
-2. Click Apply / Apply Now and follow any ATS redirects.
-3. Fill every visible field using the applicant profile above.
-4. Answer screening questions thoughtfully and specifically (2-4 sentences). Tailor answers to the job description.
-5. For dropdowns, select the closest matching option based on the profile.
-6. Navigate multi-page forms — click Next / Continue / Save and Continue as needed.
-7. On the final page, click Submit and wait for a confirmation message.
-8. If the application requires account creation, create one using the applicant's email.
+STEP 3 — NAVIGATE AND SUBMIT:
+- Click Next / Continue / Save on each page of multi-page forms.
+- On the final page, click Submit / Submit Application.
+- Wait for the confirmation page or success message.
 
-Return ONLY valid JSON with no markdown fences:
+Return ONLY this JSON object with no markdown fences, no extra text:
 {
   "jobTitle": "<exact job title from the posting>",
   "company": "<company name>",
   "ats": "<Greenhouse|Lever|Workday|LinkedIn|iCIMS|Taleo|SmartRecruiters|Direct|Other>",
   "status": "<submitted|partial|error>",
-  "confirmationText": "<exact confirmation text shown, or null>",
-  "fieldsFilled": [ { "field": "<label>", "value": "<value entered>" } ],
-  "fieldsSkipped": [ { "field": "<label>", "reason": "<why it was skipped>" } ],
-  "questionsAnswered": [ { "question": "<question text>", "answer": "<answer given>" } ],
-  "fieldsCompleted": <integer count of fields filled>,
-  "notes": "<any observations, blockers, or issues encountered>"
+  "confirmationText": "<exact confirmation message shown after submit, or null>",
+  "fieldsFilled": [ { "field": "<field label>", "value": "<value you entered>" } ],
+  "fieldsSkipped": [ { "field": "<field label>", "reason": "<why it was skipped>" } ],
+  "questionsAnswered": [ { "question": "<question text>", "answer": "<answer you gave>" } ],
+  "fieldsCompleted": <total integer count of fields filled>,
+  "notes": "<any important observations, blockers, or issues encountered>"
 }`.trim();
 }
